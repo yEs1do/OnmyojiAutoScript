@@ -223,7 +223,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                 logger.info('Battle lost and exit')
                 break
 
-
         self.ui_click(self.I_BACK_RED, self.I_CHECK_EXPLORATION)
         self.ui_get_current_page()
         self.ui_goto(page_main)
@@ -519,7 +518,7 @@ if __name__ == "__main__":
     device = Device(config)
     t = ScriptTask(config, device)
 
-    # t.run()
+    t.run()
 
     print(t.find_one())
     # target, order = t.find_one()
