@@ -31,8 +31,8 @@ class ScriptTask(GameUi, TalismanPassAssets):
         now_datetime = datetime.now()
         now_time = now_datetime.time()
         if time(hour=21) > now_time > time(hour=9):
-            # 如果是在9点到21点之间，那就设定下一次运行的时间为晚上21:10点
-            next_run_datetime = datetime.combine(now_datetime.date(), time(hour=21, minute=10))
+            # 如果是在9点到21点之间，那就设定下一次运行的时间
+            next_run_datetime = datetime.combine(now_datetime.date(), time(hour=21, minute=30))
         else:
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=10))
 
