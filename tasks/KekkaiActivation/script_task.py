@@ -31,8 +31,9 @@ class ScriptTask(KU, KekkaiActivationAssets):
         self.goto_realm()
         if con.exchange_before:
             self.check_max_lv(con.shikigami_class)
+        # 收取经验
         self.harvest_card()
-
+        # 开始挂卡
         self.run_activation(con)
         while 1:
             # 关闭到结界界面
