@@ -45,7 +45,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
                 self.gold_100()
             self.close_buff()
         count = 0
-        if count >= 2:
+        if count < 2:
             self.ui_get_current_page()
             self.ui_goto(page_team)
             self.check_zones('金币妖怪')

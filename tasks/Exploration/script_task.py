@@ -67,39 +67,20 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             logger.critical(f'Not find {explorationConfig.exploration_config.exploration_level} or'
                             f' Enter {explorationConfig.exploration_config.exploration_level} failed!')
             raise RequestHumanTakeover
+        con_scrolls = self.config.exploration.scrolls
+        # 判断是否绘卷模式，设置探索次数
+        if con_scrolls.scrolls_enable:
+            exploration_count = 50
+        else:
+            exploration_count = explorationConfig.exploration_config.current_exploration_count
 
-        # 探索
-        exploration_count = explorationConfig.exploration_config.current_exploration_count
-        # logger.info("探索执行次数：" + str(exploration_count))
+        logger.info("exploration_count:" + str(exploration_count))
         if exploration_count > 0:
             count = 0
             while count < exploration_count:
                 if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
-                    # 如果突破卷超出设定数量，退出循环，去打个突
-                    con_scrolls = self.config.exploration.scrolls
-                    # 如果打开绘卷模式
-                    if con_scrolls.scrolls_on:
-                        if con_scrolls.scrolls_cd > 0:
-                            self.screenshot()
-                            cu, res, total = self.O_REALM_RAID_NUMBER1.ocr(self.device.image)
-                            if cu >= con_scrolls.scrolls_number:
-                                # 设定下次探索时间
-                                next_run = datetime.now() + timedelta(minutes=con_scrolls.scrolls_cd)
-                                self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
-
-                                self.appear_then_click(self.I_RED_CLOSE)
-                                self.ui_goto(page_main)
-                                # 关闭 buff
-                                if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
-                                    self.open_buff()
-                                    self.gold_50(is_open=False)
-                                    self.gold_100(is_open=False)
-                                    self.exp_50(is_open=False)
-                                    self.exp_100(is_open=False)
-                                    self.close_buff()
-
-                                # 去打个突
-                                RealmRaidScriptTask(config=self.config, device=self.device).run()
+                    # 绘卷模式
+                    self.activate_realm_raid(con_scrolls,con)
 
                     self.click(self.I_E_EXPLORATION_CLICK)
                     count += 1
@@ -107,7 +88,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                     # 进入战斗环节
                     self.battle_process()
                 # 判断宝箱
-                if self.appear_then_click(self.I_TREASURE_BOX_CLICK, interval=1.8):
+                if self.appear(self.I_TREASURE_BOX_CLICK):
+                    self.click(self.I_TREASURE_BOX_CLICK)
                     self.open_expect_level()
                 # 判断妖气
                 elif self.appear(self.I_EXPLORATION_TITLE):
@@ -287,6 +269,34 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
 
         # 进入战斗环节
         self.do_battle()
+
+    def activate_realm_raid(self, con_scrolls, con) -> None:
+        # 判断是否开启突破票检测
+        if not con_scrolls.scrolls_enable:
+            return
+        self.screenshot()
+        cu, res, total = self.O_REALM_RAID_NUMBER1.ocr(self.device.image)
+        # 判断突破票数量
+        if cu < con_scrolls.scrolls_threshold:
+            return
+
+        # 关闭加成
+        self.appear_then_click(self.I_RED_CLOSE)
+        self.ui_goto(page_main)
+        if con.buff_gold_50_click or con.buff_gold_100_click or con.buff_exp_50_click or con.buff_exp_100_click:
+            self.open_buff()
+            self.gold_50(is_open=False)
+            self.gold_100(is_open=False)
+            self.exp_50(is_open=False)
+            self.exp_100(is_open=False)
+            self.close_buff()
+
+        # 设置下次执行行时间
+        logger.info("RealmRaid and Exploration  set_next_run !")
+        next_run = datetime.now() + con_scrolls.scrolls_cd
+        self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
+        self.set_next_run(task='RealmRaid', success=False, finish=False, target=datetime.now())
+        raise TaskEnd
 
 
 if __name__ == "__main__":
