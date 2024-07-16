@@ -63,8 +63,14 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
                 if not self.is_in_room():
                     continue
                 if wait_timer.reached():
-                    logger.warning('Wait for too long, exit')
-                    self.exit_room()
+                    # logger.warning('Wait for too long, exit')
+                    # self.exit_room()
+
+                    # 超过时间依然挑战
+                    logger.warning('Wait for too long and start the challenge')
+                    self.click_fire()
+                    count += 1
+                    self.run_general_battle()
                     break
                 if not self.appear(self.I_ADD_5_1):
                     # 有人进来了，可以进行挑战
