@@ -55,7 +55,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, SwitchSoul, 
             self.ensure_public()
             self.create_ensure()
             # 进入到了房间里面
-            wait_timer = Timer(60)
+            wait_timer = Timer(20)
             wait_timer.start()
             while 1:
                 self.screenshot()
