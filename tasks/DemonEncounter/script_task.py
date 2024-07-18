@@ -12,11 +12,12 @@ from module.exception import TaskEnd
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_demon_encounter
+from tasks.GameUi.page import page_main, page_demon_encounter, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.DemonEncounter.data.answer import answer_one
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 class LanternClass(Enum):
     BATTLE = 0  # 打怪  --> 无法判断因为怪的图片不一样，用排除法
@@ -27,12 +28,19 @@ class LanternClass(Enum):
     MYSTERY = 5  # 神秘任务
 
 
-class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
+class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
 
     def run(self):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
+
+        # 御魂切换方式一
+        if self.config.demon_encounter.switch_soul.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self.config.demon_encounter.switch_soul.switch_group_team)
+
         self.ui_get_current_page()
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
@@ -406,11 +414,11 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    from memory_profiler import profile
+    # from memory_profiler import profile
 
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
-    # t.run()
+    t.run()
     t.battle_wait(True)

@@ -44,12 +44,7 @@ class OrochiConfig(ConfigBase):
     # 是否开启御魂加成
     soul_buff_enable: bool = Field(default=False, description='soul_buff_enable_help')
 
-class SwitchSoulConfig(BaseSwitchSoulConfig):
-    enable: bool = Field(default=False)
-    switch_group_team: str = Field(default='-1,-1', description='switch_group_team_help')
-    # enable_switch_by_name: bool = Field(default=False, description='enable_switch_by_name_help')
-    # group_name: str = Field(default='')
-    # team_name: str = Field(default='')
+class SwitchSoulConfig(BaseModel):
     auto_enable: bool = Field(default=False, description='auto_enable_help')
     # 十层 config
     ten_switch: str = Field(default='-1,-1', description='ten_switch_help')

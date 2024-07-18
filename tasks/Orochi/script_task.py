@@ -19,23 +19,19 @@ from module.exception import TaskEnd
 
 class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, SwitchSoul, OrochiAssets):
 
-    def run(self) -> bool:
-        # 御魂切换方式一
-        if self.config.orochi.switch_soul.enable:
+    def run(self):
+        # 根据选层切换御魂
 
-            group_team = self.config.orochi.switch_soul.switch_group_team
-
-            # 根据选层切换御魂
-            orochi_switch_soul = self.config.orochi.switch_soul
-            if orochi_switch_soul.auto_enable:
-                layer = self.config.orochi.orochi_config.layer
-                match layer:
-                    case Layer.TEN:
-                        group_team = orochi_switch_soul.ten_switch
-                    case Layer.ELEVEN:
-                        group_team = orochi_switch_soul.eleven_switch
-                    case Layer.TWELVE:
-                        group_team = orochi_switch_soul.twelve_switch
+        orochi_switch_soul = self.config.orochi.switch_soul
+        if orochi_switch_soul.auto_enable:
+            layer = self.config.orochi.orochi_config.layer
+            match layer:
+                case Layer.TEN:
+                    group_team = orochi_switch_soul.ten_switch
+                case Layer.ELEVEN:
+                    group_team = orochi_switch_soul.eleven_switch
+                case Layer.TWELVE:
+                    group_team = orochi_switch_soul.twelve_switch
 
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
