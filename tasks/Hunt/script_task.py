@@ -91,13 +91,16 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 break
             if self.click(self.C_HUNT_ENTER, interval=2.9):
                 continue
-        sleep(2)
-        self.appear_then_click(self.I_KIRIN_CHALLAGE, interval=0.9)
         logger.info('Arrive the Kirin')
         self.ui_click(self.I_KIRIN_CHALLAGE, self.I_KIRIN_GATHER)
+        logger.info('点击------------------------')
+        sleep(2)
+        if self.appear(self.I_KIRIN_CHALLAGE):
+            self.click(self.I_KIRIN_CHALLAGE)
+        logger.info('点击------------------------结束')
         # 等待进入战斗
         # 等待挑战, 5秒也是等
-        sleep(5)
+        sleep(3)
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.wait_until_disappear(self.I_KIRIN_GATHER)
         self.device.stuck_record_clear()
