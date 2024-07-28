@@ -47,6 +47,7 @@ class ScriptTask(GameUi, PetsAssets):
             logger.warning('Already feed')
             return
         self.ui_click(self.I_PET_FEED, self.I_PET_SKIP)
+        self.click(self.I_PET_SKIP)
         self.wait_until_disappear(self.I_PET_SKIP)
 
     def _play(self):
@@ -66,6 +67,7 @@ class ScriptTask(GameUi, PetsAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_PET_SKIP):
+                self.click(self.I_PET_SKIP)
                 break
             if play_count >= 3:
                 logger.warning('Play count > 3')
