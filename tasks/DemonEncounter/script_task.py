@@ -42,6 +42,8 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
             self.run_switch_soul(self.config.demon_encounter.switch_soul.switch_group_team)
 
         self.ui_get_current_page()
+        self.ui_goto(page_main)
+        self.ui_click(self.I_MAIN_GOTO_TOWN, self.I_CHECK_TOWN)
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
         self.execute_boss()
