@@ -11,7 +11,17 @@ class RestartAssets:
 
 
 	# Image Rule Assets
-	# 点击勾玉 
+	# 缘庭-点击勾玉
+	I_HARVEST_JADE_9 = RuleImage(roi_front=(832,484,34,33), roi_back=(177,451,973,141), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/main9/harvest_jade_9.png")
+	# 缘庭-签到小图标
+	I_HARVEST_SIGN_9 = RuleImage(roi_front=(425,482,24,34), roi_back=(70,471,889,89), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/main9/harvest_sign_9.png")
+	# 缘庭-体力
+	I_HARVEST_AP_9 = RuleImage(roi_front=(839,481,31,38), roi_back=(206,462,970,134), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/main9/harvest_ap_9.png")
+	# 缘庭-御魂加成
+	I_HARVEST_SOUL_9 = RuleImage(roi_front=(421,482,38,36), roi_back=(67,468,930,72), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/main9/harvest_soul_9.png")
+	# 缘庭-邮件小图标
+	I_HARVEST_MAIL_9 = RuleImage(roi_front=(421,482,38,36), roi_back=(67,468,930,72), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/main9/harvest_mail.png")
+	# 点击勾玉
 	I_HARVEST_JADE = RuleImage(roi_front=(732,489,34,33), roi_back=(177,451,973,141), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_jade.png")
 	# 签到小图标 
 	I_HARVEST_SIGN = RuleImage(roi_front=(397,500,24,34), roi_back=(70,471,889,89), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign.png")
@@ -27,11 +37,11 @@ class RestartAssets:
 	I_HARVEST_MAIL_OPEN = RuleImage(roi_front=(163,367,45,48), roi_back=(139,86,100,487), threshold=0.9, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_open.png")
 	# 确认收取邮件 
 	I_HARVEST_MAIL_CONFIRM = RuleImage(roi_front=(687,543,168,64), roi_back=(687,543,168,64), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_confirm.png")
-	# description 
+	# 御魂加成
 	I_HARVEST_SOUL = RuleImage(roi_front=(241,497,38,36), roi_back=(68,480,930,72), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_soul.png")
 	# description 
 	I_HARVEST_MAIL_TITLE = RuleImage(roi_front=(520,48,245,41), roi_back=(520,48,245,41), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_mail_title.png")
-	# description 
+	# 体力
 	I_HARVEST_AP = RuleImage(roi_front=(721,486,31,38), roi_back=(206,462,970,134), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_ap.png")
 	# 打开聊天频道会自动关闭 
 	I_HARVEST_CHAT_CLOSE = RuleImage(roi_front=(639,309,35,100), roi_back=(639,309,35,100), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_chat_close.png")

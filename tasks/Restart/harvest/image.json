@@ -1,4 +1,49 @@
 [
+    {
+    "itemName": "harvest_jade_9",
+    "imageName": "main9/harvest_jade_9.png",
+    "roiFront": "832,484,34,33",
+    "roiBack": "177,451,973,141",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "缘庭-点击勾玉"
+  },
+  {
+    "itemName": "harvest_sign_9",
+    "imageName": "main9/harvest_sign_9.png",
+    "roiFront": "425,482,24,34",
+    "roiBack": "70,471,889,89",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "缘庭-签到小图标"
+  },
+  {
+    "itemName": "harvest_ap_9",
+    "imageName": "main9/harvest_ap_9.png",
+    "roiFront": "839,481,31,38",
+    "roiBack": "206,462,970,134",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "缘庭-体力"
+  },
+  {
+    "itemName": "harvest_soul_9",
+    "imageName": "main9/harvest_soul_9.png",
+    "roiFront": "421,482,38,36",
+    "roiBack": "67,468,930,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "缘庭-御魂加成"
+  },
+  {
+    "itemName": "harvest_mail_9",
+    "imageName": "main9/harvest_mail.png",
+    "roiFront": "421,482,38,36",
+    "roiBack": "67,468,930,72",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "缘庭-邮件小图标"
+  },
   {
     "itemName": "harvest_jade",
     "imageName": "harvest_harvest_jade.png",
@@ -78,7 +123,7 @@
     "roiBack": "68,480,930,72",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "御魂加成"
   },
   {
     "itemName": "harvest_mail_title",
@@ -96,7 +141,7 @@
     "roiBack": "206,462,970,134",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "体力"
   },
   {
     "itemName": "harvest_chat_close",
