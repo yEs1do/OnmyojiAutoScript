@@ -123,7 +123,7 @@
     "roiBack": "1148,548,49,43",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "description"
+    "description": "式神录头像"
   },
   {
     "itemName": "rs_level_max",
