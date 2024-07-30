@@ -92,8 +92,8 @@ class ExplorationConfig(BaseModel):
 
 class Exploration(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
-    exploration_config: ExplorationConfig = Field(default_factory=ExplorationConfig)
     scrolls: Scrolls = Field(default_factory=Scrolls)
+    exploration_config: ExplorationConfig = Field(default_factory=ExplorationConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
     switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
     # auto_rotate_after_times: str = Field(default='30', description='探索30次后, 检测是否需要添加候补式神')

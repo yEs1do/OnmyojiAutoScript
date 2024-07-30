@@ -187,10 +187,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         self.goto_main()
 
         # 设置下次运行时间
-        if success:
-            self.set_next_run(task='Dokan', finish=True, server=True, success=True)
-        else:
-            self.set_next_run(task='Dokan', finish=True, server=True, success=False)
+        self.set_next_run(task='Dokan', finish=True, server=True, success=success)
         raise TaskEnd
 
     def dokan_battle(self, cfg: Dokan):
@@ -221,7 +218,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
 
         # 点击准备
-        if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
+        if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.5):
             logger.info("Prepare")
 
             # 绿标式神, should we check there's a green marked role?
