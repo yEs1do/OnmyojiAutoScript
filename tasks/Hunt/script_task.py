@@ -35,6 +35,8 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             else:
                 if con.netherworld_group_team != '-1,-1':
                     self.run_switch_soul(con.netherworld_group_team)
+        self.ui_goto(page_main)
+        self.ui_click(self.I_MAIN_GOTO_TOWN, self.I_CHECK_TOWN)
         self.ui_get_current_page()
         self.ui_goto(page_hunt)
 
@@ -93,11 +95,9 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
                 continue
         logger.info('Arrive the Kirin')
         self.ui_click(self.I_KIRIN_CHALLAGE, self.I_KIRIN_GATHER)
-        logger.info('点击------------------------')
         sleep(2)
         if self.appear(self.I_KIRIN_CHALLAGE):
             self.click(self.I_KIRIN_CHALLAGE)
-        logger.info('点击------------------------结束')
         # 等待进入战斗
         # 等待挑战, 5秒也是等
         sleep(3)
