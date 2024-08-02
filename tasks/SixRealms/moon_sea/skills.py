@@ -3,6 +3,7 @@ import time
 from cached_property import cached_property
 
 from module.logger import logger
+from module.base.timer import Timer
 from tasks.base_task import BaseTask
 from tasks.SixRealms.assets import SixRealmsAssets
 
@@ -10,7 +11,6 @@ from tasks.SixRealms.assets import SixRealmsAssets
 class MoonSeaSkills(BaseTask, SixRealmsAssets):
 
     cnt_skill101 = 0
-
 
     def in_main(self, screenshot: bool = False):
         if screenshot:
@@ -53,11 +53,13 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
 
     def _select_skill(self) -> int:
         self.screenshot()
+        self.wait_until_stable(self.I_SELECT_3)
         select = 3  # 从0开始计数
         button = None
         # 只选柔风
         if button is None and self.appear(self.I_SKILL101):
             self.cnt_skill101 += 1
+            logger.info(f'Skill 101 level: {self.cnt_skill101}')
             button = self.I_SKILL101
         # elif button is None and self.appear(self.I_SKILL102):
         #     button = self.I_SKILL102
@@ -65,6 +67,9 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
         #     button = self.I_SKILL103
         # elif button is None and self.appear(self.I_SKILL104):
         #     button = self.I_SKILL104
+        elif button is None and self.appear(self.I_SKILL105):
+            logger.info(f'Skill 105 level: {self.cnt_skill101}')
+            button = self.I_SKILL105
         if button is not None:
             x, y = button.front_center()
             if x < 360:
@@ -87,11 +92,10 @@ class MoonSeaSkills(BaseTask, SixRealmsAssets):
             if self.in_main():
                 break
 
-            if self.appear(self.I_SKILL_REFRESH):
+            if self.appear(self.I_SKILL_REFRESH) and self.appear(self.I_SELECT_3) and not self.appear(self.I_COIN2):
                 select = self._select_skill()
                 if self.appear_then_click(self.selects_button[select]):
-                    time.sleep(1)
-                    # TODO 两次选的间隔太短就直接跳过了，或者说动画没有显示中间的就跳过了
+                    self.wait_animate_stable(self.C_MAIN_ANIMATE_KEEP, timeout=1.4)
                     continue
             if self.appear_then_click(self.I_COIN, action=self.C_UI_REWARD, interval=1.5):
                 continue
