@@ -31,20 +31,14 @@ class ScriptTask(GameUi, SwitchSoul, MoonSea):
         return self.config.model.six_realms
 
     def run(self):
-        if self._config.switch_soul_config.enable:
+        if self.config.six_realms.switch_soul_config.enable:
             self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(self._config.switch_soul_config.switch_group_team)
-        if self._config.switch_soul_config.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(
-                self._config.switch_soul_config.group_name,
-                self._config.switch_soul_config.team_name
-            )
+            self.run_switch_soul(self.config.six_realms.switch_soul_config.one_switch)
+            self.run_switch_soul(self.config.six_realms.switch_soul_config.two_switch)
+
         self.ui_get_current_page()
         self.ui_goto(page_six_gates)
-
         self.run_moon_sea()
 
         # 退出六道
