@@ -129,6 +129,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, SougenbiAssets):
             self.close_buff()
 
         self.set_next_run("Sougenbi", success=True, finish=True)
+        self.set_next_run(task='RealmRaid', target=datetime.now())
+
         raise TaskEnd
 
 

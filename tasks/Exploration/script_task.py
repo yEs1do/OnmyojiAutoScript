@@ -107,6 +107,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 self.exp_100(is_open=False)
                 self.close_buff()
             self.set_next_run(task='Exploration', success=True, finish=False)
+            self.set_next_run(task='RealmRaid', target=datetime.now())
+
         raise TaskEnd
 
     # 查找指定的章节：
@@ -295,7 +297,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         logger.info("RealmRaid and Exploration  set_next_run !")
         next_run = datetime.now() + con_scrolls.scrolls_cd
         self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
-        self.set_next_run(task='RealmRaid', success=False, finish=False, target=datetime.now())
+        self.set_next_run(task='RealmRaid', target=datetime.now())
         raise TaskEnd
 
 

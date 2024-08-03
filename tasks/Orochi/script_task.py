@@ -68,9 +68,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         # 下一次运行时间
         if success:
             self.set_next_run('Orochi', finish=True, success=True)
+            self.set_next_run(task='RealmRaid', target=datetime.now())
         else:
             self.set_next_run('Orochi', finish=False, success=False)
-
+            self.set_next_run(task='RealmRaid', target=datetime.now())
         raise TaskEnd
 
 
