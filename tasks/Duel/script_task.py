@@ -23,6 +23,12 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                                                seconds=limit_time.second)
         self.ui_get_current_page()
         self.ui_goto(page_duel)
+        # 识别到名仕星星
+        if self.appear(self.I_D_CELEB_STAR):
+            # 记得退回去到町中
+            self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_TOWN)
+            self.set_next_run(task='Duel', success=True, finish=False)
+            raise TaskEnd('Duel')
         if con.switch_all_soul:
             self.switch_all_soul()
 
