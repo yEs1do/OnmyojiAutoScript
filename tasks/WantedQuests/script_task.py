@@ -31,7 +31,7 @@ from tasks.Secret.config import Secret
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
     def run(self):
-
+        # 悬赏换秘闻配置
         secret: Secret = self.config.secret
         if secret.switch_soul.enable:
             self.ui_get_current_page()
