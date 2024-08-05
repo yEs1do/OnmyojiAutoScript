@@ -1,3 +1,4 @@
+import logging
 import time
 
 from module.logger import logger
@@ -47,14 +48,16 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             if datetime.now() - self.start_time >= max_time:
                 logger.info('Run out of time, exit')
                 break
-            self.one()
+            if not self.one():
+                break
             cnt += 1
         logger.info('Exit Moon Sea')
 
 
     def one(self):
         self.cnt_skill101 = 1
-        self._start()
+        if not self._start():
+            return False
         while 1:
             self.screenshot()
             if not self.in_main():
@@ -112,13 +115,18 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
         while 1:
             self.screenshot()
             if self.appear(self.I_MSTART):
+                if self._conf.number_enable:
+                    cu = self.O_SIXREALMS_NUMBER.ocr_single(self.device.image)
+                    if not cu > 0:
+                        logging.info("门票不足退出六道！")
+                        return False
                 break
             if self.appear_then_click(self.I_MENTER, interval=1):
                 continue
             if self.appear(self.I_MCONINUE):
                 # 继续上一把的
                 self._continue()
-                return
+                return True
         logger.info("Ensure select ShouZu")
         while 1:
             self.screenshot()
@@ -158,6 +166,7 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
                 continue
         # 选中第一个柔风
         logger.info("Select first skill")
+        return True
 
     def island_name(self) -> MoonSeaType:
         while 1:

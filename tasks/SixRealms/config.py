@@ -8,6 +8,7 @@ from tasks.Component.config_base import ConfigBase, Time
 
 
 class SixRealmsGate(BaseModel):
+    number_enable: bool = Field(default=False, description='只打门票')
     # 限制时间
     limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     # 限制次数

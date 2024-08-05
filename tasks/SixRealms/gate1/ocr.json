@@ -25,5 +25,14 @@
     "method": "Default",
     "keyword": "",
     "description": "有多少钱"
+  },
+  {
+    "itemName": "sixrealms_number",
+    "roiFront": "1151,23,59,33",
+    "roiBack": "1151,23,59,33",
+    "mode": "Digit",
+    "method": "Default",
+    "keyword": "",
+    "description": "六道门票"
   }
 ]
