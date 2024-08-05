@@ -107,6 +107,8 @@ class SixRealmsAssets:
 	O_ISLAND_NAME = RuleOcr(roi=(88,17,148,49), area=(88,17,148,49), mode="Single", method="Default", keyword="", name="island_name")
 	# 有多少钱 
 	O_COIN_NUM = RuleOcr(roi=(1171,23,59,31), area=(1171,23,59,31), mode="Digit", method="Default", keyword="", name="coin_num")
+	# 六道门票 
+	O_SIXREALMS_NUMBER = RuleOcr(roi=(1151,23,59,33), area=(1151,23,59,33), mode="Digit", method="Default", keyword="", name="sixrealms_number")
 
 
 	# Image Rule Assets
