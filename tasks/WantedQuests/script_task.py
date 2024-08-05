@@ -24,11 +24,20 @@ from tasks.WantedQuests.config import WantedQuestsConfig, CooperationType, Coope
 from tasks.WantedQuests.assets import WantedQuestsAssets
 from tasks.Component.Costume.config import MainType
 from typing import List
+from tasks.GameUi.page import page_shikigami_records
+from tasks.Secret.config import Secret
 
 
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
     def run(self):
+
+        secret: Secret = self.config.secret
+        if secret.switch_soul.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(secret.switch_soul.switch_group_team)
+
         con = self.config
         if not self.pre_work():
             # 无法完成预处理 很有可能你已经完成了悬赏任务
@@ -417,7 +426,7 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('回归')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
