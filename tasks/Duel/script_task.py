@@ -44,14 +44,15 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 # 任务执行时间超过限制时间，退出
                 logger.info('Duel task is over time')
                 break
-            if con.honor_full_exit and self.check_honor():
+            current_score = self.check_score(con.target_score)
+            # if not current_score:
+            #     # 分数够了，退出
+            #     logger.info('Duel task is over score')
+            #     break
+
+            if con.honor_full_exit and self.check_honor() and not current_score:
                 # 荣誉满了，退出
                 logger.info('Duel task is over honor')
-                break
-            current_score = self.check_score(con.target_score)
-            if not current_score:
-                # 分数够了，退出
-                logger.info('Duel task is over score')
                 break
             self.duel_one(current_score, con.green_enable, con.green_mark)
 
