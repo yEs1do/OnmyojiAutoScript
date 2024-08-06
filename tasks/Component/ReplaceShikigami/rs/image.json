@@ -131,7 +131,7 @@
     "roiFront": "52,238,1118,37",
     "roiBack": "52,238,1118,37",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.6,
     "description": "检测到已经满级了"
   }
 ]
