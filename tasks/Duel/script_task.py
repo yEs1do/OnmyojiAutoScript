@@ -45,15 +45,14 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('Duel task is over time')
                 break
             current_score = self.check_score(con.target_score)
-            # if not current_score:
-            #     # 分数够了，退出
-            #     logger.info('Duel task is over score')
-            #     break
+            if not current_score:
+                # 分数够了
+                logger.info('Duel task is over score')
+                if con.honor_full_exit and self.check_honor():
+                    # 荣誉满了，退出
+                    logger.info('Duel task is over honor')
+                    break
 
-            if con.honor_full_exit and self.check_honor() and not current_score:
-                # 荣誉满了，退出
-                logger.info('Duel task is over honor')
-                break
             self.duel_one(current_score, con.green_enable, con.green_mark)
 
         # 记得退回去到町中
@@ -117,7 +116,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 # 分太低了
                 logger.warning('Score is too low')
                 logger.error('Please enhance your score')
-                raise RequestHumanTakeover
+                # raise RequestHumanTakeover
             elif current_score > 10000:
                 # 识别错误分数超过一万, 去掉最高位
                 logger.warning('Recognition error, score is too high')
@@ -160,7 +159,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 self.device.stuck_record_add('BATTLE_STATUS_S')
                 self.wait_until_disappear(self.I_D_WORD_BATTLE)
                 break
-            if current_score <= 1800 and self.appear(self.I_D_PREPARE):
+            if self.appear(self.I_D_PREPARE):
                 # 低段位有的准备
                 self.ui_click(self.I_D_PREPARE, self.I_D_PREPARE_DONE)
                 self.wait_until_disappear(self.I_D_PREPARE_DONE)
