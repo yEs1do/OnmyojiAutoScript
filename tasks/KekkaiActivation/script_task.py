@@ -47,7 +47,9 @@ class ScriptTask(KU, KekkaiActivationAssets):
 
         if con.exchange_max:
             self.check_max_lv(con.shikigami_class)
-        self.back_guild()
+        # self.back_guild()
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
 
         raise TaskEnd('KekkaiActivation')
 
