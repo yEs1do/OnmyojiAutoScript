@@ -57,7 +57,7 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         current, remain, total = self.O_CM_NUMBER.ocr(self.device.image)
         if current == total == 30:
             logger.warning('Today\'s missions have been completed')
-            self.set_next_run(task='CollectiveMissions', success=False, finish=True)
+            self.set_next_run(task='CollectiveMissions', success=True, finish=True)
             raise TaskEnd('CollectiveMissions')
         # 判断最优的任务是哪一个
         mission, index = self.detect_best()

@@ -268,12 +268,12 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas1')
+    c = Config('mi')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t._share_collect()
+    t._share_secret()
     # t.click_share(t.I_WT_SE_WECHAT)
 
 
