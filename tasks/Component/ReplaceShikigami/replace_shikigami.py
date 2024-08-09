@@ -104,11 +104,6 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
 
     def detect_no_shikigami(self) -> bool:
         self.screenshot()
-        if self.appear(self.I_DETECT_EMPTY_1)\
-            and self.appear(self.I_DETECT_EMPTY_2) \
-                and self.appear(self.I_DETECT_EMPTY_3) \
-                and self.appear(self.I_DETECT_EMPTY_4) \
-                and self.appear(self.I_DETECT_EMPTY_5) \
-                and self.appear(self.I_DETECT_EMPTY_6):
+        if self.appear(self.I_DETECT_EMPTY):
             return True
         return False
