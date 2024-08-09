@@ -23,7 +23,7 @@ class WeeklyTriflesAssets:
 	# 地鬼分享 
 	I_WT_SHARE_AB = RuleImage(roi_front=(1183,308,45,39), roi_back=(1136,292,105,79), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_share_ab.png")
 	# 分享勾玉 
-	I_WT_AB_JADE = RuleImage(roi_front=(797,515,432,97), roi_back=(797,515,432,97), threshold=0.6, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_jade.png")
+	I_WT_AB_JADE = RuleImage(roi_front=(797,515,432,97), roi_back=(797,515,432,97), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_jade.png")
 	# 微信分享 
 	I_WT_AB_WECHAT = RuleImage(roi_front=(1032,643,50,56), roi_back=(1032,643,50,56), threshold=0.8, method="Template matching", file="./tasks/WeeklyTrifles/area_boss/area_boss_wt_ab_wechat.png")
 
