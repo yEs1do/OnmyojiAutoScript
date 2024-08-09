@@ -37,8 +37,11 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         # 收菜看看
         self.check_utilize_harvest()
-        self.realm_goto_grown()
+        # 查看满级
+        self.check_max_lv(con.shikigami_class)
+
         # 无论收不收到菜，都会进入看看至少看一眼时间还剩多少
+        self.realm_goto_grown()
         self.screenshot()
         if not self.appear(self.I_UTILIZE_ADD):
             remaining_time = self.O_UTILIZE_RES_TIME.ocr(self.device.image)
@@ -58,7 +61,37 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         self.set_next_run(task='KekkaiUtilize', success=True, finish=True)
         raise TaskEnd
 
+    def check_max_lv(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
+        """
+        在结界界面，进入式神育成，检查是否有满级的，如果有就换下一个
+        退出的时候还是结界界面
+        :return:
+        """
+        self.realm_goto_grown()
+        if self.appear(self.I_RS_LEVEL_MAX):
+            # 存在满级的式神
+            logger.info('Exist max level shikigami and replace it')
+            self.unset_shikigami_max_lv()
+            self.switch_shikigami_class(shikigami_class)
+            self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
+        else:
+            logger.info('No max level shikigami')
+        if self.detect_no_shikigami():
+            logger.warning('There are no any shikigami grow room')
+            self.switch_shikigami_class(shikigami_class)
+            self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
 
+        # 回到结界界面
+        while 1:
+            self.screenshot()
+
+            if self.appear(self.I_REALM_SHIN) and self.appear(self.I_SHI_GROWN):
+                self.screenshot()
+                if not self.appear(self.I_REALM_SHIN):
+                    continue
+                break
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2.5):
+                continue
 
 
 
