@@ -2,7 +2,8 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.SwitchSoul.switch_soul_config import SwitchSoulConfig
-from tasks.Component.config_base import ConfigBase, TimeDelta
+from tasks.Component.config_base import ConfigBase, Time
+
 from tasks.Component.config_scheduler import Scheduler
 
 
@@ -63,18 +64,14 @@ class ChooseRarity(str, Enum):
 class Scrolls(BaseModel):
     # 绘卷模式
     scrolls_enable: bool = Field(title='绘卷模式', default=False, description='绘卷模式')
-    scrolls_cd: TimeDelta = Field(title='间隔时间', default=TimeDelta(hours=0, minutes=30, seconds=0), description='间隔时间')
+    scrolls_cd: Time = Field(title='间隔时间', default=Time(hour=0, minute=30, second=0), description='间隔时间')
     scrolls_threshold: int = Field(title='突破票数量', default='25', description='突破票数量，超过打突破')
-
 
 class ExplorationConfig(BaseModel):
     buff_gold_50_click: bool = Field(default=False)
     buff_gold_100_click: bool = Field(default=False)
     buff_exp_50_click: bool = Field(default=False)
     buff_exp_100_click: bool = Field(default=False)
-
-    # attack_number: AttackNumber = Field(title='探索次数', default=AttackNumber.SEVEN,
-    #                                     description='默认探索7次')
 
     current_exploration_count: int = Field(title='探索次数', default='7', description='默认探索7次')
 

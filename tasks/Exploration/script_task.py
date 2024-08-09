@@ -80,7 +80,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
             while count < exploration_count:
                 if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
                     # 绘卷模式
-                    self.activate_realm_raid(con_scrolls,con)
+                    self.activate_realm_raid(con_scrolls, con)
 
                     self.click(self.I_E_EXPLORATION_CLICK)
                     count += 1
@@ -295,7 +295,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
 
         # 设置下次执行行时间
         logger.info("RealmRaid and Exploration  set_next_run !")
-        next_run = datetime.now() + con_scrolls.scrolls_cd
+        cd = con_scrolls.scrolls_cd
+        timedelta_cd = timedelta(hours=cd.hour , minutes=cd.minute, seconds=cd.second)
+        next_run = datetime.now() + timedelta_cd
+
         self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
         self.set_next_run(task='RealmRaid', target=datetime.now())
         raise TaskEnd
