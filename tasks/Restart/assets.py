@@ -22,7 +22,7 @@ class RestartAssets:
 	# 缘庭-邮件小图标 
 	I_HARVEST_MAIL_9 = RuleImage(roi_front=(421,482,38,36), roi_back=(67,468,930,72), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/main9/harvest_mail.png")
 	# 点击勾玉 
-	I_HARVEST_JADE = RuleImage(roi_front=(732,489,34,33), roi_back=(177,451,973,141), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_jade.png")
+	I_HARVEST_JADE = RuleImage(roi_front=(732,489,34,33), roi_back=(177,451,973,141), threshold=0.7, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_jade.png")
 	# 签到小图标 
 	I_HARVEST_SIGN = RuleImage(roi_front=(397,500,24,34), roi_back=(70,471,889,89), threshold=0.8, method="Template matching", file="./tasks/Restart/harvest/harvest_harvest_sign.png")
 	# description 
