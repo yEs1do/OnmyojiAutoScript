@@ -38,11 +38,11 @@
   {
     "itemName": "wq_box",
     "imageName": "wq_wq_box.png",
-    "roiFront": "48,187,43,38",
+    "roiFront": "20,137,100,397",
     "roiBack": "20,137,100,397",
     "method": "Template matching",
-    "threshold": 0.7,
-    "description": "奖励宝箱"
+    "threshold": 0.6,
+    "description": "悬赏奖励宝箱"
   },
   {
     "itemName": "trace_true",
