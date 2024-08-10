@@ -31,16 +31,17 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         self.check_guild_ap_or_assets(ap_enable=con.guild_ap_enable, assets_enable=con.guild_assets_enable)
         # 进入寮结界
         self.goto_realm()
+        # 查看满级
+        self.check_max_lv(con.shikigami_class)
         # 顺带收体力盒子或者是经验盒子
         time.sleep(1)
         self.check_box_ap_or_exp(con.box_ap_enable, con.box_exp_enable, con.box_exp_waste)
 
-        # 收菜看看
+        # 在寮结界界面检查是否有收获
         self.check_utilize_harvest()
-        # 查看满级
-        self.check_max_lv(con.shikigami_class)
 
         # 无论收不收到菜，都会进入看看至少看一眼时间还剩多少
+        time.sleep(0.5)
         self.realm_goto_grown()
         self.screenshot()
         if not self.appear(self.I_UTILIZE_ADD):
@@ -341,11 +342,11 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             return ImageGrid([self.I_U_TAIKO_6, self.I_U_FISH_6, self.I_U_TAIKO_5, self.I_U_FISH_5,
                               self.I_U_TAIKO_4, self.I_U_FISH_4, self.I_U_TAIKO_3, self.I_U_FISH_3])
         elif rule == UtilizeRule.FISH:
-            return ImageGrid([self.I_U_FISH_6, self.I_U_FISH_5, self.I_U_FISH_4, self.I_U_FISH_3,
-                              self.I_U_TAIKO_6, self.I_U_TAIKO_5, self.I_U_TAIKO_4, self.I_U_TAIKO_3])
+            return ImageGrid([self.I_U_FISH_6, self.I_U_FISH_5,
+                              self.I_U_TAIKO_6, self.I_U_TAIKO_5, self.I_U_FISH_4, self.I_U_TAIKO_4,  self.I_U_FISH_3,self.I_U_TAIKO_3])
         elif rule == UtilizeRule.TAIKO:
-            return ImageGrid([self.I_U_TAIKO_6, self.I_U_TAIKO_5, self.I_U_TAIKO_4, self.I_U_TAIKO_3,
-                              self.I_U_FISH_6, self.I_U_FISH_5, self.I_U_FISH_4, self.I_U_FISH_3])
+            return ImageGrid([self.I_U_TAIKO_6, self.I_U_TAIKO_5,
+                              self.I_U_FISH_6, self.I_U_FISH_5,  self.I_U_TAIKO_4, self.I_U_FISH_4, self.I_U_TAIKO_3,self.I_U_FISH_3])
         else:
             logger.error('Unknown utilize rule')
             raise ValueError('Unknown utilize rule')
@@ -358,11 +359,11 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             result = [CardClass.TAIKO6, CardClass.FISH6, CardClass.TAIKO5, CardClass.FISH5,
                       CardClass.TAIKO4, CardClass.FISH4, CardClass.TAIKO3, CardClass.FISH3]
         elif rule == UtilizeRule.FISH:
-            result = [CardClass.FISH6, CardClass.FISH5, CardClass.FISH4, CardClass.FISH3,
-                      CardClass.TAIKO6, CardClass.TAIKO5, CardClass.TAIKO4, CardClass.TAIKO3]
+            result = [CardClass.FISH6, CardClass.FISH5,
+                      CardClass.TAIKO6, CardClass.TAIKO5, CardClass.FISH4,CardClass.TAIKO4,  CardClass.FISH3,CardClass.TAIKO3]
         elif rule == UtilizeRule.TAIKO:
-            result = [CardClass.TAIKO6, CardClass.TAIKO5, CardClass.TAIKO4, CardClass.TAIKO3,
-                      CardClass.FISH6, CardClass.FISH5, CardClass.FISH4, CardClass.FISH3]
+            result = [CardClass.TAIKO6, CardClass.TAIKO5,
+                      CardClass.FISH6, CardClass.FISH5, CardClass.TAIKO4,CardClass.FISH4,  CardClass.TAIKO3,CardClass.FISH3]
         else:
             logger.error('Unknown utilize rule')
             raise ValueError('Unknown utilize rule')
@@ -384,7 +385,9 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             包括点击这种卡
             :return: 返回当前选中的最好的卡， 如果什么的都没有，返回None
             """
+            time.sleep(1)
             self.screenshot()
+            time.sleep(1)
             target = self.order_targets.find_anyone(self.device.image)
             if target is None:
                 logger.info('No target card found')
@@ -395,13 +398,14 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if last_best is not None:
                 last_index = self.order_cards.index(last_best)
                 current_index = self.order_cards.index(card_class)
-                if current_index > last_index:
+                if current_index >= last_index:
                     # 不比上一张卡好就退出不执行操作
                     logger.info('Current card is not better than last best card')
                     return last_best
             logger.info('Current select card: %s', card_class)
 
-            self.appear_then_click(target, interval=0.3)
+            self.appear_then_click(target, interval=0.9)
+            time.sleep(1)
             # 验证这张卡 的等级是否一致
             # while 1:
             #     self.screenshot()
@@ -505,7 +509,7 @@ if __name__ == "__main__":
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run()
+    t.run_utilize()
     # t.screenshot()
     # print(t.appear(t.I_BOX_EXP, threshold=0.6))
     # print(t.appear(t.I_BOX_EXP_MAX, threshold=0.6))
