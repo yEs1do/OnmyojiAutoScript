@@ -27,6 +27,8 @@ from typing import List
 from tasks.GameUi.page import page_shikigami_records
 from tasks.Secret.config import Secret
 
+# 定义检查次数
+global_count = 0
 
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
@@ -38,14 +40,17 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(secret.switch_soul.switch_group_team)
 
-        con = self.config
-        if not self.pre_work():
-            # 无法完成预处理 很有可能你已经完成了悬赏任务
-            logger.warning('Cannot pre-work')
-            logger.warning('You may have completed the reward task')
-            self.next_run()
-            raise TaskEnd('WantedQuests')
+        while 1:
+            if not self.pre_work():
+                # 无法完成预处理 很有可能你已经完成了悬赏任务
+                logger.warning('Cannot pre-work')
+                logger.warning('You may have completed the reward task')
+                self.next_run()
+                raise TaskEnd('WantedQuests')
+            # 执行悬赏
+            self.play_run()
 
+    def play_run(self):
         self.screenshot()
         number_challenge = self.O_WQ_NUMBER.ocr(self.device.image)
         ocr_error_count = 0
@@ -88,8 +93,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                 logger.info('No wanted quests')
                 break
 
-        self.next_run()
-        raise TaskEnd('WantedQuests')
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
 
     def next_run(self):
         before_end: time = self.config.wanted_quests.wanted_quests_config.before_end
@@ -121,12 +126,17 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         前置工作，
         :return:
         """
+        global global_count
+        global_count += 1
         self.ui_get_current_page()
         self.ui_goto(page_main)
         done_timer = Timer(5)
         while 1:
             self.screenshot()
             if self.appear(self.I_TARCE_DISENABLE):
+                if global_count >= 3:
+                    self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                    return False
                 break
             if self.appear_then_click(self.I_WQ_SEAL, interval=1):
                 continue
@@ -318,8 +328,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         if len(ret) == 0:
             logger.info("no Cooperation found")
             return False
-        typeMask=15
-        typeMask = CooperationSelectMask [self.config.wanted_quests.wanted_quests_config.cooperation_type.value]
+        typeMask = 15
+        typeMask = CooperationSelectMask[self.config.wanted_quests.wanted_quests_config.cooperation_type.value]
         for item in ret:
             # 该任务是需要邀请的任务类型
             if not (item['type'] & typeMask):
