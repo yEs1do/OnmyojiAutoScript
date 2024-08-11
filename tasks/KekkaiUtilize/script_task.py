@@ -19,6 +19,8 @@ from tasks.Component.ReplaceShikigami.replace_shikigami import ReplaceShikigami
 from tasks.GameUi.page import page_main, page_guild
 
 
+last_best_index = 99
+
 class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
     def run(self):
@@ -53,7 +55,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             logger.info('Utilize failed, exit')
             self.back_guild()
             next_time = datetime.now() + remaining_time
-            self.set_next_run(task='KekkaiUtilize', success=False, finish=True, target=next_time)
+            self.set_next_run(task='KekkaiUtilize', target=next_time)
             raise TaskEnd
         if not self.grown_goto_utilize():
             logger.info('Utilize failed, exit')
@@ -93,8 +95,6 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 break
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2.5):
                 continue
-
-
 
     def check_guild_ap_or_assets(self, ap_enable: bool=True, assets_enable: bool=True) -> bool:
         """
@@ -393,17 +393,23 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 logger.info('No target card found')
                 return None
             card_class = target_to_card_class(target)
+            global last_best_index
+            last_best_index = self.order_cards.index(card_class)
+
             logger.info('Current find best card: %s', target)
             # 如果当前的卡比记录的最好的卡还要好,那么就更新最好的卡
             if last_best is not None:
                 last_index = self.order_cards.index(last_best)
                 current_index = self.order_cards.index(card_class)
+
                 if current_index >= last_index:
                     # 不比上一张卡好就退出不执行操作
                     logger.info('Current card is not better than last best card')
+                    last_best_index = last_best
                     return last_best
             logger.info('Current select card: %s', card_class)
 
+            # 选择这个卡
             self.appear_then_click(target, interval=0.9)
             time.sleep(1)
             # 验证这张卡 的等级是否一致
@@ -442,6 +448,12 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             time.sleep(3)
         # 最好的结界卡
         logger.info('End best card is %s', card_best)
+
+        # 蹭卡，卡不是前四位下标退出，执行错误时间判定
+        global last_best_index
+        if last_best_index > 3:
+            self.set_next_run(task='KekkaiUtilize', success=False, finish=True)
+            raise TaskEnd
 
         # 进入结界
         self.screenshot()
