@@ -451,7 +451,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         # 蹭卡，卡不是前四位下标退出，执行错误时间判定
         global last_best_index
-        if last_best_index > 3:
+        logger.info(last_best_index)
+        if last_best_index is None or last_best_index > 3:
             self.set_next_run(task='KekkaiUtilize', success=False, finish=True)
             raise TaskEnd
 
