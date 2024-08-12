@@ -33,7 +33,7 @@ class SixRealmsAssets:
 	# description 
 	I_BOSS_SHARE = RuleImage(roi_front=(1090,604,70,74), roi_back=(1074,587,100,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_share.png")
 	# 结算的椒图 
-	I_BOSS_SHUTU = RuleImage(roi_front=(435,46,388,46), roi_back=(338,1,573,166), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_shutu.png")
+	I_BOSS_SHUTU = RuleImage(roi_front=(108,141,173,122), roi_back=(108,141,173,122), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_shutu.png")
 	# description 
 	I_BOSS_BATTLE_AGAIN = RuleImage(roi_front=(435,403,173,64), roi_back=(409,390,212,100), threshold=0.8, method="Template matching", file="./tasks/SixRealms/gate1/gate1_boss_battle_again.png")
 	# description 
@@ -107,8 +107,10 @@ class SixRealmsAssets:
 	O_ISLAND_NAME = RuleOcr(roi=(88,17,148,49), area=(88,17,148,49), mode="Single", method="Default", keyword="", name="island_name")
 	# 有多少钱 
 	O_COIN_NUM = RuleOcr(roi=(1171,23,59,31), area=(1171,23,59,31), mode="Digit", method="Default", keyword="", name="coin_num")
-	# 六道门票 
+	# 六道门票
 	O_SIXREALMS_NUMBER = RuleOcr(roi=(1151,23,59,33), area=(1151,23,59,33), mode="Digit", method="Default", keyword="", name="sixrealms_number")
+	# Ocr-description
+	O_SKILL_REFRESH = RuleOcr(roi=(1172,684,100,31), area=(1172,684,100,31), mode="Single", method="Default", keyword="", name="skill_refresh")
 
 
 	# Image Rule Assets

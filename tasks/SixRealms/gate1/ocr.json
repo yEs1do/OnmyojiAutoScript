@@ -34,5 +34,14 @@
     "method": "Default",
     "keyword": "",
     "description": "六道门票"
+  },
+  {
+    "itemName": "skill_refresh",
+    "roiFront": "1172,684,100,31",
+    "roiBack": "1172,684,100,31",
+    "mode": "Single",
+    "method": "Default",
+    "keyword": "",
+    "description": "Ocr-description"
   }
 ]
