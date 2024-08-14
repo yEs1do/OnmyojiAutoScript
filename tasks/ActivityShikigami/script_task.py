@@ -15,13 +15,29 @@ from tasks.GameUi.game_ui import GameUi
 
 from module.logger import logger
 from module.exception import TaskEnd
+from tasks.GameUi.page import page_exploration, page_shikigami_records, page_main
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
-class ScriptTask(GameUi, BaseActivity, ActivityShikigamiAssets):
+class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
 
     def run(self) -> None:
 
+
         config = self.config.activity_shikigami
+
+        # 切换御魂
+        if config.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(config.switch_soul_config.switch_group_team)
+
+        if config.switch_soul_config.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(config.switch_soul_config.group_name,
+                                         config.switch_soul_config.team_name)
+
         self.limit_time: timedelta = config.general_climb.limit_time
         if isinstance(self.limit_time, time):
             self.limit_time = timedelta(hours=self.limit_time.hour, minutes=self.limit_time.minute,
