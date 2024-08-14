@@ -18,8 +18,8 @@ class ShikigamiConfig(BaseModel):
 class ActivityShikigami(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     # shikigami: ShikigamiConfig = Field(default_factory=ShikigamiConfig)
-    switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
     general_climb: GeneralClimb = Field(default_factory=GeneralClimb)
+    switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
     general_battle: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
 
 
