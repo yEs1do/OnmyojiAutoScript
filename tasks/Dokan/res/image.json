@@ -1,5 +1,32 @@
 [
   {
+    "itemName": "daoguan",
+    "imageName": "Screenshots_daoguan.png",
+    "roiFront": "462,159,100,100",
+    "roiBack": "462,159,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "道馆"
+  },
+  {
+    "itemName": "newtz",
+    "imageName": "Screenshots_newtz.png",
+    "roiFront": "798,482,44,39",
+    "roiBack": "0,0,1047,718",
+    "method": "Template matching",
+    "threshold": 0.7,
+    "description": "挑战"
+  },
+  {
+    "itemName": "ok",
+    "imageName": "Screenshots_ok.png",
+    "roiFront": "706,407,100,48",
+    "roiBack": "706,407,100,48",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确定"
+  },
+  {
     "itemName": "ryou_shenshe",
     "imageName": "res_ryou_shenshe.png",
     "roiFront": "476,173,62,24",

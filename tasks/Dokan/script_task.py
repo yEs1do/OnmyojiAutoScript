@@ -3,30 +3,25 @@
 # @author   jackyhwei
 # @note     draft version without full test
 # github    https://github.com/roarhill/oas
-import time
 import random
-import numpy as np
+import time
 from enum import Enum
+
+import numpy as np
 from cached_property import cached_property
 
-from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
-from tasks.Component.GeneralBattle.general_battle import GeneralBattle
-from tasks.Component.config_base import ConfigBase, Time
-from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_kekkai_toppa, page_shikigami_records, page_guild
-from tasks.RealmRaid.assets import RealmRaidAssets
-
-from module.logger import logger
-from module.exception import TaskEnd
 from module.atom.image_grid import ImageGrid
-from module.base.utils import point2str
-from module.base.timer import Timer
-from module.exception import GamePageUnknownError
-
-from tasks.Dokan.config import DokanConfig, Dokan
+from module.exception import TaskEnd
+from module.logger import logger
+from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.Component.GeneralBattle.general_battle import GeneralBattle
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Dokan.assets import DokanAssets
+from tasks.Dokan.config import Dokan
 from tasks.Dokan.utils import detect_safe_area2
+from tasks.GameUi.game_ui import GameUi
+from tasks.GameUi.page import page_main, page_shikigami_records, page_guild
+from tasks.RichMan.assets import RichManAssets
 
 
 class DokanScene(Enum):
@@ -105,13 +100,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
 
         # 在阴阳竂界面点击并进入道馆
         # 检测当前界面的场景（时间关系，暂时没有做庭院、町中等主界面的场景检测, 应考虑在GameUI.game_ui.ui_get_current_page()里实现）
-        in_dokan, current_scene = self.get_current_scene(True)
+        # in_dokan, current_scene = self.get_current_scene(True)
 
-        if not in_dokan:
-            self.ui_get_current_page()
-            self.ui_goto(page_guild)
+        # if not in_dokan:
+        self.ui_get_current_page()
+        self.ui_goto(page_guild)
 
-            self.goto_dokan()
+        # self.goto_dokan_new()
+        self.goto_dokan()
+
+
 
         # 开始道馆流程
         while 1:
@@ -180,8 +178,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 logger.info(f"unknown scene, skipped")
 
             # 防封，随机移动，随机点击（安全点击），随机时延
-            if not self.anti_detect(True, True, True):
-                time.sleep(1)
+            # if not self.anti_detect(True, True, True):
+            #     time.sleep(1)
 
         # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
         self.goto_main()
@@ -348,8 +346,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 else:
                     self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=sleep)
             else:
-                # 假设安全区域是绿色的  
-                safe_color_lower = np.array([45, 25, 25])  # HSV颜色空间的绿色下界  
+                # 假设安全区域是绿色的
+                safe_color_lower = np.array([45, 25, 25])  # HSV颜色空间的绿色下界
                 safe_color_upper = np.array([90, 255, 255])  # HSV颜色空间的绿色上界
                 pos = detect_safe_area2(self.device.image, safe_color_lower, safe_color_upper, 3, True)
                 logger.info(f"random click area: {pos}, delay: {sleep}")
@@ -400,6 +398,26 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 logger.info(f"Click {GameUi.I_BACK_BL.name}")
                 break
 
+    def goto_dokan_new(self):
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_DAOGUAN, interval=1.1):
+                continue
+            if self.appear_then_click(self.I_GUILD_SHRINE, interval=0.8):
+                continue
+            if not self.appear_then_click(self.I_DAOGUAN, interval=0.8):
+                break
+        while 1:
+            self.screenshot()
+
+            if self.appear_then_click(self.I_NEWTZ, interval=1.1):
+                continue
+            if self.appear_then_click(self.I_OK, interval=1.1):
+                if not self.appear(self.I_OK):
+                    break
+                break
+            if self.click(self.C_DOKAN_READY_SEL, interval=0.8):
+                continue
     def goto_dokan(self):
         ''' 进入道馆
         TODO 道馆相关场景
@@ -495,28 +513,35 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
 
 
-def test_goto_main():
-    from module.config.config import Config
-    from module.device.device import Device
-    from tasks.GameUi.page import page_dokan
-
-    config = Config('oas1')
-    device = Device(config)
-    t = ScriptTask(config, device)
-    # t.run()
-    t.ui_current = page_dokan
-    t.ui_goto(page_main)
+# def test_goto_main():
+#     from module.config.config import Config
+#     from module.device.device import Device
+#     from tasks.GameUi.page import page_dokan
+#
+#     config = Config('oas1')
+#     device = Device(config)
+#     t = ScriptTask(config, device)
+#     t.run()
+#     t.ui_current = page_dokan
+#     t.ui_goto(page_main)
 
 
 if __name__ == "__main__":
     # from module.config.config import Config
     # from module.device.device import Device
-
+    #
     # config = Config('oas1')
     # device = Device(config)
     # t = ScriptTask(config, device)
     # t.run()
-
+    #
     # test_ocr_locate_dokan_target()
     # test_anti_detect_random_click()
-    test_goto_main()
+    # test_goto_main()
+    from module.config.config import Config
+    from module.device.device import Device
+
+    config = Config('oas1')
+    device = Device(config)
+    t = ScriptTask(config, device)
+    t.run()
