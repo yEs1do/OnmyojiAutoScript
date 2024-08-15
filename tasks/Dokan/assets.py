@@ -11,9 +11,9 @@ class DokanAssets:
 
 
 	# Click Rule Assets
-	# 选择寮
+	# 选择寮 
 	C_DOKAN_READY_SEL = RuleClick(roi_front=(1113,179,100,100), roi_back=(1113,179,100,100), name="dokan_ready_sel")
-	# 道馆随机点击安全区域
+	# 道馆随机点击安全区域 
 	C_DOKAN_RANDOM_CLICK_AREA = RuleClick(roi_front=(142,294,107,555), roi_back=(142,294,107,555), name="dokan_random_click_area")
 	# 道馆随机点击安全区域1：竂友突破信息 
 	C_DOKAN_RANDOM_CLICK_AREA1 = RuleClick(roi_front=(42,594,10,100), roi_back=(42,594,10,100), name="dokan_random_click_area1")
@@ -26,13 +26,13 @@ class DokanAssets:
 
 
 	# Image Rule Assets
-	# 道馆
+	# 道馆 
 	I_DAOGUAN = RuleImage(roi_front=(462,159,100,100), roi_back=(462,159,100,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_daoguan.png")
-	# 挑战
+	# 挑战 
 	I_NEWTZ = RuleImage(roi_front=(798,482,44,39), roi_back=(0,0,1047,718), threshold=0.7, method="Template matching", file="./tasks/Dokan/res/Screenshots_newtz.png")
-	# 确定
+	# 确定 
 	I_OK = RuleImage(roi_front=(706,407,100,48), roi_back=(706,407,100,48), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_ok.png")
-	# 阴阳竂->神社
+	# 阴阳竂->神社 
 	I_RYOU_SHENSHE = RuleImage(roi_front=(476,173,62,24), roi_back=(476,173,62,24), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_shenshe.png")
 	# 神社->道馆 
 	I_RYOU_DOKAN = RuleImage(roi_front=(476,173,62,24), roi_back=(476,173,62,24), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan.png")
