@@ -91,7 +91,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     self.click(self.I_TREASURE_BOX_CLICK)
                     self.open_expect_level()
-                if self.appear(self.I_MAP_BOX_CLICK):
+                elif self.appear(self.I_MAP_BOX_CLICK):
                     self.click(self.I_MAP_BOX_CLICK)
                     self.open_expect_level()
                 # 判断妖气
