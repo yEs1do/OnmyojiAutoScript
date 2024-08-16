@@ -12,12 +12,11 @@ from module.exception import TaskEnd
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main, page_demon_encounter, page_shikigami_records
+from tasks.GameUi.page import page_main, page_demon_encounter
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.DemonEncounter.data.answer import answer_one
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
+from tasks.DemonEncounter.data.answer import Answer
 
 class LanternClass(Enum):
     BATTLE = 0  # 打怪  --> 无法判断因为怪的图片不一样，用排除法
@@ -28,22 +27,13 @@ class LanternClass(Enum):
     MYSTERY = 5  # 神秘任务
 
 
-class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
+class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets):
 
     def run(self):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
-
-        # 御魂切换方式一
-        if self.config.demon_encounter.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(self.config.demon_encounter.switch_soul.switch_group_team)
-
         self.ui_get_current_page()
-        self.ui_goto(page_main)
-        self.ui_click(self.I_MAIN_GOTO_TOWN, self.I_CHECK_TOWN)
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
         self.execute_boss()
@@ -175,7 +165,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
             lantern_type = self.check_lantern(i)
             match lantern_type:
                 case LanternClass.BOX:
-                    self._box(match_click[i])
+                    self._box()
                 case LanternClass.MAIL:
                     self._mail(match_click[i])
                 case LanternClass.REALM:
@@ -242,22 +232,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
             logger.info(f'Lantern {index} is battle')
             return LanternClass.BATTLE
 
-    def _box(self, target_click):
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_JADE_50):
-                break
-            if self.click(target_click, interval=1):
-                continue
-        while 1:
-            self.screenshot()
-            if self.appear(self.I_BLUE_PIAO):
-                if self.click(self.I_JADE_50):
-                    continue
-            if not self.appear(self.I_BLUE_PIAO):
-                if self.appear_then_click(self.I_DE_FIND, interval=2.5):
-                    break
-
+    def _box(self):
+        # 宝箱不领
+        pass
 
     def _mail(self, target_click):
         # 答题，还没有碰到过答题的
@@ -281,7 +258,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
             elif answer_3 == '其余选项皆对':
                 index = 3
             if not index:
-                index = answer_one(question=question, options=[answer_1, answer_2, answer_3])
+                index = Answer().answer_one(question=question, options=[answer_1, answer_2, answer_3])
+            if index is None:
+                index = 1
             logger.info(f'Question: {question}, Answer: {index}')
             return click_match[index]
 
@@ -429,11 +408,11 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    # from memory_profiler import profile
+    from memory_profiler import profile
 
-    c = Config('mi')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run()
-    # t.battle_wait(True)
+    # t.run()
+    t.battle_wait(True)
