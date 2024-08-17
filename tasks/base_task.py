@@ -110,6 +110,8 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 logger.info('Deal with invitation done')
                 break
             if self.appear_then_click(click_button, interval=0.8):
+                # 执行悬赏
+                self.set_next_run(task='WantedQuests', target=datetime.now())
                 continue
         # 有的时候长战斗 点击后会取消战斗状态
         self.device.detect_record = detect_record

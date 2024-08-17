@@ -16,6 +16,7 @@ from tasks.GameUi.page import page_main, page_demon_encounter, page_shikigami_re
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
+from tasks.DemonEncounter.data.answer import Answer
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 class LanternClass(Enum):
@@ -280,7 +281,9 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
             elif answer_3 == '其余选项皆对':
                 index = 3
             if not index:
-                index = answer_one(question=question, options=[answer_1, answer_2, answer_3])
+                index = Answer().answer_one(question=question, options=[answer_1, answer_2, answer_3])
+            if index is None:
+                index = 1
             logger.info(f'Question: {question}, Answer: {index}')
             return click_match[index]
 
@@ -428,11 +431,11 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    # from memory_profiler import profile
+    from memory_profiler import profile
 
-    c = Config('du')
+    c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run()
-    # t.battle_wait(True)
+    # t.run()
+    t.battle_wait(True)
