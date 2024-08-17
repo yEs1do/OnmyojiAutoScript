@@ -16,7 +16,6 @@ from tasks.GameUi.page import page_main, page_demon_encounter, page_shikigami_re
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
-from tasks.DemonEncounter.data.answer import answer_one
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 class LanternClass(Enum):
