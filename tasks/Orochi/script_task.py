@@ -5,6 +5,7 @@ import random
 from time import sleep
 from datetime import time, datetime, timedelta
 from module.base.timer import Timer
+from module.config.utils import parse_tomorrow_server
 
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
@@ -38,7 +39,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul(group_team)
 
-        limit_count = self.config.orochi.orochi_config.limit_count
+        if self.config.orochi.liao30_config.liao30_enable:
+            limit_count = 30
+        else:
+            limit_count = self.config.orochi.orochi_config.limit_count
+
         limit_time = self.config.orochi.orochi_config.limit_time
         self.current_count = 0
         self.limit_count: int = limit_count
@@ -66,11 +71,17 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.open_buff()
             self.soul(is_open=False)
             self.close_buff()
+
         # 下一次运行时间
-        if success:
-            self.set_next_run('Orochi', finish=True, success=True)
+        if self.config.orochi.liao30_config.liao30_enable:
+            liao30_time = self.config.orochi.liao30_config.liao30_time
+            next_run = parse_tomorrow_server(liao30_time)
+            self.set_next_run('Orochi', target=next_run)
         else:
-            self.set_next_run('Orochi', finish=False, success=False)
+            if success:
+                self.set_next_run('Orochi', finish=True, success=True)
+            else:
+                self.set_next_run('Orochi', finish=False, success=False)
 
         self.set_next_run(task='RealmRaid', target=datetime.now())
         raise TaskEnd
