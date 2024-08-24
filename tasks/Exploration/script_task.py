@@ -87,15 +87,22 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
                     logger.info("exploration count :" + str(count))
                     # 进入战斗环节
                     self.battle_process()
-                # 判断宝箱
-                if self.appear(self.I_MAP_BOX_CLICK):
-                    self.click(self.I_MAP_BOX_CLICK)
-                    self.open_expect_level()
-                elif self.appear(self.I_TREASURE_BOX_CLICK):
-                    self.click(self.I_TREASURE_BOX_CLICK)
-                    self.open_expect_level()
-                # 判断妖气
-                elif self.appear(self.I_EXPLORATION_TITLE):
+
+                # 如果没有出现探索按钮,代表地图出现新东西
+                if self.wait_until_appear(self.I_E_EXPLORATION_CLICK, wait_time=1):
+                    if self.appear(self.I_TREASURE_BOX_CLICK):
+                        self.appear_then_click(self.I_RED_CLOSE, interval=1)
+                        self.appear_then_click(self.I_TREASURE_BOX_CLICK, interval=1)
+                        self.open_expect_level()
+                        continue
+                else:
+                    # 判断地图宝箱
+                    if self.appear_then_click(self.I_MAP_BOX_CLICK, interval=1):
+                        self.open_expect_level()
+                        continue
+                    # 左侧宝箱
+                    self.appear_then_click(self.I_TREASURE_BOX_CLICK, interval=1)
+                    # 判断有无目标章节
                     self.open_expect_level()
 
             if self.wait_until_appear(self.I_RED_CLOSE, wait_time=2):
@@ -300,10 +307,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, ExplorationAssets):
         logger.info("RealmRaid and Exploration  set_next_run !")
         cd = con_scrolls.scrolls_cd
         timedelta_cd = timedelta(hours=cd.hour , minutes=cd.minute, seconds=cd.second)
-        next_run = datetime.now() + timedelta_cd
 
-        self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
-        self.set_next_run(task='RealmRaid', target=datetime.now())
+        self.set_next_run(task='Exploration',  target=datetime.now() + timedelta_cd)
+        self.set_next_run(task='RealmRaid',    target=datetime.now())
         raise TaskEnd
 
 
@@ -311,7 +317,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('oas1')
+    config = Config('mi')
     device = Device(config)
     t = ScriptTask(config, device)
     t.config.exploration.exploration_config.exploration_level = '第二十八章'
