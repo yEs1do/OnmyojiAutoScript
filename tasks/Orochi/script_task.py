@@ -238,20 +238,22 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         wait_timer.start()
 
         success = True
+
+        # 进入战斗流程
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+
         while 1:
+
+            self.screenshot()
 
             # 等待超时
             if wait_timer.reached():
                 success = False
                 return success
 
-            self.screenshot()
-
             if self.check_then_accept():
                 break
 
-            # 进入战斗流程
-            self.device.stuck_record_add('BATTLE_STATUS_S')
         while 1:
             self.screenshot()
 
