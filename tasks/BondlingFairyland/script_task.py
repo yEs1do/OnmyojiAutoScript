@@ -173,9 +173,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
 
             if bondling_config.bondling_mode != BondlingMode.MODE1:
                 if self.ball_click(current_ball):
-                    # 盘子满了继续
-                    self.screenshot()
-                    self.check_and_invite(True)
+                    pass
                 else:
                     # 如果点击了四次还是没有进去，那可能说明这个位置没有球
                     current_ball -= 1
@@ -637,11 +635,19 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         # appear1 = self.I_CREATE_ENSURE.match(self.device.image)
         while 1:
             self.screenshot()
+            if click_count >= 6:
+                logger.error('Click fire failed')
+                logger.error('You might need to check your bondling number. It most possibly arrived to the max 500')
+                raise BondlingNumberMax
             if self.appear(self.I_CREATE_TEAM):
                 break
+            # 盘子满了继续
+            if self.check_and_invite(True):
+                continue
             if self.appear_then_click(self.I_BALL_HELP, interval=1):
                 click_count += 1
                 continue
+
         while 1:
             self.screenshot()
             if self.ensure_private():
@@ -653,11 +659,6 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 break
             if self.appear_then_click(self.I_CREATE_TEAM, interval=1):
                 continue
-
-            if click_count >= 6:
-                logger.error('Click fire failed')
-                logger.error('You might need to check your bondling number. It most possibly arrived to the max 500')
-                raise BondlingNumberMax
             # 某些活动的时候出现 “选择共鸣的阴阳师”
             if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
                 continue
