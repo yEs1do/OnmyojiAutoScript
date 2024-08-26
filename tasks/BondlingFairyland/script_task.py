@@ -173,7 +173,8 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
 
             if bondling_config.bondling_mode != BondlingMode.MODE1:
                 if self.ball_click(current_ball):
-                    pass
+                    # 盘子满了继续
+                    self.check_and_invite(True)
                 else:
                     # 如果点击了四次还是没有进去，那可能说明这个位置没有球
                     current_ball -= 1
