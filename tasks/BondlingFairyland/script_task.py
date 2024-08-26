@@ -94,12 +94,13 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         self.device.stuck_record_add('BATTLE_STATUS_S')
 
         while 1:
-            self.screenshot()
 
             # 等待超时
             if wait_timer.reached():
                 logger.warning('Wait timeout')
                 break
+
+            self.screenshot()
 
             # if self.current_count >= self.limit_count:
             #     logger.info('Orochi count limit out')

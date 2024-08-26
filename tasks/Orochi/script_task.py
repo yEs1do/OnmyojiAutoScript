@@ -239,12 +239,13 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         success = True
         while 1:
-            self.screenshot()
 
             # 等待超时
             if wait_timer.reached():
                 success = False
                 return success
+
+            self.screenshot()
 
             if self.check_then_accept():
                 break
