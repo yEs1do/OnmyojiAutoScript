@@ -641,6 +641,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 raise BondlingNumberMax
             if self.appear(self.I_CREATE_TEAM):
                 break
+            # 某些活动的时候出现 “选择共鸣的阴阳师”
+            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
+                continue
             # 盘子满了继续
             if self.check_and_invite(True):
                 continue
@@ -659,9 +662,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 break
             if self.appear_then_click(self.I_CREATE_TEAM, interval=1):
                 continue
-            # 某些活动的时候出现 “选择共鸣的阴阳师”
-            if self.appear_then_click(self.I_UI_CONFIRM, interval=1):
-                continue
+
         # 邀请队友
         success = True
         is_first = True
