@@ -250,8 +250,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             if self.check_then_accept():
                 break
 
-        # 进入战斗流程
-        self.device.stuck_record_add('BATTLE_STATUS_S')
+            # 进入战斗流程
+            self.device.stuck_record_add('BATTLE_STATUS_S')
         while 1:
             self.screenshot()
 
