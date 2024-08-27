@@ -309,13 +309,17 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
 
     #
     def check_exit(self) -> bool:
-        # True 表示要退出这个任务
-        if self.minions_cnt >= self._config.exploration_config.minions_cnt:
-            logger.info('Minions count is enough, exit')
-            return True
-        if datetime.now() - self.start_time >= self.limit_time:
-            logger.info('Exploration time limit out')
-            return True
+
+        # 判断是否开启突破票检测
+        if not self._config.scrolls.scrolls_enable:
+            # True 表示要退出这个任务
+            if self.minions_cnt >= self._config.exploration_config.minions_cnt:
+                logger.info('Minions count is enough, exit')
+                return True
+            if datetime.now() - self.start_time >= self.limit_time:
+                logger.info('Exploration time limit out')
+                return True
+
         self.activate_realm_raid(self._config.scrolls, self._config.exploration_config)
         return False
 

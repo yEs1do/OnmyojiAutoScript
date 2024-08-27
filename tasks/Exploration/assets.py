@@ -113,7 +113,6 @@ class ExplorationAssets:
 	I_TREASURE_BOX_CLICK = RuleImage(roi_front=(33,476,70,49), roi_back=(2,130,135,406), threshold=0.6, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
 	# 地图宝箱
 	I_MAP_BOX_CLICK = RuleImage(roi_front=(680,203,100,100), roi_back=(680,203,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
-	I_TREASURE_BOX_CLICK = RuleImage(roi_front=(33,476,70,49), roi_back=(2,130,135,406), threshold=0.7, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
 	# 困28滚动到最后
 	I_SWIPE_END = RuleImage(roi_front=(994,234,119,100), roi_back=(968,196,311,165), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_swipe_end.png")
 	# 队伍的表情标志
