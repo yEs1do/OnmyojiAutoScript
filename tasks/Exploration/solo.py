@@ -31,7 +31,7 @@ class SoloExploration(BaseExploration):
         logger.hr('solo')
         explore_init = False
         search_fail_cnt = 0
-
+        explore_first = False
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
@@ -60,12 +60,15 @@ class SoloExploration(BaseExploration):
                 continue
             #
             elif scene == Scene.MAIN:
-                if not explore_init:
-                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
-                    if self._config.exploration_config.auto_rotate == AutoRotate.yes:
-                        self.enter_settings_and_do_operations()
-                    explore_init = True
-                    continue
+                # 是否第一次进
+                if not explore_first:
+                    if not explore_init:
+                        self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                        if self._config.exploration_config.auto_rotate == AutoRotate.yes:
+                            self.enter_settings_and_do_operations()
+                        explore_init = True
+                        explore_first = True
+                        continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
@@ -455,14 +458,15 @@ class ScriptTask(SoloExploration):
                 break
 
         if scene == Scene.UNKNOWN:
-            self.pre_process()
+            pass
+        # 换御魂
+        self.pre_process()
 
         match self._config.exploration_config.user_status:
             case UserStatus.ALONE: self.run_solo()
             case UserStatus.LEADER: self.run_leader()
             case UserStatus.MEMBER: self.run_member()
             case _: self.run_solo()
-
 
         self.post_process()
 

@@ -302,9 +302,11 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
 
         # 设置下次执行行时间
         logger.info("RealmRaid and Exploration  set_next_run !")
-        next_run = datetime.now() + con_scrolls.scrolls_cd
-        self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
-        self.set_next_run(task='RealmRaid', success=False, finish=False, target=datetime.now())
+        cd = con_scrolls.scrolls_cd
+        timedelta_cd = timedelta(hours=cd.hour, minutes=cd.minute, seconds=cd.second)
+
+        self.set_next_run(task='Exploration', target=datetime.now() + timedelta_cd)
+        self.set_next_run(task='RealmRaid', target=datetime.now())
         raise TaskEnd
 
     #
