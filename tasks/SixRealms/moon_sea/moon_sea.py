@@ -114,11 +114,12 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
         logger.hr('Moon Sea', 1)
         while 1:
             self.screenshot()
-            if self.appear(self.I_MSTART):
+            if self.appear(self.I_MSTART,interval=1):
                 if self._conf.number_enable:
-                    cu = self.O_SIXREALMS_NUMBER.ocr_single(self.device.image)
+                    cu = self.O_SIXREALMS_NUMBER.ocr(self.device.image)
+                    logger.info("门票："+str(cu))
                     if not cu > 0:
-                        logging.info("门票不足退出六道！")
+                        logger.info("门票不足退出六道！")
                         return False
                 break
             if self.appear_then_click(self.I_MENTER, interval=1):
