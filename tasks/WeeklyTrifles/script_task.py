@@ -173,17 +173,17 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         # 一路进去
         while 1:
             self.screenshot()
-            if self.appear(self.I_WT_SE_WECHAT):
+            if self.appear(self.I_WT_SE_WECHAT, interval=1):
                 break
             if self.appear_then_click(self.I_WT_ENTER_SE, interval=1):
                 continue
             if self.appear_then_click(self.I_WT_SE_SHARE, interval=1):
                 continue
-            if self.appear(self.I_WT_SE_RANK):
+            if self.appear(self.I_WT_SE_RANK, interval=1):
                 # 如果出现排名但是没有出现分享，那就是还没打，退出
                 time.sleep(0.5)
                 self.screenshot()
-                if self.appear(self.I_WT_SE_SHARE):
+                if self.appear(self.I_WT_SE_SHARE, interval=1):
                     continue
                 logger.warning('This week has not been obtained')
                 # 返回
@@ -268,7 +268,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('mi')
+    c = Config('du')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
