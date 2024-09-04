@@ -44,6 +44,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         # 无论收不收到菜，都会进入看看至少看一眼时间还剩多少
         time.sleep(0.5)
+        # 进入育成界面
         self.realm_goto_grown()
         self.screenshot()
         if not self.appear(self.I_UTILIZE_ADD):
