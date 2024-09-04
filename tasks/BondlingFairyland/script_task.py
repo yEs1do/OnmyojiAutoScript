@@ -99,7 +99,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             #     logger.info('Orochi time limit out')
             #     break
 
-            if self.check_then_accept(wait_timer):
+            if self.check_then_accept():
                 continue
 
             if self.is_in_room():
@@ -744,14 +744,19 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
 
             # 判断是否进入战斗
             if self.is_in_room(is_screenshot=False):
+                logger.info("契灵：进入组队房间！")
                 if self.timer_emoji.reached():
                     self.timer_emoji.reset()
                     self.appear_then_click(self.I_GI_EMOJI_1)
                     self.appear_then_click(self.I_GI_EMOJI_2)
             else:
+                if self.appear(self.I_EXIT):
+                    logger.info("契灵：进入战斗页面！")
+                    break
                 if self.appear(self.I_CHECK_BONDLING_FAIRYLAND):
+                    logger.info("契灵：探查页面！")
                     success = False
-                break
+                    break
 
         # 调出循环只有这些可能性：
         # 1. 进入战斗（ui是战斗）
@@ -817,7 +822,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 continue
         return False
 
-    def check_then_accept(self,wait_timer) -> bool:
+    def check_then_accept(self) -> bool:
         """
         队员接受邀请
         :return:
@@ -825,12 +830,16 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         if not self.appear(self.I_I_ACCEPT):
             return False
         logger.info('Click accept')
+
+        accept_timer = Timer(5)
+        accept_timer.start()
+        logger.info("识别到队长邀请，准备点击接受")
         while 1:
             self.screenshot()
 
             # 等待超时
-            if wait_timer.reached():
-                logger.warning('Wait timeout')
+            if accept_timer.reached():
+                logger.warning('accept_timer timeout')
                 break
 
             if self.is_in_room():
@@ -838,12 +847,14 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             # 被秒开
             # https://github.com/runhey/OnmyojiAutoScript/issues/230
             if self.appear(GeneralBattleAssets.I_EXIT):
+                logger.info("进入到组队房间！")
                 return False
             if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
                 continue
             if self.appear_then_click(self.I_GI_SURE, interval=1):
                 continue
             if self.appear_then_click(self.I_I_ACCEPT_DEFAULT, interval=1):
+                logger.info("点击接受!")
                 continue
             if self.appear_then_click(self.I_I_ACCEPT, interval=1):
                 continue
