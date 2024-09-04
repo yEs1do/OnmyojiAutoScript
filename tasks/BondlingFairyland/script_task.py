@@ -9,6 +9,7 @@ from time import sleep
 from cached_property import cached_property
 from datetime import datetime, timedelta
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
+from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 
 from tasks.base_task import BaseTask
 from tasks.GameUi.game_ui import GameUi
@@ -78,17 +79,6 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         wait_timer = Timer(wait_time.minute * 60)
         wait_timer.start()
         success = True
-        # while 1:
-        #     self.screenshot()
-        #
-        #     if self.check_then_accept():
-        #         wait_timer.reset()
-        #         break
-        #
-        #     # 等待超时
-        #     if wait_timer.reached():
-        #         self.set_next_run(task='BondlingFairyland', finish=True, success=False)
-        #         raise TaskEnd
 
         # 进入战斗流程
         self.device.stuck_record_add('BATTLE_STATUS_S')
@@ -109,7 +99,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             #     logger.info('Orochi time limit out')
             #     break
 
-            if self.check_then_accept():
+            if self.check_then_accept(wait_timer):
                 continue
 
             if self.is_in_room():
@@ -684,14 +674,6 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                     logger.info('bondling_fairyland time limit out')
                     break
 
-            # 如果没有进入房间那就不需要后面的邀请
-            # if not self.I_GI_IN_ROOM:
-            #     if self.is_room_dead():
-            #         logger.warning('bondling_fairyland task failed')
-            #         success = False
-            #         break
-            #     continue
-
             if self.appear(self.I_GI_IN_ROOM):
                 # 点击挑战
                 if not is_first:
@@ -712,12 +694,6 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                     else:
                         is_first = False
                         self.run_battle(self.config.bondling_fairyland.battle_config)
-                        # while 1:
-                        #     self.screenshot()
-                        #     # 无论胜利与否, 都会出现是否邀请一次队友
-                        #     # 区别在于，失败的话不会出现那个勾选默认邀请的框
-                        #     if self.check_and_invite(True):
-                        #         break
                         continue
             if self.appear(self.I_CHECK_BONDLING_FAIRYLAND):
                 return True
@@ -766,12 +742,6 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 success = False
                 break
 
-            # 如果队长跑路了，自己变成了队长: 自己也要跑路
-            if self.appear(self.I_FIRE) or self.appear(self.I_FIRE_SEA):
-                logger.warning('Leader run away while wait battle and become leader now')
-                success = False
-                break
-
             # 判断是否进入战斗
             if self.is_in_room(is_screenshot=False):
                 if self.timer_emoji.reached():
@@ -779,8 +749,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                     self.appear_then_click(self.I_GI_EMOJI_1)
                     self.appear_then_click(self.I_GI_EMOJI_2)
             else:
+                if self.appear(self.I_CHECK_BONDLING_FAIRYLAND):
+                    success = False
                 break
-
 
         # 调出循环只有这些可能性：
         # 1. 进入战斗（ui是战斗）
@@ -792,6 +763,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             self.exit_room()
 
         return success
+
     def exit_team(self) -> bool:
         """
         在组队界面 退出组队的界面， 返回到庭院或者是你一开始进入的入口
@@ -845,6 +817,38 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 continue
         return False
 
+    def check_then_accept(self,wait_timer) -> bool:
+        """
+        队员接受邀请
+        :return:
+        """
+        if not self.appear(self.I_I_ACCEPT):
+            return False
+        logger.info('Click accept')
+        while 1:
+            self.screenshot()
+
+            # 等待超时
+            if wait_timer.reached():
+                logger.warning('Wait timeout')
+                break
+
+            if self.is_in_room():
+                return True
+            # 被秒开
+            # https://github.com/runhey/OnmyojiAutoScript/issues/230
+            if self.appear(GeneralBattleAssets.I_EXIT):
+                return False
+            if self.appear_then_click(self.I_I_NO_DEFAULT, interval=1):
+                continue
+            if self.appear_then_click(self.I_GI_SURE, interval=1):
+                continue
+            if self.appear_then_click(self.I_I_ACCEPT_DEFAULT, interval=1):
+                continue
+            if self.appear_then_click(self.I_I_ACCEPT, interval=1):
+                continue
+        return True
+
     @cached_property
     def general_battle_config(self):
         gbc = GeneralBattleConfig()
@@ -860,7 +864,7 @@ if __name__ == '__main__':
     from module.device.device import Device
     import cv2
 
-    config = Config('oas1')
+    config = Config('mi')
     device = Device(config)
     task = ScriptTask(config, device)
     image = task.screenshot()
