@@ -742,21 +742,26 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 success = False
                 break
 
-            # 判断是否进入战斗
-            if self.is_in_room(is_screenshot=False):
-                logger.info("契灵：进入组队房间！")
-                if self.timer_emoji.reached():
-                    self.timer_emoji.reset()
-                    self.appear_then_click(self.I_GI_EMOJI_1)
-                    self.appear_then_click(self.I_GI_EMOJI_2)
-            else:
-                if self.appear(self.I_EXIT):
-                    logger.info("契灵：进入战斗页面！")
-                    break
-                if self.appear(self.I_CHECK_BONDLING_FAIRYLAND):
-                    logger.info("契灵：探查页面！")
-                    success = False
-                    break
+            if self.appear(self.I_EXIT):
+                success = True
+                logger.info("契灵：进入战斗页面！")
+                break
+
+            # # 判断是否进入战斗
+            # if self.is_in_room(is_screenshot=False):
+            #     logger.info("契灵：进入组队房间！")
+            #     if self.timer_emoji.reached():
+            #         self.timer_emoji.reset()
+            #         self.appear_then_click(self.I_GI_EMOJI_1)
+            #         self.appear_then_click(self.I_GI_EMOJI_2)
+            # else:
+            #     if self.appear(self.I_EXIT):
+            #         logger.info("契灵：进入战斗页面！")
+            #         break
+            #     if self.appear(self.I_CHECK_BONDLING_FAIRYLAND):
+            #         logger.info("契灵：探查页面！")
+            #         success = False
+            #         break
 
         # 调出循环只有这些可能性：
         # 1. 进入战斗（ui是战斗）
