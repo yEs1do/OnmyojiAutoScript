@@ -114,6 +114,8 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                     break
             # 队长秒开的时候，检测是否进入到战斗中
             elif self.check_take_over_battle(False, config=self.config.bondling_fairyland.battle_config):
+                wait_timer.reset()
+                logger.info("重置等待队长拉人时间:" + str(wait_timer.current()))
                 continue
 
         while 1:
