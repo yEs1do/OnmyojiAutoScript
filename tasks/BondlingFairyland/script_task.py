@@ -86,10 +86,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         while 1:
 
             self.screenshot()
+            logger.info("开始等待:"+str(wait_timer.count))
 
             # 等待超时
             if wait_timer.reached():
-                logger.warning('Wait timeout')
+                logger.warning('wait_timer timeout')
                 break
 
             # if self.current_count >= self.limit_count:
@@ -844,6 +845,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             self.screenshot()
 
             # 等待超时
+            logger.info(str(accept_timer.count))
             if accept_timer.reached():
                 logger.warning('accept_timer timeout')
                 break
@@ -860,7 +862,6 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             if self.appear_then_click(self.I_GI_SURE, interval=1):
                 continue
             if self.appear_then_click(self.I_I_ACCEPT_DEFAULT, interval=1):
-                logger.info("点击接受!")
                 continue
             if self.appear_then_click(self.I_I_ACCEPT, interval=1):
                 continue
