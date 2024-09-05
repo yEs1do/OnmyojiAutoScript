@@ -58,10 +58,12 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         self.ui_goto(page_bondling_fairyland)
 
         while 1:
+            self.screenshot()
             if self.appear(self.I_CHECK_BONDLING_FAIRYLAND, interval=1):
                 break
             if self.appear(self.I_BALL_HELP, interval=1):
-                self.appear_then_click(self.I_BACK_YELLOW, interval=1)
+                self.ui_get_current_page()
+                self.ui_goto(page_bondling_fairyland)
                 continue
 
         limit_count = cong.bondling_config.limit_count
@@ -894,7 +896,7 @@ if __name__ == '__main__':
     from module.device.device import Device
     import cv2
 
-    config = Config('mi')
+    config = Config('oas1')
     device = Device(config)
     task = ScriptTask(config, device)
     image = task.screenshot()
