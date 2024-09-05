@@ -80,12 +80,12 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         wait_timer.start()
         success = True
 
+        # 进入战斗流程
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+
         while 1:
 
             self.screenshot()
-
-            # 进入战斗流程
-            self.device.stuck_record_add('BATTLE_STATUS_S')
 
             # 等待超时
             logger.info("开始等待队长拉人:" + str(wait_timer.current()))
@@ -105,17 +105,14 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
 
             if self.is_in_room():
                 logger.info("契灵：进入组队房间！")
-                self.device.stuck_record_clear()
                 if self.wait_battle(wait_time=self.config.bondling_fairyland.invite_config.wait_time):
                     self.run_battle(self.config.bondling_fairyland.battle_config)
                     wait_timer.reset()
-                    logger.info("重置等待队长拉人时间:" + str(wait_timer.current()))
                 else:
                     break
             # 队长秒开的时候，检测是否进入到战斗中
             elif self.check_take_over_battle(False, config=self.config.bondling_fairyland.battle_config):
                 wait_timer.reset()
-                logger.info("重置等待队长拉人时间:" + str(wait_timer.current()))
                 continue
 
         while 1:
