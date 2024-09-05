@@ -87,10 +87,8 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             # 进入战斗流程
             self.device.stuck_record_add('BATTLE_STATUS_S')
 
-
-
             # 等待超时
-            logger.info("开始等待:" + str(wait_timer.count))
+            logger.info("开始等待队长拉人:" + str(wait_timer.current()))
             if wait_timer.reached():
                 logger.warning('wait_timer timeout')
                 break
@@ -111,7 +109,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 if self.wait_battle(wait_time=self.config.bondling_fairyland.invite_config.wait_time):
                     self.run_battle(self.config.bondling_fairyland.battle_config)
                     wait_timer.reset()
-                    logger.info("重置等待时间:" + str(wait_timer.count))
+                    logger.info("重置等待队长拉人时间:" + str(wait_timer.current()))
                 else:
                     break
             # 队长秒开的时候，检测是否进入到战斗中
