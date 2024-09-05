@@ -57,6 +57,13 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         self.ui_get_current_page()
         self.ui_goto(page_bondling_fairyland)
 
+        while 1:
+            if self.appear(self.I_CHECK_BONDLING_FAIRYLAND, interval=1):
+                break
+            if self.appear(self.I_BALL_HELP, interval=1):
+                self.appear_then_click(self.I_BACK_YELLOW, interval=1)
+                continue
+
         limit_count = cong.bondling_config.limit_count
         self.current_count = 0
         self.limit_count: int = limit_count
@@ -96,9 +103,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             # if self.current_count >= self.limit_count:
             #     logger.info('Orochi count limit out')
             #     break
-            # if datetime.now() - self.start_time >= self.limit_time:
-            #     logger.info('Orochi time limit out')
-            #     break
+            if datetime.now() - self.start_time >= self.limit_time:
+                logger.info('Orochi time limit out')
+                break
 
             if self.check_then_accept():
                 continue
@@ -108,11 +115,15 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 if self.wait_battle(wait_time=self.config.bondling_fairyland.invite_config.wait_time):
                     self.run_battle(self.config.bondling_fairyland.battle_config)
                     wait_timer.reset()
+                    # 进入战斗流程
+                    self.device.stuck_record_add('BATTLE_STATUS_S')
                 else:
                     break
             # 队长秒开的时候，检测是否进入到战斗中
             elif self.check_take_over_battle(False, config=self.config.bondling_fairyland.battle_config):
                 wait_timer.reset()
+                # 进入战斗流程
+                self.device.stuck_record_add('BATTLE_STATUS_S')
                 continue
 
         while 1:
@@ -639,6 +650,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             # 盘子满了继续
             if self.check_and_invite(True):
                 continue
+            # 求援
             if self.appear_then_click(self.I_BALL_HELP, interval=1):
                 click_count += 1
                 continue
