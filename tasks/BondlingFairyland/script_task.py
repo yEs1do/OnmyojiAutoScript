@@ -103,6 +103,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 continue
 
             if self.is_in_room():
+                logger.info("契灵：进入组队房间！")
                 wait_timer.reset()
                 self.device.stuck_record_clear()
                 if self.wait_battle(wait_time=self.config.bondling_fairyland.invite_config.wait_time):
