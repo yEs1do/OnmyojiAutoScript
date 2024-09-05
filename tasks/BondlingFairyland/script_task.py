@@ -80,12 +80,13 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         wait_timer.start()
         success = True
 
-        # 进入战斗流程
-        self.device.stuck_record_add('BATTLE_STATUS_S')
-
         while 1:
 
             self.screenshot()
+
+            # 进入战斗流程
+            self.device.stuck_record_add('BATTLE_STATUS_S')
+
             logger.info("开始等待:"+str(wait_timer.count))
 
             # 等待超时
@@ -845,7 +846,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             self.screenshot()
 
             # 等待超时
-            logger.info(str(accept_timer.count))
+            logger.info(str(accept_timer.current()))
             if accept_timer.reached():
                 logger.warning('accept_timer timeout')
                 break
