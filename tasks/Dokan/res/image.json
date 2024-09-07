@@ -8,6 +8,42 @@
     "threshold": 0.8,
     "description": "道馆"
   },
+    {
+    "itemName": "fangshou",
+    "imageName": "Screenshots_fangshou.png",
+    "roiFront": "35,610,75,79",
+    "roiBack": "35,610,75,79",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "防守战报"
+  },
+    {
+    "itemName": "create_daoguan",
+    "imageName": "Screenshots_create_daoguan.png",
+    "roiFront": "262,630,45,62",
+    "roiBack": "262,630,45,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "建立道馆 "
+  },
+    {
+    "itemName": "create_daoguan_sure",
+    "imageName": "Screenshots_create_daoguan_sure.png",
+    "roiFront": "766,409,100,55",
+    "roiBack": "766,409,100,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确定建立道馆"
+  },
+      {
+    "itemName": "create_daoguan_ok",
+    "imageName": "Screenshots_create_daoguan_ok.png",
+    "roiFront": "262,630,45,62",
+    "roiBack": "262,630,45,62",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "已经建立道馆 "
+  },
   {
     "itemName": "newtz",
     "imageName": "Screenshots_newtz.png",
@@ -25,15 +61,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "确定"
-  },
-  {
-    "itemName": "ryou_shenshe",
-    "imageName": "res_ryou_shenshe.png",
-    "roiFront": "476,173,62,24",
-    "roiBack": "476,173,62,24",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "阴阳竂->神社"
   },
   {
     "itemName": "ryou_dokan",
@@ -266,17 +293,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入加油相关：前往战斗中的竂友"
-  },
-
-
-  {
-    "itemName": "scene_ryou",
-    "imageName": "scene_ryou.png",
-    "roiFront": "1161,674,75,31",
-    "roiBack": "1161,674,75,31",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "场景检测：阴阳竂"
   },
   {
     "itemName": "scene_ryou",

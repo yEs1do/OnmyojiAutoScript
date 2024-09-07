@@ -59,7 +59,7 @@ class DokanScene(Enum):
         print(str(DokanScene.RYOU_DOKAN_SCENE_FIGHTING))  # 输出: Ryou_Daoguan_Scene_Fighting
 
 
-class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
+class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     medal_grid: ImageGrid = None
     attack_priority_selected: bool = False
     team_switched: bool = False
@@ -106,10 +106,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         self.ui_get_current_page()
         self.ui_goto(page_guild)
 
-        # self.goto_dokan_new()
-        self.goto_dokan()
-
-
+        # 寮管理开启道馆
+        if cfg.dokan_config.dokan_enable:
+            self.goto_dokan_open()
+        else:
+            self.goto_dokan()
 
         # 开始道馆流程
         while 1:
@@ -398,30 +399,65 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
                 logger.info(f"Click {GameUi.I_BACK_BL.name}")
                 break
 
-    def goto_dokan_new(self):
+    def goto_dokan_open(self):
+        # 进入选择寮界面
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_DAOGUAN, interval=1.1):
+            if self.appear_then_click(self.I_DAOGUAN, interval=1):
                 continue
-            if self.appear_then_click(self.I_GUILD_SHRINE, interval=0.8):
+            if self.appear_then_click(self.I_GUILD_SHRINE, interval=1):
                 continue
-            if not self.appear_then_click(self.I_DAOGUAN, interval=0.8):
+            if self.appear(self.I_FANGSHOU, interval=0.8):
                 break
+        # 判断是否需要建立道馆
+        count = 0
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(self.I_CREATE_DAOGUAN_SURE, interval=1):
+                self.screenshot()
+                if not self.appear(self.I_CREATE_DAOGUAN_SURE, interval=1):
+                    break
+                continue
+            if self.appear_then_click(self.I_CREATE_DAOGUAN, interval=1):
+                count += 1
+                if count < 5:
+                    continue
+                break
+            # if self.appear(self.I_CREATE_DAOGUAN, interval=0.8):
+            #     break
+        count = 0
         while 1:
             self.screenshot()
 
-            if self.appear_then_click(self.I_NEWTZ, interval=1.1):
+            DOKAN_1 = self.O_DOKAN_READY_SEL1.ocr_digit(self.device.image)
+            DOKAN_2 = self.O_DOKAN_READY_SEL2.ocr_digit(self.device.image)
+            DOKAN_3 = self.O_DOKAN_READY_SEL3.ocr_digit(self.device.image)
+            DOKAN_4 = self.O_DOKAN_READY_SEL4.ocr_digit(self.device.image)
+
+            if DOKAN_1 == 0 or DOKAN_2 == 0 or DOKAN_3 == 0 or DOKAN_4 == 0:
+                count += 1
+                if count < 5:
+                    continue
+
+            DOKAN_list = [DOKAN_1, DOKAN_2, DOKAN_3, DOKAN_4]
+            DOKAN_index = DOKAN_list.index(min(DOKAN_list))
+
+            DOKAN_click_list = [self.O_DOKAN_READY_SEL1, self.O_DOKAN_READY_SEL2, self.O_DOKAN_READY_SEL3,
+                                self.O_DOKAN_READY_SEL4]
+
+            self.click(DOKAN_click_list[DOKAN_index], interval=1)
+
+            if self.appear_then_click(self.I_NEWTZ, interval=1):
                 continue
-            if self.appear_then_click(self.I_OK, interval=1.1):
-                if not self.appear(self.I_OK):
-                    break
+            if self.appear_then_click(self.I_OK, interval=1):
+                continue
+            if self.appear(self.I_RYOU_DOKAN_CHECK, threshold=1):
                 break
-            if self.click(self.C_DOKAN_READY_SEL, interval=0.8):
-                continue
+
     def goto_dokan(self):
         ''' 进入道馆
         TODO 道馆相关场景
-        :return 
+        :return
         '''
         self.ui_get_current_page()
         try_count = 0
@@ -494,7 +530,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
         # 状态：达到失败次数，CD中
         if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_CD
-        
+
         # # 状态：加油中，左下角有鼓
         # if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(
         #         self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
@@ -507,7 +543,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets):
 
         # 状态：道馆已经结束，图片位置会偏移，换OCR
         if self.ocr_appear(self.O_DOKAN_SUCCEEDED):
-        # if self.appear(self.I_RYOU_DOKAN_FINISHED, threshold=0.8):
+            # if self.appear(self.I_RYOU_DOKAN_FINISHED, threshold=0.8):
             return True, DokanScene.RYOU_DOKAN_SCENE_FINISHED
 
         return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
