@@ -114,7 +114,7 @@ class BondlingFairylandAssets:
 	I_C_FIRST_DISABLE = RuleImage(roi_front=(713,469,38,34), roi_back=(713,469,38,34), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_c_first_disable.png")
 	# description 
 	I_CAPTION_ENSURE = RuleImage(roi_front=(690,532,129,56), roi_back=(690,532,129,56), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_caption_ensure.png")
-	# 结契设置
+	# 结契设置 
 	I_CLICK_CAPTION = RuleImage(roi_front=(177,625,59,51), roi_back=(177,625,59,51), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_click_caption.png")
 
 
