@@ -76,8 +76,6 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         logger.info('Invitation appearing')
         invite_type = self.config.global_game.emergency.friend_invitation
         accept_now = self.config.global_game.emergency.accept_now
-        if accept_now:
-            logger.info("----------------------")
         detect_record = self.device.detect_record
         match invite_type:
             case FriendInvitation.ACCEPT:
