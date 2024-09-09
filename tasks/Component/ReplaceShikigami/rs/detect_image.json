@@ -1,0 +1,11 @@
+[
+  {
+    "itemName": "detect_empty",
+    "imageName": "rs_detect_empty.png",
+    "roiFront": "32,229,1215,159",
+    "roiBack": "32,229,1215,159",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "育成没狗粮"
+  }
+]

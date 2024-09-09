@@ -48,6 +48,11 @@ oas-backend.bat
 
 
 
+
+
+
+
+
 # Created by .ignore support plugin (hsz.mobi)
 
 ### JetBrains template
@@ -264,7 +269,9 @@ $RECYCLE.BIN/
 *.lnk
 adb_port.txt
 adb_port.ini
+*.exe
 !popup.exe
 *.zip
 console.bat
 .vscode/*
+/dev_tools/assets_test.py
