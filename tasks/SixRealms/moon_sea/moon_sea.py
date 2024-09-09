@@ -48,11 +48,10 @@ class MoonSea(MoonSeaMap, MoonSeaL101, MoonSeaL102, MoonSeaL103, MoonSeaL104, Mo
             if datetime.now() - self.start_time >= max_time:
                 logger.info('Run out of time, exit')
                 break
-            if not self.one():
-                break
+            self.one()
             cnt += 1
+            logger.info("打完" + str(cnt) + "退出六道之门！")
         logger.info('Exit Moon Sea')
-
 
     def one(self):
         self.cnt_skill101 = 1
