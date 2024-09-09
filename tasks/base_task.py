@@ -75,8 +75,9 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             return False
         logger.info('Invitation appearing')
         invite_type = self.config.global_game.emergency.friend_invitation
-        when_accept_invitation = self.config.global_game.emergency.when_accept_invitation
-
+        accept_now = self.config.global_game.emergency.accept_now
+        if accept_now:
+            logger.info("----------------------")
         detect_record = self.device.detect_record
         match invite_type:
             case FriendInvitation.ACCEPT:
@@ -114,7 +115,7 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                 break
             if self.appear_then_click(click_button, interval=0.8):
                 # 执行悬赏
-                if when_accept_invitation.accept_invitation_complete_now:
+                if accept_now:
                     if click_button == self.I_G_ACCEPT:
                         self.set_next_run(task='WantedQuests', target=datetime.now())
                     continue

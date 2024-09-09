@@ -22,13 +22,9 @@ class WhenNetworkAbnormal(str, Enum):
 class WhenNetworkError(str, Enum):
     RESTART = 'restart'
 
-class WhenAcceptInvitation(BaseModel):
-    # 接取悬赏后立即去完成
-    accept_invitation_complete_now: bool = Field(default=True)
-# 也可以是左边的邀请什么的
 class Emergency(BaseModel):
+    accept_now: bool = Field(default=True, description='accept_now')
     friend_invitation: FriendInvitation = Field(default=FriendInvitation.ACCEPT,description='friend_invitation_help')
-    when_accept_invitation: WhenAcceptInvitation = Field(default_factory=WhenAcceptInvitation)
     # invitation_detect_interval: int = Field(default=5, description='invitation_detect_interval_help')
     # when_network_abnormal: WhenNetworkAbnormal = Field(default=WhenNetworkAbnormal.WAIT_10S, description='when_network_abnormal_help')
     # when_network_error: WhenNetworkError = Field(default=WhenNetworkError.RESTART, description='when_network_error_help')
