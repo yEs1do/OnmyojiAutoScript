@@ -1,5 +1,11 @@
 [
   {
+    "itemName": "dokan_ready_sel",
+    "roiFront": "1113,179,100,100",
+    "roiBack": "1113,179,100,100",
+    "description": "选择寮"
+  },
+  {
     "itemName": "dokan_random_click_area",
     "roiFront": "142,294,107,555",
     "roiBack": "142,294,107,555",
