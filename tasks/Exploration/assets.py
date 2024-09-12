@@ -110,8 +110,10 @@ class ExplorationAssets:
 	# description 
 	I_E_EXIT_CONFIRM = RuleImage(roi_front=(694,380,163,49), roi_back=(694,380,163,49), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_e_exit_confirm.png")
 	# 宝箱 
-	I_TREASURE_BOX_CLICK = RuleImage(roi_front=(33,476,70,49), roi_back=(2,130,135,406), threshold=0.7, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
-	# 困28滚动到最后 
+	I_TREASURE_BOX_CLICK = RuleImage(roi_front=(33,476,70,49), roi_back=(2,130,135,406), threshold=0.6, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
+	# 地图宝箱
+	I_MAP_BOX_CLICK = RuleImage(roi_front=(680,203,100,100), roi_back=(680,203,100,100), threshold=0.6, method="Template matching", file="./tasks/Exploration/res/res_treasure_box_click.png")
+	# 困28滚动到最后
 	I_SWIPE_END = RuleImage(roi_front=(994,234,119,100), roi_back=(968,196,311,165), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_swipe_end.png")
 	# 队伍的表情标志 
 	I_TEAM_EMOJI = RuleImage(roi_front=(36,437,44,46), roi_back=(4,407,100,100), threshold=0.8, method="Template matching", file="./tasks/Exploration/res/res_team_emoji.png")

@@ -76,10 +76,9 @@ class InviteConfig(BaseModel):
 
 class Scrolls(BaseModel):
     # 绘卷模式
-    scrolls_enable: bool = Field(title='绘卷模式', default=False, description='scrolls_enable_help')
-    scrolls_cd: TimeDelta = Field(title='间隔时间', default=TimeDelta(hours=0, minutes=30, seconds=0), description='scrolls_cd_help')
-    scrolls_threshold: int = Field(title='突破票数量', default='25', description='scrolls_threshold_help')
-
+    scrolls_enable: bool = Field(title='绘卷模式', default=False, description='绘卷模式')
+    scrolls_cd: Time = Field(title='间隔时间', default=Time(hour=0, minute=30, second=0), description='间隔时间')
+    scrolls_threshold: int = Field(title='突破票数量', default='25', description='突破票数量，超过打突破')
 
 class ExplorationConfig(BaseModel):
     buff_gold_50_click: bool = Field(default=False)
@@ -104,9 +103,9 @@ class ExplorationConfig(BaseModel):
 
 class Exploration(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
-    exploration_config: ExplorationConfig = Field(default_factory=ExplorationConfig)
     scrolls: Scrolls = Field(default_factory=Scrolls)
     invite_config: InviteConfig = Field(default_factory=InviteConfig)
+    exploration_config: ExplorationConfig = Field(default_factory=ExplorationConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)
     switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)
 

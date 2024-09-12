@@ -312,20 +312,26 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
 
         # 设置下次执行行时间
         logger.info("RealmRaid and Exploration  set_next_run !")
-        next_run = datetime.now() + con_scrolls.scrolls_cd
-        self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
-        self.set_next_run(task='RealmRaid', success=False, finish=False, target=datetime.now())
+        cd = con_scrolls.scrolls_cd
+        timedelta_cd = timedelta(hours=cd.hour, minutes=cd.minute, seconds=cd.second)
+
+        self.set_next_run(task='Exploration', target=datetime.now() + timedelta_cd)
+        self.set_next_run(task='RealmRaid', target=datetime.now())
         raise TaskEnd
 
     #
     def check_exit(self) -> bool:
-        # True 表示要退出这个任务
-        if self.minions_cnt >= self._config.exploration_config.minions_cnt:
-            logger.info('Minions count is enough, exit')
-            return True
-        if datetime.now() - self.start_time >= self.limit_time:
-            logger.info('Exploration time limit out')
-            return True
+
+        # 判断是否开启突破票检测
+        if not self._config.scrolls.scrolls_enable:
+            # True 表示要退出这个任务
+            if self.minions_cnt >= self._config.exploration_config.minions_cnt:
+                logger.info('Minions count is enough, exit')
+                return True
+            if datetime.now() - self.start_time >= self.limit_time:
+                logger.info('Exploration time limit out')
+                return True
+
         self.activate_realm_raid(self._config.scrolls, self._config.exploration_config)
         return False
 
@@ -339,18 +345,6 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
                 continue
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
                 continue
-
-    def fire(self, button) -> bool:
-        self.ui_click_until_disappear(button, interval=3)
-        if (self.appear(self.I_E_SETTINGS_BUTTON) or
-                self.appear(self.I_E_AUTO_ROTATE_ON) or
-                self.appear(self.I_E_AUTO_ROTATE_OFF)):
-            # 如果还在探索说明，这个是显示滑动导致挑战按钮不在范围内
-            logger.warning('Fire button disappear, but still in exploration')
-            return False
-        self.run_general_battle(self._config.general_battle_config)
-        self.minions_cnt += 1
-        return True
 
 
 if __name__ == "__main__":
