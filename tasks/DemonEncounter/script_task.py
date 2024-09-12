@@ -11,13 +11,13 @@ from module.logger import logger
 from module.exception import TaskEnd
 from module.base.timer import Timer
 
-from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_demon_encounter, page_shikigami_records
+from tasks.GameUi.page import page_main, page_demon_encounter, page_shikigami_records
 from tasks.DemonEncounter.assets import DemonEncounterAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.DemonEncounter.data.answer import Answer
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 class LanternClass(Enum):
     BATTLE = 0  # 打怪  --> 无法判断因为怪的图片不一样，用排除法
@@ -28,18 +28,22 @@ class LanternClass(Enum):
     MYSTERY = 5  # 神秘任务
 
 
-class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
+class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DemonEncounterAssets):
 
     def run(self):
         if not self.check_time():
             logger.warning('Time is not right')
             raise TaskEnd('DemonEncounter')
-        self.ui_get_current_page()
-        # 切换御魂
-        soul_config = self.config.demon_encounter.demon_soul_config
-        if soul_config.enable:
+
+        # 御魂切换方式一
+        if self.config.demon_encounter.switch_soul.enable:
+            self.ui_get_current_page()
             self.ui_goto(page_shikigami_records)
-            self.checkout_soul()
+            self.run_switch_soul(self.config.demon_encounter.switch_soul.switch_group_team)
+
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
+        self.ui_click(self.I_MAIN_GOTO_TOWN, self.I_CHECK_TOWN)
         self.ui_goto(page_demon_encounter)
         self.execute_lantern()
         self.execute_boss()
@@ -47,28 +51,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
         self.set_next_run(task='DemonEncounter', success=True, finish=False)
         raise TaskEnd('DemonEncounter')
 
-    def checkout_soul(self):
-        """
-        切换御魂
-        """
-        # 判断今天是周几
-        today = datetime.now().weekday()
-        soul_config = self.config.demon_encounter.demon_soul_config
-        if today == 0:
-            self.run_switch_soul(soul_config.demon_kiryou_utahime)
-            self.run_switch_soul(soul_config.demon_kiryou_utahime_supplementary)
-        elif today == 1:
-            self.run_switch_soul(soul_config.demon_shinkirou)
-        elif today == 2:
-            self.run_switch_soul(soul_config.demon_tsuchigumo)
-        elif today == 3:
-            self.run_switch_soul(soul_config.demon_gashadokuro)
-        elif today == 4:
-            self.run_switch_soul(soul_config.demon_namazu)
-        elif today == 5:
-            self.run_switch_soul(soul_config.demon_oboroguruma)
-        elif today == 6:
-            self.run_switch_soul(soul_config.demon_nightly_aramitama)
 
     def execute_boss(self):
         """
@@ -193,7 +175,7 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             lantern_type = self.check_lantern(i)
             match lantern_type:
                 case LanternClass.BOX:
-                    self._box()
+                    self._box(match_click[i])
                 case LanternClass.MAIL:
                     self._mail(match_click[i])
                 case LanternClass.REALM:
@@ -260,9 +242,22 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             logger.info(f'Lantern {index} is battle')
             return LanternClass.BATTLE
 
-    def _box(self):
-        # 宝箱不领
-        pass
+    def _box(self, target_click):
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_JADE_50):
+                break
+            if self.click(target_click, interval=1):
+                continue
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_BLUE_PIAO):
+                if self.click(self.I_JADE_50):
+                    continue
+            if not self.appear(self.I_BLUE_PIAO):
+                if self.appear_then_click(self.I_DE_FIND, interval=2.5):
+                    break
+
 
     def _mail(self, target_click):
         # 答题，还没有碰到过答题的
@@ -432,7 +427,6 @@ class ScriptTask(GameUi, GeneralBattle, DemonEncounterAssets, SwitchSoul):
             if check_timer and check_timer.reached():
                 logger.warning('Obtain battle timeout')
                 return True
-
 
 if __name__ == '__main__':
     from module.config.config import Config
