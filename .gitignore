@@ -1,5 +1,6 @@
 ### AzurLaneAutoScript
 log
+dev_tools/assets_test.py
 config/backup/*
 config/*.ini
 !config/template.ini
@@ -271,4 +272,4 @@ adb_port.ini
 *.zip
 console.bat
 .vscode/*
-/dev_tools/
+
