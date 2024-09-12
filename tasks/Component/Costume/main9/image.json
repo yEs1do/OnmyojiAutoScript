@@ -11,19 +11,19 @@
   {
     "itemName": "main_goto_exploration_9",
     "imageName": "main9_main_goto_exploration_9.png",
-    "roiFront": "553,107,31,30",
+    "roiFront": "547,121,31,30",
     "roiBack": "234,98,904,68",
     "method": "Template matching",
-    "threshold": 0.3,
+    "threshold": 0.5,
     "description": "description"
   },
   {
     "itemName": "main_goto_summon_9",
     "imageName": "main9_main_goto_summon_9.png",
-    "roiFront": "970,210,35,29",
+    "roiFront": "975,213,21,21",
     "roiBack": "609,194,623,68",
     "method": "Template matching",
-    "threshold": 0.25,
+    "threshold": 0.5,
     "description": ""
   },
   {
@@ -32,7 +32,7 @@
     "roiFront": "684,342,41,42",
     "roiBack": "276,321,999,78",
     "method": "Template matching",
-    "threshold": 0.7,
+    "threshold": 0.5,
     "description": "description"
   },
   {
