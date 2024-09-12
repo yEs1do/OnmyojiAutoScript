@@ -5,7 +5,7 @@
     "roiFront": "1064,559,117,108",
     "roiBack": "1064,559,117,108",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.5,
     "description": "麒麟的挑战"
   },
   {
