@@ -32,20 +32,8 @@ class ReplaceShikigamiAssets:
 
 
 	# Image Rule Assets
-	# description 
-	I_DETECT_EMPTY_1 = RuleImage(roi_front=(64,262,100,100), roi_back=(38,227,158,177), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_1.png")
-	# description 
-	I_DETECT_EMPTY_2 = RuleImage(roi_front=(281,263,100,100), roi_back=(238,234,178,168), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_2.png")
-	# description 
-	I_DETECT_EMPTY_3 = RuleImage(roi_front=(495,263,100,100), roi_back=(470,234,150,150), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_3.png")
-	# description 
-	I_DETECT_EMPTY_4 = RuleImage(roi_front=(703,256,100,100), roi_back=(681,229,157,174), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_4.png")
-	# description 
-	I_DETECT_EMPTY_5 = RuleImage(roi_front=(914,257,100,100), roi_back=(872,221,198,190), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_5.png")
-	# description 
-	I_DETECT_EMPTY_6 = RuleImage(roi_front=(1135,253,100,100), roi_back=(1091,229,156,159), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty_6.png")
-	# description 
-	I_NEW = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/image_name.png")
+	# 育成没狗粮 
+	I_DETECT_EMPTY = RuleImage(roi_front=(32,229,1215,159), roi_back=(32,229,1215,159), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_detect_empty.png")
 
 
 	# Image Rule Assets
@@ -75,10 +63,10 @@ class ReplaceShikigamiAssets:
 	I_RS_SSR_SELECTED = RuleImage(roi_front=(29,622,66,59), roi_back=(29,622,66,59), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_ssr_selected.png")
 	# description 
 	I_RS_SP_SELECTED = RuleImage(roi_front=(31,622,62,59), roi_back=(31,622,62,59), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_sp_selected.png")
-	# description 
+	# 式神录头像 
 	I_RS_RECORDS_SHIKI = RuleImage(roi_front=(1148,548,49,43), roi_back=(1148,548,49,43), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_records_shiki.png")
 	# 检测到已经满级了 
-	I_RS_LEVEL_MAX = RuleImage(roi_front=(487,248,23,21), roi_back=(52,238,1118,37), threshold=0.8, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_level_max.png")
+	I_RS_LEVEL_MAX = RuleImage(roi_front=(52,238,1118,37), roi_back=(52,238,1118,37), threshold=0.6, method="Template matching", file="./tasks/Component/ReplaceShikigami/rs/rs_rs_level_max.png")
 
 
 	# Image Rule Assets
