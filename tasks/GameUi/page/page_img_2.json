@@ -80,6 +80,15 @@
     "threshold": 0.8,
     "description": "description"
   },
+    {
+    "itemName": "check_duel_new",
+    "imageName": "page_check_duel_new.png",
+    "roiFront": "95,5,100,46",
+    "roiBack": "95,5,100,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "斗技页面"
+  },
   {
     "itemName": "check_demon_encounter",
     "imageName": "page_check_demon_encounter.png",
