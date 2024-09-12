@@ -31,44 +31,32 @@ class SoloExploration(BaseExploration):
         logger.hr('solo')
         explore_init = False
         search_fail_cnt = 0
-        explore_first = False
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
 
             #
             if scene == Scene.WORLD:
-                if self.appear(self.I_MAP_BOX_CLICK):
-                    # 地图宝箱
-                    logger.info('Treasure box appear, get it.')
-                    self.ui_click_until_disappear(self.I_MAP_BOX_CLICK)
-                if self.appear(self.I_TREASURE_BOX_CLICK):
-                    # 宝箱
-                    logger.info('Treasure box appear, get it.')
-                    self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+                self.get_box()
                 if self.check_exit():
                     break
                 self.open_expect_level()
-                explore_init = False
                 continue
             #
             elif scene == Scene.ENTRANCE:
                 if self.check_exit():
                     break
                 self.ui_click(self.I_E_EXPLORATION_CLICK, stop=self.I_E_SETTINGS_BUTTON)
-                explore_init = False
                 continue
             #
             elif scene == Scene.MAIN:
                 # 是否第一次进
-                if not explore_first:
-                    if not explore_init:
-                        self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
-                        if self._config.exploration_config.auto_rotate == AutoRotate.yes:
-                            self.enter_settings_and_do_operations()
-                        explore_init = True
-                        explore_first = True
-                        continue
+                if not explore_init:
+                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                    if self._config.exploration_config.auto_rotate == AutoRotate.yes:
+                        self.enter_settings_and_do_operations()
+                    explore_init = True
+                    continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
@@ -139,10 +127,8 @@ class SoloExploration(BaseExploration):
                     break
                 if self.appear(self.I_UI_CONFIRM):
                     self.ui_click_until_disappear(self.I_UI_CONFIRM)
-                    # 可以加一下，清空第一次 explore_init
                     continue
                 self.open_expect_level()
-                explore_init = False
                 continue
 
             # 邀请好友, 非常有可能是后面邀请好友，然后直接跳到组队了
@@ -242,14 +228,7 @@ class SoloExploration(BaseExploration):
             scene = self.get_current_scene()
             #
             if scene == Scene.WORLD:
-                if self.appear(self.I_MAP_BOX_CLICK):
-                    # 地图宝箱
-                    logger.info('Treasure box appear, get it.')
-                    self.ui_click_until_disappear(self.I_MAP_BOX_CLICK)
-                if self.appear(self.I_TREASURE_BOX_CLICK):
-                    # 宝箱
-                    logger.info('Treasure box appear, get it.')
-                    self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+                self.get_box()
                 if self.check_exit():
                     break
                 if self.check_then_accept():
@@ -257,8 +236,6 @@ class SoloExploration(BaseExploration):
                 if wait_timer.started() and wait_timer.reached():
                     logger.warning('Wait timer reached')
                     break
-
-                explore_init = False
                 continue
             #
             elif scene == Scene.ENTRANCE:
