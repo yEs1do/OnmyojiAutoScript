@@ -223,7 +223,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
                 logger.info('Battle lost and exit')
                 break
 
-
         self.ui_click(self.I_BACK_RED, self.I_CHECK_EXPLORATION)
         self.ui_get_current_page()
         self.ui_goto(page_main)
