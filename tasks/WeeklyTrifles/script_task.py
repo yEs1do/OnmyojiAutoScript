@@ -173,31 +173,27 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         # 一路进去
         while 1:
             self.screenshot()
-            if self.appear(self.I_WT_SE_WECHAT):
+            if self.appear(self.I_WT_SE_WECHAT, interval=1):
                 break
             if self.appear_then_click(self.I_WT_ENTER_SE, interval=1):
                 continue
             if self.appear_then_click(self.I_WT_SE_SHARE, interval=1):
                 continue
-            if self.appear(self.I_WT_SE_RANK):
-                # 如果出现排名但是没有出现分享，那就是还没打，退出
-                time.sleep(0.5)
-                self.screenshot()
-                if self.appear(self.I_WT_SE_SHARE):
-                    continue
-                logger.warning('This week has not been obtained')
-                # 返回
-                self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
-                return
+            # if self.appear(self.I_WT_SE_RANK, interval=1):
+            #     # 如果出现排名但是没有出现分享，那就是还没打，退出
+            #     time.sleep(0.5)
+            #     self.screenshot()
+            #     if self.appear(self.I_WT_SE_SHARE, interval=1):
+            #         continue
+            #     logger.warning('This week has not been obtained')
+            #     # 返回
+            #     self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
+            #     return
         logger.info('Enter secret')
         # 判断是否已经领取
         self.screenshot()
-        obtained = False
-        if not self.appear(self.I_WT_SE_JADE):
-            obtained = True
-            logger.warning('This week has been obtained')
-        # 点击分享
-        if not obtained:
+        if self.appear(self.I_WT_SE_WECHAT):
+            # 点击分享
             self.click_share(self.I_WT_SE_WECHAT)
         # 返回
         self.ui_click(self.I_UI_BACK_BLUE, self.I_CHECK_MAIN)
@@ -268,13 +264,12 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas1')
+    c = Config('du')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
 
-    t.run()
-    # t._share_collect()
+    t._share_secret()
     # t.click_share(t.I_WT_SE_WECHAT)
 
 
