@@ -19,6 +19,8 @@ from tasks.Component.ReplaceShikigami.replace_shikigami import ReplaceShikigami
 from tasks.GameUi.page import page_main, page_guild
 
 
+last_best_index = 99
+
 class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
     def run(self):
@@ -31,14 +33,19 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         self.check_guild_ap_or_assets(ap_enable=con.guild_ap_enable, assets_enable=con.guild_assets_enable)
         # 进入寮结界
         self.goto_realm()
+        # 查看满级
+        self.check_max_lv(con.shikigami_class)
         # 顺带收体力盒子或者是经验盒子
         time.sleep(1)
         self.check_box_ap_or_exp(con.box_ap_enable, con.box_exp_enable, con.box_exp_waste)
 
-        # 收菜看看
+        # 在寮结界界面检查是否有收获
         self.check_utilize_harvest()
-        self.realm_goto_grown()
+
         # 无论收不收到菜，都会进入看看至少看一眼时间还剩多少
+        time.sleep(0.5)
+        # 进入育成界面
+        self.realm_goto_grown()
         self.screenshot()
         if not self.appear(self.I_UTILIZE_ADD):
             remaining_time = self.O_UTILIZE_RES_TIME.ocr(self.device.image)
@@ -49,7 +56,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             logger.info('Utilize failed, exit')
             self.back_guild()
             next_time = datetime.now() + remaining_time
-            self.set_next_run(task='KekkaiUtilize', success=False, finish=True, target=next_time)
+            self.set_next_run(task='KekkaiUtilize', target=next_time)
             raise TaskEnd
         if not self.grown_goto_utilize():
             logger.info('Utilize failed, exit')
@@ -58,9 +65,37 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         self.set_next_run(task='KekkaiUtilize', success=True, finish=True)
         raise TaskEnd
 
+    def check_max_lv(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
+        """
+        在结界界面，进入式神育成，检查是否有满级的，如果有就换下一个
+        退出的时候还是结界界面
+        :return:
+        """
+        self.realm_goto_grown()
+        if self.appear(self.I_RS_LEVEL_MAX):
+            # 存在满级的式神
+            logger.info('Exist max level shikigami and replace it')
+            self.unset_shikigami_max_lv()
+            self.switch_shikigami_class(shikigami_class)
+            self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
+        else:
+            logger.info('No max level shikigami')
+        if self.detect_no_shikigami():
+            logger.warning('There are no any shikigami grow room')
+            self.switch_shikigami_class(shikigami_class)
+            self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
 
+        # 回到结界界面
+        while 1:
+            self.screenshot()
 
-
+            if self.appear(self.I_REALM_SHIN) and self.appear(self.I_SHI_GROWN):
+                self.screenshot()
+                if not self.appear(self.I_REALM_SHIN):
+                    continue
+                break
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=2.5):
+                continue
 
     def check_guild_ap_or_assets(self, ap_enable: bool=True, assets_enable: bool=True) -> bool:
         """
@@ -202,12 +237,9 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 if self.appear(self.I_EXP_EXTRACT):
                     # 如果达到今日领取的最大，就不领取了
                     cur, res, totol = self.O_BOX_EXP.ocr(self.device.image)
-                    if cur != 0 and totol != 0 and cur == totol and cur + res == totol:
-                        logger.info('Exp box reach max do not collect')
-                        break
-                    # 开启招财上宾后，上限增加20%，数值位置有偏移
-                    cur, res, totol = self.O_BOX_EXP_ZCSB.ocr(self.device.image)
-                    if cur != 0 and totol != 0 and cur == totol * 1.2 and cur + res == totol:
+                    if cur == res == totol == 0:
+                        continue
+                    if cur == totol and cur + res == totol:
                         logger.info('Exp box reach max do not collect')
                         break
                 if self.appear_then_click(self.I_BOX_EXP, threshold=0.6, interval=1):
@@ -311,11 +343,11 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             return ImageGrid([self.I_U_TAIKO_6, self.I_U_FISH_6, self.I_U_TAIKO_5, self.I_U_FISH_5,
                               self.I_U_TAIKO_4, self.I_U_FISH_4, self.I_U_TAIKO_3, self.I_U_FISH_3])
         elif rule == UtilizeRule.FISH:
-            return ImageGrid([self.I_U_FISH_6, self.I_U_FISH_5, self.I_U_FISH_4, self.I_U_FISH_3,
-                              self.I_U_TAIKO_6, self.I_U_TAIKO_5, self.I_U_TAIKO_4, self.I_U_TAIKO_3])
+            return ImageGrid([self.I_U_FISH_6, self.I_U_FISH_5,
+                              self.I_U_TAIKO_6, self.I_U_TAIKO_5, self.I_U_FISH_4, self.I_U_TAIKO_4,  self.I_U_FISH_3,self.I_U_TAIKO_3])
         elif rule == UtilizeRule.TAIKO:
-            return ImageGrid([self.I_U_TAIKO_6, self.I_U_TAIKO_5, self.I_U_TAIKO_4, self.I_U_TAIKO_3,
-                              self.I_U_FISH_6, self.I_U_FISH_5, self.I_U_FISH_4, self.I_U_FISH_3])
+            return ImageGrid([self.I_U_TAIKO_6, self.I_U_TAIKO_5,
+                              self.I_U_FISH_6, self.I_U_FISH_5,  self.I_U_TAIKO_4, self.I_U_FISH_4, self.I_U_TAIKO_3,self.I_U_FISH_3])
         else:
             logger.error('Unknown utilize rule')
             raise ValueError('Unknown utilize rule')
@@ -328,11 +360,11 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             result = [CardClass.TAIKO6, CardClass.FISH6, CardClass.TAIKO5, CardClass.FISH5,
                       CardClass.TAIKO4, CardClass.FISH4, CardClass.TAIKO3, CardClass.FISH3]
         elif rule == UtilizeRule.FISH:
-            result = [CardClass.FISH6, CardClass.FISH5, CardClass.FISH4, CardClass.FISH3,
-                      CardClass.TAIKO6, CardClass.TAIKO5, CardClass.TAIKO4, CardClass.TAIKO3]
+            result = [CardClass.FISH6, CardClass.FISH5,
+                      CardClass.TAIKO6, CardClass.TAIKO5, CardClass.FISH4,CardClass.TAIKO4,  CardClass.FISH3,CardClass.TAIKO3]
         elif rule == UtilizeRule.TAIKO:
-            result = [CardClass.TAIKO6, CardClass.TAIKO5, CardClass.TAIKO4, CardClass.TAIKO3,
-                      CardClass.FISH6, CardClass.FISH5, CardClass.FISH4, CardClass.FISH3]
+            result = [CardClass.TAIKO6, CardClass.TAIKO5,
+                      CardClass.FISH6, CardClass.FISH5, CardClass.TAIKO4,CardClass.FISH4,  CardClass.TAIKO3,CardClass.FISH3]
         else:
             logger.error('Unknown utilize rule')
             raise ValueError('Unknown utilize rule')
@@ -354,24 +386,33 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             包括点击这种卡
             :return: 返回当前选中的最好的卡， 如果什么的都没有，返回None
             """
+            time.sleep(1)
             self.screenshot()
+            time.sleep(1)
             target = self.order_targets.find_anyone(self.device.image)
             if target is None:
                 logger.info('No target card found')
                 return None
             card_class = target_to_card_class(target)
+            global last_best_index
+            last_best_index = self.order_cards.index(card_class)
+
             logger.info('Current find best card: %s', target)
             # 如果当前的卡比记录的最好的卡还要好,那么就更新最好的卡
             if last_best is not None:
                 last_index = self.order_cards.index(last_best)
                 current_index = self.order_cards.index(card_class)
+
                 if current_index >= last_index:
-                    # 不比上一张卡好就退出不执行操作，相同星级卡亦跳过
+                    # 不比上一张卡好就退出不执行操作
                     logger.info('Current card is not better than last best card')
+                    last_best_index = last_best
                     return last_best
             logger.info('Current select card: %s', card_class)
 
-            self.appear_then_click(target, interval=0.3)
+            # 选择这个卡
+            self.appear_then_click(target, interval=0.9)
+            time.sleep(1)
             # 验证这张卡 的等级是否一致
             # while 1:
             #     self.screenshot()
@@ -409,6 +450,13 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         # 最好的结界卡
         logger.info('End best card is %s', card_best)
 
+        # 蹭卡，卡不是前四位下标退出，执行错误时间判定
+        # global last_best_index
+        # logger.info(last_best_index)
+        # if last_best_index is None or last_best_index > 3:
+        #     self.set_next_run(task='KekkaiUtilize', success=False, finish=True)
+        #     raise TaskEnd
+
         # 进入结界
         self.screenshot()
         if not self.appear(self.I_U_ENTER_REALM):
@@ -418,12 +466,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             return
         while 1:
             self.screenshot()
-            if self.appear(self.I_CHECK_FRIEND_REALM_1):
-                self.wait_until_stable(self.I_CHECK_FRIEND_REALM_1)
-                logger.info('Appear enter friend realm button')
-                break
-            if self.appear(self.I_CHECK_FRIEND_REALM_3):
-                self.wait_until_stable(self.I_CHECK_FRIEND_REALM_3)
+            if self.appear(self.I_CHECK_FRIEND_REALM_1) \
+                    or self.appear(self.I_CHECK_FRIEND_REALM_3):
                 logger.info('Appear enter friend realm button')
                 break
 
@@ -479,7 +523,7 @@ if __name__ == "__main__":
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run()
+    t.run_utilize()
     # t.screenshot()
     # print(t.appear(t.I_BOX_EXP, threshold=0.6))
     # print(t.appear(t.I_BOX_EXP_MAX, threshold=0.6))
