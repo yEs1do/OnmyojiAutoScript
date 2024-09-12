@@ -32,6 +32,12 @@ class Layer(str, Enum):
     ELEVEN = '悲鸣'
     TWELVE = '神罚'
 
+class Liao30Config(BaseModel):
+    # 寮30模式
+    liao30_enable: bool = Field(title='寮30模式', default=True, description='只打30次结束到第二天运行')
+    # 启动时间
+    liao30_time: Time = Field(default=Time(hour=10), description='启动时间')
+
 class OrochiConfig(ConfigBase):
     # 身份
     user_status: UserStatus = Field(default=UserStatus.LEADER, description='user_status_help')
@@ -44,15 +50,10 @@ class OrochiConfig(ConfigBase):
     # 是否开启御魂加成
     soul_buff_enable: bool = Field(default=False, description='soul_buff_enable_help')
 
-class SwitchSoulConfig(BaseSwitchSoulConfig):
-    enable: bool = Field(default=False)
-    switch_group_team: str = Field(default='-1,-1', description='switch_group_team_help')
-    enable_switch_by_name: bool = Field(default=False, description='enable_switch_by_name_help')
-    group_name: str = Field(default='')
-    team_name: str = Field(default='')
-    auto_switch_soul: bool = Field(default=False, description='auto_switch_soul_help')
+class SwitchSoulConfig(BaseModel):
+    auto_enable: bool = Field(default=False, description='auto_enable_help')
     # 十层 config
-    # ten_switch: str = Field(default='-1,-1', description='ten_switch_help')
+    ten_switch: str = Field(default='-1,-1', description='ten_switch_help')
     # 悲鸣 config
     eleven_switch: str = Field(default='-1,-1', description='eleven_switch_help')
     # 神罚 config
@@ -61,6 +62,7 @@ class SwitchSoulConfig(BaseSwitchSoulConfig):
 
 class Orochi(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
+    liao30_config: Liao30Config = Field(default_factory=Liao30Config)
     orochi_config: OrochiConfig = Field(default_factory=OrochiConfig)
     invite_config: InviteConfig = Field(default_factory=InviteConfig)
     general_battle_config: GeneralBattleConfig = Field(default_factory=GeneralBattleConfig)

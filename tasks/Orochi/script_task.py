@@ -4,6 +4,8 @@
 import random
 from time import sleep
 from datetime import time, datetime, timedelta
+from module.base.timer import Timer
+from module.config.utils import parse_tomorrow_server
 
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
@@ -19,23 +21,29 @@ from module.exception import TaskEnd
 
 class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi, SwitchSoul, OrochiAssets):
 
-    def run(self) -> bool:
-        # 御魂切换方式一
-        if self.config.orochi.switch_soul.enable:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(self.config.orochi.switch_soul.switch_group_team)
-
-        # 御魂切换方式二
-        if self.config.orochi.switch_soul.enable_switch_by_name:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul_by_name(self.config.orochi.switch_soul.group_name,
-                                         self.config.orochi.switch_soul.team_name)
+    def run(self):
         # 根据选层切换御魂
-        self.orochi_switch_soul()
 
-        limit_count = self.config.orochi.orochi_config.limit_count
+        orochi_switch_soul = self.config.orochi.switch_soul
+        if orochi_switch_soul.auto_enable:
+            layer = self.config.orochi.orochi_config.layer
+            match layer:
+                case Layer.TEN:
+                    group_team = orochi_switch_soul.ten_switch
+                case Layer.ELEVEN:
+                    group_team = orochi_switch_soul.eleven_switch
+                case Layer.TWELVE:
+                    group_team = orochi_switch_soul.twelve_switch
+
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(group_team)
+
+        if self.config.orochi.liao30_config.liao30_enable:
+            limit_count = 30
+        else:
+            limit_count = self.config.orochi.orochi_config.limit_count
+
         limit_time = self.config.orochi.orochi_config.limit_time
         self.current_count = 0
         self.limit_count: int = limit_count
@@ -63,12 +71,19 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.open_buff()
             self.soul(is_open=False)
             self.close_buff()
-        # 下一次运行时间
-        if success:
-            self.set_next_run('Orochi', finish=True, success=True)
-        else:
-            self.set_next_run('Orochi', finish=False, success=False)
 
+        # 下一次运行时间
+        if self.config.orochi.liao30_config.liao30_enable:
+            liao30_time = self.config.orochi.liao30_config.liao30_time
+            next_run = parse_tomorrow_server(liao30_time)
+            self.set_next_run('Orochi', target=next_run)
+        else:
+            if success:
+                self.set_next_run('Orochi', finish=True, success=True)
+            else:
+                self.set_next_run('Orochi', finish=False, success=False)
+
+        self.set_next_run(task='RealmRaid', target=datetime.now())
         raise TaskEnd
 
 
@@ -211,19 +226,34 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_get_current_page()
         self.ui_goto(page_main)
 
-        if not success:
-            return False
-        return True
+        return success
 
     def run_member(self):
         logger.info('Start run member')
         self.ui_get_current_page()
-        # self.ui_goto(page_soul_zones)
-        # self.orochi_enter()
-        # self.check_lock(self.config.orochi.general_battle_config.lock_team_enable)
+
+        # 开始等待队长拉人
+        wait_time = self.config.orochi.invite_config.wait_time
+        wait_timer = Timer(wait_time.minute * 60)
+        wait_timer.start()
+
+        success = True
 
         # 进入战斗流程
         self.device.stuck_record_add('BATTLE_STATUS_S')
+
+        while 1:
+
+            self.screenshot()
+
+            # 等待超时
+            if wait_timer.reached():
+                success = False
+                return success
+
+            if self.check_then_accept():
+                break
+
         while 1:
             self.screenshot()
 
@@ -265,7 +295,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
-        return True
+
+        return success
 
     def run_alone(self):
         logger.info('Start run alone')
@@ -472,27 +503,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             # 如果开启战斗过程随机滑动
             if random_click_swipt_enable:
                 self.random_click_swipt()
-
-    def orochi_switch_soul(self) -> None:
-        # 判断是否开启根据选层切换御魂
-        orochi_switch_soul = self.config.orochi.switch_soul
-        if not orochi_switch_soul.auto_switch_soul:
-            return
-
-        group_team: str = None
-        layer = self.config.orochi.orochi_config.layer
-        match layer:
-            # case Layer.TEN:
-            #     group_team = orochi_switch_soul.ten_switch
-            case Layer.ELEVEN:
-                group_team = orochi_switch_soul.eleven_switch
-            case Layer.TWELVE:
-                group_team = orochi_switch_soul.twelve_switch
-
-        if orochi_switch_soul.auto_switch_soul:
-            self.ui_get_current_page()
-            self.ui_goto(page_shikigami_records)
-            self.run_switch_soul(group_team)
 
 
 if __name__ == '__main__':
