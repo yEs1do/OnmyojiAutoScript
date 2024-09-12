@@ -1,15 +1,17 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
-from module.logger import logger
 from module.exception import TaskEnd
-
+from module.logger import logger
 from tasks.GameUi.game_ui import GameUi
-from tasks.GameUi.page import page_main
+from tasks.GameUi.page import page_main, page_shikigami_records, page_soul_zones
+from tasks.Orochi.config import Layer
+from tasks.Orochi.script_task import ScriptTask as OrochiScriptTask
 from tasks.Pets.assets import PetsAssets
 from tasks.Pets.config import PetsConfig
 
-class ScriptTask(GameUi, PetsAssets):
+
+class ScriptTask(OrochiScriptTask, PetsAssets):
 
     def run(self):
         self.ui_get_current_page()
@@ -31,8 +33,42 @@ class ScriptTask(GameUi, PetsAssets):
             self._feed()
         self.ui_click(self.I_PET_EXIT, self.I_CHECK_MAIN)
 
+        # 打一次魂十
+        self.orochi_ten()
+
         self.set_next_run(task='Pets', success=True, finish=True)
         raise TaskEnd('Pets')
+
+    def orochi_ten(self):
+        # 御魂切换方式一
+        if self.config.true_orochi.switch_soul.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(self.config.true_orochi.switch_soul.switch_group_team)
+
+        self.ui_get_current_page()
+        self.ui_goto(page_soul_zones)
+        self.orochi_enter()
+
+        self.check_layer(Layer.TEN)
+        count_orochi_ten = 0
+        while 1:
+            self.screenshot()
+            # 检查猫咪奖励
+            if self.appear_then_click(self.I_PET_PRESENT, action=self.C_WIN_3, interval=1):
+                continue
+            if not self.appear(self.I_OROCHI_FIRE):
+                continue
+            if count_orochi_ten >= 1:
+                logger.warning('Not find true orochi')
+                battle = False
+                break
+            # 否则点击挑战
+            if self.appear(self.I_OROCHI_FIRE):
+                self.ui_click_until_disappear(self.I_OROCHI_FIRE)
+                self.run_general_battle()
+                count_orochi_ten += 1
+                continue
 
     def _feed(self):
         """
@@ -47,6 +83,8 @@ class ScriptTask(GameUi, PetsAssets):
             logger.warning('Already feed')
             return
         self.ui_click(self.I_PET_FEED, self.I_PET_SKIP)
+        if self.appear(self.I_PET_SKIP):
+            self.click(self.I_PET_SKIP)
         self.wait_until_disappear(self.I_PET_SKIP)
 
     def _play(self):
@@ -66,6 +104,7 @@ class ScriptTask(GameUi, PetsAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_PET_SKIP):
+                self.click(self.I_PET_SKIP)
                 break
             if play_count >= 3:
                 logger.warning('Play count > 3')
@@ -80,7 +119,8 @@ class ScriptTask(GameUi, PetsAssets):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-    c = Config('oas1')
+
+    c = Config('du')
     d = Device(c)
     t = ScriptTask(c, d)
     t.screenshot()
