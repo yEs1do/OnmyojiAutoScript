@@ -90,10 +90,10 @@ class BaseTask(GlobalGameAssets, CostumeBase):
                     click_button = self.I_G_ACCEPT
                 else:
                     click_button = self.I_G_IGNORE
-            case FriendInvitation.JADE_AND_FOOD:
-                # 如果是接受勾协和粮协
-                logger.info(f"Accept jade and food invitation")
-                if self.appear(self.I_G_JADE) or self.appear(self.I_G_CAT_FOOD) or self.appear(self.I_G_DOG_FOOD):
+            case FriendInvitation.JADE_SUSHI_FOOD:
+                # 如果是接受勾协和粮协和体协
+                logger.info(f"Accept jade and food and sushi invitation")
+                if self.appear(self.I_G_JADE) or self.appear(self.I_G_CAT_FOOD) or self.appear(self.I_G_DOG_FOOD) or self.appear(self.I_G_SUSHI):
                     click_button = self.I_G_ACCEPT
                 else:
                     click_button = self.I_G_IGNORE
