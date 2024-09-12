@@ -134,8 +134,16 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_HARVEST_JADE, interval=1):
                 timer_harvest.reset()
                 continue
+            # 缘庭
+            if self.appear_then_click(self.I_HARVEST_JADE_9, interval=1):
+                timer_harvest.reset()
+                continue
             # 签到
             if self.appear_then_click(self.I_HARVEST_SIGN, interval=1):
+                timer_harvest.reset()
+                continue
+            # 缘庭签到
+            if self.appear_then_click(self.I_HARVEST_SIGN_9, interval=1):
                 timer_harvest.reset()
                 continue
             # 某些活动的特殊签到，有空看到就删掉
@@ -144,6 +152,7 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_HARVEST_SIGN_4, interval=1):
                 timer_harvest.reset()
                 continue
+            # 每日一签
             if self.appear_then_click(self.I_HARVEST_SIGN_2, interval=1):
                 timer_harvest.reset()
                 continue
@@ -156,6 +165,9 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.config.restart.harvest_config.enable_mail:
 
                 if self.appear_then_click(self.I_HARVEST_MAIL, interval=1.2):
+                    timer_harvest.reset()
+                    continue
+                if self.appear_then_click(self.I_HARVEST_MAIL_9, interval=1.2):
                     timer_harvest.reset()
                     continue
                 if self.appear(self.I_HARVEST_MAIL_TITLE, interval=0.2):
@@ -182,8 +194,14 @@ class LoginHandler(BaseTask, RestartAssets):
             if self.appear_then_click(self.I_HARVEST_AP, interval=1, threshold=0.7):
                 timer_harvest.reset()
                 continue
+            if self.appear_then_click(self.I_HARVEST_AP_9, interval=1, threshold=0.7):
+                timer_harvest.reset()
+                continue
             # 御魂觉醒加成
             if self.appear_then_click(self.I_HARVEST_SOUL, interval=1):
+                timer_harvest.reset()
+                continue
+            if self.appear_then_click(self.I_HARVEST_SOUL_9, interval=1):
                 timer_harvest.reset()
                 continue
 
