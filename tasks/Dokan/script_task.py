@@ -404,9 +404,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 # 寮成员十次未进入道馆结束任务
                 time.sleep(20)
                 self.goto_dokan_num += 1
+                logger.info(f"寮成员第{self.goto_dokan_num}次进入选择寮界面")
                 if self.goto_dokan_num >= 10:
+                    logger.info(f"寮成员{self.goto_dokan_num}次未进入道馆结束任务!")
+                    self.goto_main()
                     self.set_next_run(task='Dokan', finish=True, server=True, success=True)
-
+                    raise TaskEnd
             return False
 
     def goto_dokan_click(self):
