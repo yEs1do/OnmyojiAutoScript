@@ -64,6 +64,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     attack_priority_selected: bool = False
     team_switched: bool = False
     green_mark_done: bool = False
+    # 战斗次数
+    battle_count: int = 0
+    # 寮友进入道馆次数
+    goto_dokan_num: int = 0
 
     @cached_property
     def _attack_priorities(self) -> list:
@@ -208,7 +212,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 self.device.stuck_record_add('BATTLE_STATUS_S')
                 self.device.click_record_clear()
 
-                logger.info(f"开始战斗")
+                self.battle_count += 1
+                logger.info(f"开始战斗: {self.battle_count}")
 
                 # 绿标
                 if not self.green_mark_done:
@@ -396,7 +401,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             if self.config.dokan.dokan_config.dokan_enable:
                 self.open_dokan()
             else:
+                # 寮成员十次未进入道馆结束任务
                 time.sleep(20)
+                self.goto_dokan_num += 1
+                if self.goto_dokan_num >= 10:
+                    self.set_next_run(task='Dokan', finish=True, server=True, success=True)
+
             return False
 
     def goto_dokan_click(self):
