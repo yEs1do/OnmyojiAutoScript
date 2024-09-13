@@ -259,8 +259,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 break
 
             # 如果出现失败 就点击，返回False。 TODO 不知道挑战馆主失败是不是同一个画面？
-            if self.appear(GeneralBattle.I_FALSE, threshold=0.8):
-                self.ui_click_until_disappear(GeneralBattle.I_FALSE)
+            if self.appear(self.I_RYOU_DOKAN_FAIL, threshold=0.8):
+                self.ui_click_until_disappear(self.I_RYOU_DOKAN_FAIL)
                 logger.info("馆主战斗失败，返回")
                 win = False
                 break
