@@ -95,18 +95,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             self.ui_goto(page_shikigami_records)
             self.run_switch_soul_by_name(cfg.switch_soul_config.group_name, cfg.switch_soul_config.team_name)
 
-        # scene_err_count = 0
-
-        # 在阴阳竂界面点击并进入道馆
-        # 检测当前界面的场景（时间关系，暂时没有做庭院、町中等主界面的场景检测, 应考虑在GameUI.game_ui.ui_get_current_page()里实现）
-        # in_dokan, current_scene = self.get_current_scene(True)
-
-
-        # 寮管理开启道馆
-        # if cfg.dokan_config.dokan_enable:
-        #     self.goto_dokan_open()
-        # else:
-        #     # self.goto_dokan_new()
+        # 进入道馆
         self.goto_dokan()
 
         # 开始道馆流程
@@ -403,8 +392,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             self.goto_dokan_click()
             return True
         else:
+            # 管理开道馆
             if self.config.dokan.dokan_config.dokan_enable:
                 self.open_dokan()
+            else:
+                time.sleep(20)
             return False
 
     def goto_dokan_click(self):
