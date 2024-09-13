@@ -55,17 +55,23 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         if not reuse_screenshot:
             self.screenshot()
 
-        if self.appear(self.I_CHECK_EXPLORATION):
+        if self.appear(self.I_CHECK_EXPLORATION) and not (self.appear(self.I_E_SETTINGS_BUTTON) or self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_E_AUTO_ROTATE_OFF)):
+            logger.info("在探索大世界中")
             return Scene.WORLD
         elif self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
+            logger.info("在探索入口弹窗中")
             return Scene.ENTRANCE
         elif self.appear(self.I_E_SETTINGS_BUTTON) or self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_E_AUTO_ROTATE_OFF):
+            logger.info("在探索里面")
             return Scene.MAIN
         elif self.is_in_prepare():
+            logger.info("在战斗准备")
             return Scene.BATTLE_PREPARE
         elif self.is_in_battle():
+            logger.info("在战斗中")
             return Scene.BATTLE_FIGHTING
         elif self.is_in_room() or self.appear(self.I_CREATE_ENSURE):
+            logger.info("在组队界面中")
             return Scene.TEAM
 
         logger.info("Unknown scene")
