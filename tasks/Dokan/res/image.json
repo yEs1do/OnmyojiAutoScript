@@ -216,9 +216,17 @@
     "roiBack": "628,60,45,33",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "状态：道馆胜利"
+    "description": "打馆主胜利"
   },
-
+  {
+    "itemName": "ryou_dokan_fail",
+    "imageName": "res_ryou_dokan_fail.png",
+    "roiFront": "454,44,56,46",
+    "roiBack": "454,44,56,46",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "打馆主失败"
+  },
   {
     "itemName": "ryou_dokan_in_field2",
     "imageName": "res_ryou_dokan_in_field2.png",

@@ -1,5 +1,14 @@
 [
   {
+    "itemName": "dokan_status",
+    "roiFront": "492,628,222,44",
+    "roiBack": "492,628,222,44",
+    "mode": "Full",
+    "method": "Default",
+    "keyword": "",
+    "description": "道馆开启状态"
+  },
+  {
     "itemName": "dokan_ready_sel1",
     "roiFront": "1156,105,80,28",
     "roiBack": "1156,105,80,28",

@@ -72,8 +72,10 @@ class DokanAssets:
 	I_RYOU_DOKAN_IN_FIELD = RuleImage(roi_front=(1128,536,100,100), roi_back=(1128,536,100,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_in_field.png")
 	# 馆主战等待中 
 	I_DOKAN_BOSS_WAITING = RuleImage(roi_front=(603,148,130,32), roi_back=(603,148,130,32), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_dokan_boss_waiting.png")
-	# 状态：道馆胜利 
+	# 打馆主胜利 
 	I_RYOU_DOKAN_WIN = RuleImage(roi_front=(628,60,45,33), roi_back=(628,60,45,33), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_win.png")
+	# 打馆主失败 
+	I_RYOU_DOKAN_FAIL = RuleImage(roi_front=(454,44,56,46), roi_back=(454,44,56,46), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_fail.png")
 	# 状态：进入战斗，待开始，右下角图标。 
 	I_RYOU_DOKAN_IN_FIELD2 = RuleImage(roi_front=(1131,562,88,48), roi_back=(1131,562,88,48), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan_in_field2.png")
 	# 状态：战斗结算，可能是打完小朋友了，也可能是失败了。 
@@ -101,9 +103,9 @@ class DokanAssets:
 
 
 	# Ocr Rule Assets
-	# 道馆开启状态
+	# 道馆开启状态 
 	O_DOKAN_STATUS = RuleOcr(roi=(492,628,222,44), area=(492,628,222,44), mode="Full", method="Default", keyword="", name="dokan_status")
-	# 选择寮1
+	# 选择寮1 
 	O_DOKAN_READY_SEL1 = RuleOcr(roi=(1156,105,80,28), area=(1156,105,80,28), mode="Digit", method="Default", keyword="", name="dokan_ready_sel1")
 	# 选择寮2 
 	O_DOKAN_READY_SEL2 = RuleOcr(roi=(1156,255,80,28), area=(1156,255,80,28), mode="Digit", method="Default", keyword="", name="dokan_ready_sel2")
