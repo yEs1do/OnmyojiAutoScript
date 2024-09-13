@@ -24,8 +24,6 @@ from tasks.GameUi.page import page_main, page_shikigami_records, page_guild
 from tasks.RichMan.assets import RichManAssets
 from module.base.timer import Timer
 
-global_count = 0
-
 class DokanScene(Enum):
     # 未知界面
     RYOU_DOKAN_SCENE_UNKNOWN = 0
@@ -210,10 +208,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         #         self.green_mark(config.green_enable, config.green_mark)
         #         self.green_mark_done = True
 
-        # 等待战斗结果
-        # logger.info(f"等待战斗结果:config.random_click_swipt_enable={config.random_click_swipt_enable}")
-        # logger.info("come on baby, let's go.")
-
         while 1:
 
             self.screenshot()
@@ -225,58 +219,48 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 self.device.stuck_record_add('BATTLE_STATUS_S')
                 self.device.click_record_clear()
 
-                logger.info(f"已经完成准备点击！开始战斗")
+                logger.info(f"开始战斗")
 
-                global global_count
-                global_count += 1
                 # 绿标
                 if not self.green_mark_done:
                     self.green_mark(config.green_enable, config.green_mark)
                     self.green_mark_done = True
-
-                logger.info(f"battle starts {global_count}")
 
             # 如果出现赢 就点击
             if self.appear(GeneralBattle.I_WIN, threshold=0.8):
                 self.ui_click_until_disappear(GeneralBattle.I_WIN)
                 logger.info("Dokan guards eliminated, boss is on the way")
                 logger.info("战斗赢,红色鼓")
-                win = True
                 break
 
             # 如果出现打败馆主的赢，就点击
             if self.appear(self.I_RYOU_DOKAN_WIN, threshold=0.8):
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_WIN)
                 logger.info("馆主的赢，就点击.")
-                win = True
                 break
 
-            # 如果出现失败 就点击，返回False。 TODO 不知道挑战馆主失败是不是同一个画面？
+            # 如果出现失败 就点击，返回False。
             if self.appear(GeneralBattle.I_FALSE, threshold=0.8):
                 self.ui_click_until_disappear(GeneralBattle.I_FALSE)
                 logger.info("战斗失败，返回")
-                win = False
                 break
 
-            # 如果出现失败 就点击，返回False。 TODO 不知道挑战馆主失败是不是同一个画面？
+            # 如果出现失败 就点击，返回False。
             if self.appear(self.I_RYOU_DOKAN_FAIL, threshold=0.8):
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_FAIL)
                 logger.info("馆主战斗失败，返回")
-                win = False
                 break
 
             # 如果领奖励
             if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.6):
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_BATTLE_OVER)
                 logger.info("领奖励,那个魂")
-                win = True
                 break
 
             # 如果领奖励出现金币
             if self.appear(GeneralBattle.I_REWARD_GOLD, threshold=0.8):
                 self.ui_click_until_disappear(GeneralBattle.I_REWARD_GOLD)
                 logger.info("领奖励,那个金币")
-                win = True
                 break
 
             # 如果开启战斗过程随机滑动
