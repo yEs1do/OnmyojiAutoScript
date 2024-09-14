@@ -36,6 +36,8 @@ class DokanAssets:
 	I_CREATE_DAOGUAN_SURE = RuleImage(roi_front=(766,409,100,55), roi_back=(766,409,100,55), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_create_daoguan_sure.png")
 	# 已经建立道馆  
 	I_CREATE_DAOGUAN_OK = RuleImage(roi_front=(262,630,45,62), roi_back=(262,630,45,62), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_create_daoguan_ok.png")
+	# 建立道馆弹出页，红色关闭 
+	I_RED_CLOSE = RuleImage(roi_front=(1175,108,41,42), roi_back=(1175,108,41,42), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_red_close.png")
 	# 挑战 
 	I_NEWTZ = RuleImage(roi_front=(798,482,44,39), roi_back=(0,0,1047,718), threshold=0.7, method="Template matching", file="./tasks/Dokan/res/Screenshots_newtz.png")
 	# 确定 

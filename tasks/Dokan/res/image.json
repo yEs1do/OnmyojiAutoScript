@@ -8,7 +8,7 @@
     "threshold": 0.8,
     "description": "道馆"
   },
-    {
+  {
     "itemName": "fangshou",
     "imageName": "Screenshots_fangshou.png",
     "roiFront": "35,610,75,79",
@@ -17,7 +17,7 @@
     "threshold": 0.8,
     "description": "防守战报"
   },
-    {
+  {
     "itemName": "create_daoguan",
     "imageName": "Screenshots_create_daoguan.png",
     "roiFront": "262,630,45,62",
@@ -26,7 +26,7 @@
     "threshold": 0.8,
     "description": "建立道馆 "
   },
-    {
+  {
     "itemName": "create_daoguan_sure",
     "imageName": "Screenshots_create_daoguan_sure.png",
     "roiFront": "766,409,100,55",
@@ -35,7 +35,7 @@
     "threshold": 0.8,
     "description": "确定建立道馆"
   },
-      {
+  {
     "itemName": "create_daoguan_ok",
     "imageName": "Screenshots_create_daoguan_ok.png",
     "roiFront": "262,630,45,62",
@@ -43,6 +43,15 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "已经建立道馆 "
+  },
+  {
+    "itemName": "red_close",
+    "imageName": "Screenshots_red_close.png",
+    "roiFront": "1175,108,41,42",
+    "roiBack": "1175,108,41,42",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "建立道馆弹出页，红色关闭"
   },
   {
     "itemName": "newtz",
@@ -152,8 +161,6 @@
     "threshold": 0.8,
     "description": "优先攻击: 黑脸"
   },
-
-
   {
     "itemName": "ryou_dokan_gathering",
     "imageName": "res_ryou_dokan_gathering.png",
@@ -208,7 +215,6 @@
     "threshold": 0.8,
     "description": "馆主战等待中"
   },
-
   {
     "itemName": "ryou_dokan_win",
     "imageName": "res_ryou_dokan_win.png",
@@ -245,7 +251,6 @@
     "threshold": 0.8,
     "description": "状态：战斗结算，可能是打完小朋友了，也可能是失败了。"
   },
-
   {
     "itemName": "ryou_dokan_fighting",
     "imageName": "res_ryou_dokan_fighting.png",
@@ -282,8 +287,6 @@
     "threshold": 0.8,
     "description": "道馆退出确认"
   },
-
-  
   {
     "itemName": "ryou_dokan_cheering_scores",
     "imageName": "res_ryou_dokan_cheering_scores.png",
@@ -311,5 +314,4 @@
     "threshold": 0.8,
     "description": "场景检测：阴阳竂"
   }
-
 ]

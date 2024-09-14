@@ -68,6 +68,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     battle_count: int = 0
     # 寮友进入道馆次数
     goto_dokan_num: int = 0
+    CREATE_DAOGUAN_OK = (83, 87, 89)
+    CREATE_DAOGUAN = (103, 84, 58)
 
     @cached_property
     def _attack_priorities(self) -> list:
@@ -402,9 +404,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 self.open_dokan()
             else:
                 # 寮成员十次未进入道馆结束任务
-                time.sleep(20)
                 self.goto_dokan_num += 1
                 logger.info(f"寮成员第{self.goto_dokan_num}次进入选择寮界面")
+                time.sleep(20)
                 if self.goto_dokan_num >= 10:
                     logger.info(f"寮成员{self.goto_dokan_num}次未进入道馆结束任务!")
                     self.goto_main()
@@ -443,24 +445,18 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     def open_dokan(self):
 
         # 判断是否需要建立道馆
-        count = 0
         while 1:
             self.screenshot()
-            if self.appear(self.I_CREATE_DAOGUAN_SURE, interval=1):
-                self.ui_click_until_disappear(self.I_CREATE_DAOGUAN_SURE)
+            if self.appear_then_click(self.I_RED_CLOSE, interval=1):
+                continue
+            if self.appear_then_click(self.I_CREATE_DAOGUAN_SURE, interval=1):
+                continue
+            if self.I_CREATE_DAOGUAN_OK.match_mean_color(self.device.image, self.CREATE_DAOGUAN_OK, 10):
                 break
+            if self.appear_then_click(self.I_CREATE_DAOGUAN, interval=1):
+                continue
 
-            if self.appear(self.I_CREATE_DAOGUAN, interval=1):
-                self.appear_then_click(self.I_CREATE_DAOGUAN, interval=1)
-                time.sleep(1)
-                count += 1
-                if count < 3:
-                    continue
-                break
-            if not self.appear(self.I_CREATE_DAOGUAN, interval=1):
-                break
-            # if self.appear(self.I_CREATE_DAOGUAN, interval=0.8):
-            #     break
+        # 识别寮资金 选择最低的
         count = 0
         num = 0
         while 1:
@@ -497,6 +493,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             if self.appear(self.I_NEWTZ, interval=1):
                 break
 
+        # 识别挑战按钮
         while 1:
             self.screenshot()
             if self.appear_then_click(self.I_NEWTZ, interval=1):
@@ -512,7 +509,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     def get_current_scene(self):
         ''' 检测当前场景
         '''
-        time.sleep(3)
+        time.sleep(1.5)
         self.screenshot()
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
@@ -522,7 +519,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         if self.appear(self.I_SCENE_RYOU, threshold=0.8):
             logger.info(f"在阴阳寮中")
             return False, DokanScene.RYOU_DOKAN_RYOU
-
+        # 场景检测：在庭院中
+        if self.appear(self.I_CHECK_MAIN, threshold=0.8):
+            # self.ui_goto(page_main)
+            logger.info(f"在庭院中")
+            return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
         # 场景检测：选寮界面
         if self.appear(self.I_FANGSHOU, threshold=0.8):
             logger.info(f"在选寮界面中")
@@ -574,27 +575,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         #     # if self.appear(self.I_RYOU_DOKAN_FINISHED, threshold=0.8):
         #     return True, DokanScene.RYOU_DOKAN_SCENE_FINISHED
 
-        return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
-
-
-# def test_goto_main():
-#     from module.config.config import Config
-#     from module.device.device import Device
-#     from tasks.GameUi.page import page_dokan
-#
-#     config = Config('oas1')
-#     device = Device(config)
-#     t = ScriptTask(config, device)
-#     # t.run()
-#     t.ui_current = page_dokan
-#     t.ui_goto(page_main)
-
+        return True, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
 
 if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('du')
+    config = Config('oas1')
     device = Device(config)
     t = ScriptTask(config, device)
     t.run()
