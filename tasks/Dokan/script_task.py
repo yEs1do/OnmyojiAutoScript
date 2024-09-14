@@ -23,6 +23,8 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_shikigami_records, page_guild
 from tasks.RichMan.assets import RichManAssets
 from module.base.timer import Timer
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
+
 
 class DokanScene(Enum):
     # 未知界面
@@ -63,7 +65,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     medal_grid: ImageGrid = None
     attack_priority_selected: bool = False
     team_switched: bool = False
-    green_mark_done: bool = False
     # 战斗次数
     battle_count: int = 0
     # 寮友进入道馆次数
@@ -110,8 +111,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             # 检测当前界面的场景（时间关系，暂时没有做庭院、町中等主界面的场景检测, 应考虑在GameUI.game_ui.ui_get_current_page()里实现）
             in_dokan, current_scene = self.get_current_scene()
 
-            # logger.info(f"in_dokan={in_dokan}, current_scene={current_scene}")
-
             # 如果当前不在道馆，或者被人工操作退出道馆了，重新尝试进入道馆
             if not in_dokan:
                 self.goto_dokan()
@@ -139,8 +138,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 # self.click(click=self.C_DOKAN_READY_FOR_BATTLE, interval=1.5)
                 # self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=2.2)
                 # self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3, interval=1.8)
-                # 每次战斗结束都重置绿标
-                self.green_mark_done = False
             # 场景状态：如果CD中，开始加油
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_CD:
                 if cfg.dokan_config.dokan_auto_cheering_while_cd:
@@ -164,6 +161,84 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             # 防封，随机移动，随机点击（安全点击），随机时延
             # if not self.anti_detect(True, True, True):
             #     time.sleep(1)
+
+    def get_current_scene(self):
+        ''' 检测当前场景
+        '''
+        time.sleep(2)
+        self.screenshot()
+        self.device.click_record_clear()
+        self.device.stuck_record_add('BATTLE_STATUS_S')
+
+        # logger.info(f"检测当前场景")
+        # 场景检测：阴阳竂
+        if self.appear(self.I_SCENE_RYOU, threshold=0.8):
+            logger.info(f"在阴阳寮中")
+            return False, DokanScene.RYOU_DOKAN_RYOU
+        # 场景检测：在庭院中
+        if self.appear(self.I_CHECK_MAIN, threshold=0.8):
+            # self.ui_goto(page_main)
+            logger.info(f"在庭院中")
+            return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
+        # 场景检测：选寮界面
+        if self.appear(self.I_FANGSHOU, threshold=0.8):
+            logger.info(f"在选寮界面中")
+            return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
+
+        # 状态：判断是否集结中
+        # if self.ocr_appear(self.O_DOKAN_GATHERING):
+        if self.appear(self.I_RYOU_DOKAN_GATHERING, threshold=0.95):
+            logger.info(f"道馆集结中")
+            return True, DokanScene.RYOU_DOKAN_SCENE_GATHERING
+        # 状态：是否在等待馆主战
+        # if self.ocr_appear(self.O_DOKAN_BOSS_WAITING):
+        if self.appear(self.I_DOKAN_BOSS_WAITING):
+            logger.info(f"等待馆主战中")
+            return True, DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING
+
+        # 状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
+        if self.appear(self.I_RYOU_DOKAN_START_CHALLENGE, 0.95):
+            logger.info(f"挑战次数已重置")
+            return True, DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE
+
+        # # 状态：进入战斗，待开始
+        if self.appear(self.I_RYOU_DOKAN_IN_FIELD, threshold=0.85):
+            logger.info(f"开始点击准备中")
+            return True, DokanScene.RYOU_DOKAN_SCENE_IN_FIELD
+        # 状态：战斗结算，可能是打完小朋友了，也可能是失败了。
+        if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.85):
+            logger.info(f"打完看到魂奖励中")
+            self.appear_then_click(self.I_RYOU_DOKAN_BATTLE_OVER)
+            return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
+
+        # 状态：达到失败次数，CD中
+        if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
+            logger.info(f"等待挑战次数，观战中")
+            return True, DokanScene.RYOU_DOKAN_SCENE_CD
+
+        # 如果出现馆主战斗失败 就点击，返回False。
+        if self.appear(self.I_RYOU_DOKAN_FAIL, threshold=0.8):
+            self.appear_then_click(self.I_RYOU_DOKAN_FAIL)
+            logger.info("馆主战斗失败，返回")
+            return True, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
+
+        # # 状态：加油中，左下角有鼓
+        # if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(
+        #         self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
+        #     return True, DokanScene.RYOU_DOKAN_SCENE_CHEERING
+        # # 状态：战斗中，左上角的加油图标
+        # if self.appear(self.I_RYOU_DOKAN_FIGHTING, threshold=0.8):
+        #     return True, DokanScene.RYOU_DOKAN_SCENE_FIGHTING
+        # if self.appear(self.I_RYOU_DOKAN_FAILED_VOTE_NO):
+        #     return True, DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE_NO
+
+        # 状态：道馆已经结束，图片位置会偏移，换OCR
+        # if self.ocr_appear(self.O_DOKAN_SUCCEEDED):
+        #     logger.info(f"道馆打完了，等待关闭中")
+        #     # if self.appear(self.I_RYOU_DOKAN_FINISHED, threshold=0.8):
+        #     return True, DokanScene.RYOU_DOKAN_SCENE_FINISHED
+
+        return True, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
 
     def dokan_battle(self, cfg: Dokan):
         """ 道馆战斗
@@ -189,20 +264,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         #     # 切完队伍后有时候会卡顿，先睡一觉，防止快速跳到绿标流程，导致未能成功绿标
         #     time.sleep(3)
 
-        # # 等待准备按钮的出现
-        # self.wait_until_appear(self.I_PREPARE_HIGHLIGHT)
-        #
-        # # 点击准备
-        # if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1.5):
-        #     logger.info("Prepare")
-        #
-        #     # 绿标式神, should we check there's a green marked role?
-        #     if not self.green_mark_done and self.is_in_battle(False):
-        #         logger.info(
-        #             f"green mark: enable={config.green_enable}, green_mark={config.green_mark}")
-        #         self.green_mark(config.green_enable, config.green_mark)
-        #         self.green_mark_done = True
-
         while 1:
 
             self.screenshot()
@@ -211,16 +272,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD)
 
-                self.device.stuck_record_add('BATTLE_STATUS_S')
                 self.device.click_record_clear()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
 
                 self.battle_count += 1
-                logger.info(f"开始战斗: {self.battle_count}")
+                logger.info(f"第 {self.battle_count} 次战斗")
 
                 # 绿标
-                if not self.green_mark_done:
-                    self.green_mark(config.green_enable, config.green_mark)
-                    self.green_mark_done = True
+                self.green_mark(config.green_enable, config.green_mark)
 
             # 如果出现赢 就点击
             if self.appear(GeneralBattle.I_WIN, threshold=0.8):
@@ -241,7 +300,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 logger.info("战斗失败，返回")
                 break
 
-            # 如果出现失败 就点击，返回False。
+            # 如果出现馆主战斗失败 就点击，返回False。
             if self.appear(self.I_RYOU_DOKAN_FAIL, threshold=0.8):
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_FAIL)
                 logger.info("馆主战斗失败，返回")
@@ -265,103 +324,50 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 logger.info("random swipt ...")
                 self.random_click_swipt()
 
-    def dokan_choose_attack_priority(self, attack_priority: int) -> bool:
-        """ 选择优先攻击
-        : return
+    def green_mark(self, enable: bool = False, mark_mode: GreenMarkType = GreenMarkType.GREEN_MAIN):
         """
-        logger.hr('Try to choose attack priority')
-        max_try = 5
+        绿标， 如果不使能就直接返回
+        :param enable:
+        :param mark_mode:
+        :return:
+        """
+        if enable:
+            if self.wait_until_appear(self.I_GREEN_MARK, wait_time=1):
+                logger.info("识别到绿标，返回")
+                return
+            logger.info("Green is enable")
+            x, y = None, None
+            match mark_mode:
+                case GreenMarkType.GREEN_LEFT1:
+                    x, y = self.C_GREEN_LEFT_1.coord()
+                    logger.info("Green left 1")
+                case GreenMarkType.GREEN_LEFT2:
+                    x, y = self.C_GREEN_LEFT_2.coord()
+                    logger.info("Green left 2")
+                case GreenMarkType.GREEN_LEFT3:
+                    x, y = self.C_GREEN_LEFT_3.coord()
+                    logger.info("Green left 3")
+                case GreenMarkType.GREEN_LEFT4:
+                    x, y = self.C_GREEN_LEFT_4.coord()
+                    logger.info("Green left 4")
+                case GreenMarkType.GREEN_LEFT5:
+                    x, y = self.C_GREEN_LEFT_5.coord()
+                    logger.info("Green left 5")
+                case GreenMarkType.GREEN_MAIN:
+                    x, y = self.C_GREEN_MAIN.coord()
+                    logger.info("Green main")
 
-        if not self.appear_then_click(self.I_RYOU_DOKAN_ATTACK_PRIORITY, interval=2):
-            logger.error(f"can not find dokan priority option button, choose attack priority process skipped")
-            return False
+            # 等待那个准备的消失
+            while 1:
+                self.screenshot()
+                if not self.appear(self.I_PREPARE_HIGHLIGHT):
+                    break
 
-        logger.info(f"start select attack priority: {attack_priority}, remain try: {max_try}")
-        try:
-            target_attack = self._attack_priorities[attack_priority]
-        except:
-            target_attack = self._attack_priorities[0]
-
-        while 1:
-            self.screenshot()
-            if max_try <= 0:
-                logger.warn("give up priority selection!")
-                break
-
-            if self.appear_then_click(target_attack, interval=1.8):
-                self.attack_priority_selected = True
-                logger.info(f"selected attack priority: {attack_priority}")
-                break
-
-            max_try -= 1
-
-        return True
-
-    def anti_detect(self, random_move: bool = True, random_click: bool = True, random_delay: bool = True):
-        '''额外的防封测试
-
-        准备找个号做做爬楼活动的每天300次试试
-        '''
-        res = False
-        # 三个行为中，任何一个生效了都返回True, 否则返回False
-        if random_move:
-            self.random_click_swipt()
-            res = True
-        if random_click:
-            # 0到2秒之间的随机浮点数
-            sleep = random.uniform(0, 2)
-            # 只保留2位小数
-            sleep = round(sleep, 2)
-            if not self.config.dokan.dokan_config.anti_detect_click_fixed_random_area:
-                # 多搞几个安全点击区域
-                num = random.randint(0, 5)
-                if num == 0:
-                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA, interval=sleep)
-                elif num == 1:
-                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=sleep)
-                elif num == 2:
-                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3, interval=sleep)
-                elif num == 3:
-                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA, interval=sleep)
-                else:
-                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=sleep)
-            else:
-                # 假设安全区域是绿色的
-                safe_color_lower = np.array([45, 25, 25])  # HSV颜色空间的绿色下界
-                safe_color_upper = np.array([90, 255, 255])  # HSV颜色空间的绿色上界
-                pos = detect_safe_area2(self.device.image, safe_color_lower, safe_color_upper, 3, True)
-                logger.info(f"random click area: {pos}, delay: {sleep}")
-                self.click(pos)
-
-            res = True
-        if random_delay:
-            # 0到2秒之间的随机浮点数
-            sleep = random.uniform(0, 5)
-            # 只保留2位小数
-            sleep = round(sleep, 2)
-            time.sleep(sleep)
-            res = True
-        return res
-
-    def goto_main(self):
-        ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
-          退出道馆。注意：有的时候有退出确认框，有的时候没有。未找到规律。
-               先试试用确认框的，若是实在不行，就改成等道馆时间结束后，系统自动退出
-               但是如果出错了，需要重启任务时必须走GameUi.ui_goto(page_main)，
-               那样有或者无确认框不确定性还是会导致ui_goto()出错
-        '''
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(GeneralBattle.I_EXIT, interval=1):
-                continue
-            # 点了后EXIT后，可能无确认框
-            if self.appear_then_click(self.I_RYOU_DOKAN_EXIT_ENSURE, interval=1):
-                continue
-            if self.appear(self.I_FANGSHOU, interval=1):
-                break
-
-        self.ui_get_current_page()
-        self.ui_goto(page_main)
+            # 判断有无坐标的偏移
+            self.appear_then_click(self.I_LOCAL)
+            time.sleep(0.3)
+            # 点击绿标
+            self.device.click(x, y)
 
     def goto_dokan(self):
 
@@ -476,8 +482,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
         DOKAN_list = [DOKAN_1, DOKAN_2, DOKAN_3, DOKAN_4]
         DOKAN_list_sort = sorted(DOKAN_list)
-        DOKAN_click_list = [self.O_DOKAN_READY_SEL1, self.O_DOKAN_READY_SEL2, self.O_DOKAN_READY_SEL3,
-                            self.O_DOKAN_READY_SEL4]
+        DOKAN_click_list = [self.O_DOKAN_READY_SEL1, self.O_DOKAN_READY_SEL2,
+                            self.O_DOKAN_READY_SEL3, self.O_DOKAN_READY_SEL4]
 
         while 1:
             DOKAN_index = DOKAN_list.index(DOKAN_list_sort[num])
@@ -506,76 +512,104 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             if self.appear(self.I_RYOU_DOKAN_CHECK, threshold=0.6):
                 break
 
-    def get_current_scene(self):
-        ''' 检测当前场景
+    def dokan_choose_attack_priority(self, attack_priority: int) -> bool:
+        """ 选择优先攻击
+        : return
+        """
+        logger.hr('Try to choose attack priority')
+        max_try = 5
+
+        if not self.appear_then_click(self.I_RYOU_DOKAN_ATTACK_PRIORITY, interval=2):
+            logger.error(f"can not find dokan priority option button, choose attack priority process skipped")
+            return False
+
+        logger.info(f"start select attack priority: {attack_priority}, remain try: {max_try}")
+        try:
+            target_attack = self._attack_priorities[attack_priority]
+        except:
+            target_attack = self._attack_priorities[0]
+
+        while 1:
+            self.screenshot()
+            if max_try <= 0:
+                logger.warn("give up priority selection!")
+                break
+
+            if self.appear_then_click(target_attack, interval=1.8):
+                self.attack_priority_selected = True
+                logger.info(f"selected attack priority: {attack_priority}")
+                break
+
+            max_try -= 1
+
+        return True
+
+    def anti_detect(self, random_move: bool = True, random_click: bool = True, random_delay: bool = True):
+        '''额外的防封测试
+
+        准备找个号做做爬楼活动的每天300次试试
         '''
-        time.sleep(1.5)
-        self.screenshot()
-        self.device.stuck_record_add('BATTLE_STATUS_S')
-        self.device.click_record_clear()
+        res = False
+        # 三个行为中，任何一个生效了都返回True, 否则返回False
+        if random_move:
+            self.random_click_swipt()
+            res = True
+        if random_click:
+            # 0到2秒之间的随机浮点数
+            sleep = random.uniform(0, 2)
+            # 只保留2位小数
+            sleep = round(sleep, 2)
+            if not self.config.dokan.dokan_config.anti_detect_click_fixed_random_area:
+                # 多搞几个安全点击区域
+                num = random.randint(0, 5)
+                if num == 0:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA, interval=sleep)
+                elif num == 1:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=sleep)
+                elif num == 2:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA3, interval=sleep)
+                elif num == 3:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA, interval=sleep)
+                else:
+                    self.click(click=self.C_DOKAN_RANDOM_CLICK_AREA2, interval=sleep)
+            else:
+                # 假设安全区域是绿色的
+                safe_color_lower = np.array([45, 25, 25])  # HSV颜色空间的绿色下界
+                safe_color_upper = np.array([90, 255, 255])  # HSV颜色空间的绿色上界
+                pos = detect_safe_area2(self.device.image, safe_color_lower, safe_color_upper, 3, True)
+                logger.info(f"random click area: {pos}, delay: {sleep}")
+                self.click(pos)
 
-        # logger.info(f"检测当前场景")
-        # 场景检测：阴阳竂
-        if self.appear(self.I_SCENE_RYOU, threshold=0.8):
-            logger.info(f"在阴阳寮中")
-            return False, DokanScene.RYOU_DOKAN_RYOU
-        # 场景检测：在庭院中
-        if self.appear(self.I_CHECK_MAIN, threshold=0.8):
-            # self.ui_goto(page_main)
-            logger.info(f"在庭院中")
-            return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
-        # 场景检测：选寮界面
-        if self.appear(self.I_FANGSHOU, threshold=0.8):
-            logger.info(f"在选寮界面中")
-            return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
+            res = True
+        if random_delay:
+            # 0到2秒之间的随机浮点数
+            sleep = random.uniform(0, 5)
+            # 只保留2位小数
+            sleep = round(sleep, 2)
+            time.sleep(sleep)
+            res = True
+        return res
 
-        # 状态：判断是否集结中
-        # if self.ocr_appear(self.O_DOKAN_GATHERING):
-        if self.appear(self.I_RYOU_DOKAN_GATHERING, threshold=0.95):
-            logger.info(f"道馆集结中")
-            return True, DokanScene.RYOU_DOKAN_SCENE_GATHERING
-        # 状态：是否在等待馆主战
-        # if self.ocr_appear(self.O_DOKAN_BOSS_WAITING):
-        if self.appear(self.I_DOKAN_BOSS_WAITING):
-            logger.info(f"等待馆主战中")
-            return True, DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING
+    def goto_main(self):
+        ''' 保持好习惯，一个任务结束了就返回庭院，方便下一任务的开始或者是出错重启
+          退出道馆。注意：有的时候有退出确认框，有的时候没有。未找到规律。
+               先试试用确认框的，若是实在不行，就改成等道馆时间结束后，系统自动退出
+               但是如果出错了，需要重启任务时必须走GameUi.ui_goto(page_main)，
+               那样有或者无确认框不确定性还是会导致ui_goto()出错
+        '''
+        while 1:
+            self.screenshot()
+            if self.appear_then_click(GeneralBattle.I_EXIT, interval=1):
+                continue
+            # 点了后EXIT后，可能无确认框
+            if self.appear_then_click(self.I_RYOU_DOKAN_EXIT_ENSURE, interval=1):
+                continue
+            if self.appear(self.I_FANGSHOU, interval=1):
+                break
 
-        # 状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
-        if self.appear(self.I_RYOU_DOKAN_START_CHALLENGE, 0.95):
-            logger.info(f"挑战次数已重置")
-            return True, DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE
+        self.ui_get_current_page()
+        self.ui_goto(page_main)
 
-        # # 状态：进入战斗，待开始
-        if self.appear(self.I_RYOU_DOKAN_IN_FIELD, threshold=0.85):
-            logger.info(f"开始点击准备中")
-            return True, DokanScene.RYOU_DOKAN_SCENE_IN_FIELD
-        # 状态：战斗结算，可能是打完小朋友了，也可能是失败了。
-        if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.85):
-            logger.info(f"打完看到魂奖励中")
-            return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
-
-        # 状态：达到失败次数，CD中
-        if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
-            logger.info(f"等待挑战次数，观战中")
-            return True, DokanScene.RYOU_DOKAN_SCENE_CD
-
-        # # 状态：加油中，左下角有鼓
-        # if self.appear_then_click(self.I_RYOU_DOKAN_CHEERING, threshold=0.8) or self.appear(
-        #         self.I_RYOU_DOKAN_CHEERING_GRAY, threshold=0.8):
-        #     return True, DokanScene.RYOU_DOKAN_SCENE_CHEERING
-        # # 状态：战斗中，左上角的加油图标
-        # if self.appear(self.I_RYOU_DOKAN_FIGHTING, threshold=0.8):
-        #     return True, DokanScene.RYOU_DOKAN_SCENE_FIGHTING
-        # if self.appear(self.I_RYOU_DOKAN_FAILED_VOTE_NO):
-        #     return True, DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE_NO
-
-        # 状态：道馆已经结束，图片位置会偏移，换OCR
-        # if self.ocr_appear(self.O_DOKAN_SUCCEEDED):
-        #     logger.info(f"道馆打完了，等待关闭中")
-        #     # if self.appear(self.I_RYOU_DOKAN_FINISHED, threshold=0.8):
-        #     return True, DokanScene.RYOU_DOKAN_SCENE_FINISHED
-
-        return True, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
 
 if __name__ == "__main__":
     from module.config.config import Config
