@@ -7,13 +7,13 @@ import random
 import time
 from enum import Enum
 
+import cv2
 import numpy as np
 from cached_property import cached_property
 
 from module.atom.image_grid import ImageGrid
 from module.exception import TaskEnd
 from module.logger import logger
-from tasks.Component.GeneralBattle.config_general_battle import GeneralBattleConfig
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Dokan.assets import DokanAssets
@@ -69,8 +69,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     battle_count: int = 0
     # 寮友进入道馆次数
     goto_dokan_num: int = 0
-    CREATE_DAOGUAN_OK = (83, 87, 89)
-    CREATE_DAOGUAN = (103, 84, 58)
+    # CREATE_DAOGUAN_OK = (83, 87, 89)
+    # CREATE_DAOGUAN = (103, 84, 58)
 
     @cached_property
     def _attack_priorities(self) -> list:
@@ -102,10 +102,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
         # 进入道馆
         self.goto_dokan()
+        # 开始道馆流程
+        self.dokan_process(cfg, attack_priority)
 
+    def dokan_process(self, cfg: Dokan, attack_priority: int):
         # 开始道馆流程
         while 1:
-
             # 检测当前界面的场景（时间关系，暂时没有做庭院、町中等主界面的场景检测, 应考虑在GameUI.game_ui.ui_get_current_page()里实现）
             in_dokan, current_scene = self.get_current_scene()
 
@@ -258,9 +260,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         # 正式进攻会设定 2s - 10s 的随机延迟，避免攻击间隔及其相近被检测为脚本。
         # if cfg.dokan_config.random_delay:
         #     self.anti_detect(False, False, True)
-
-        # 上面可能睡了一觉，重新截图
-        self.screenshot()
 
         # 更换队伍
         # if not self.team_switched:
@@ -465,8 +464,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 continue
             if self.appear_then_click(self.I_CREATE_DAOGUAN_SURE, interval=1):
                 continue
-            if self.I_CREATE_DAOGUAN_OK.match_mean_color(self.device.image, self.CREATE_DAOGUAN_OK, 10):
+            if self.appear_rbg(self.I_CREATE_DAOGUAN_OK, self.device.image):
                 break
+            # if self.I_CREATE_DAOGUAN_OK.match_mean_color(self.device.image, self.CREATE_DAOGUAN_OK, 10):
+            #     break
             if self.appear_then_click(self.I_CREATE_DAOGUAN, interval=1):
                 continue
 
@@ -617,6 +618,16 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
         self.ui_get_current_page()
         self.ui_goto(page_main)
+
+    def appear_rbg(self, target, image):
+        # 加载图像
+        average_color = cv2.mean(cv2.imread(target.file))
+        print("三原色：", average_color)
+
+        if target.match_mean_color(image, average_color, 10):
+            return True
+        else:
+            return False
 
 
 if __name__ == "__main__":
