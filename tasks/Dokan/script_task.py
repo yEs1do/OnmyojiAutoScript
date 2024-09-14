@@ -129,6 +129,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 # logger.debug(f"Ryou DOKAN boss battle waiting...")
             # 场景状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE:
+                time.sleep(1)
                 self.appear_then_click(self.I_RYOU_DOKAN_START_CHALLENGE, interval=1)
                 # # 场景状态：进入战斗，待准备
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_IN_FIELD:
@@ -165,7 +166,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     def get_current_scene(self):
         ''' 检测当前场景
         '''
-        time.sleep(2)
+        time.sleep(1)
         self.screenshot()
         self.device.click_record_clear()
         self.device.stuck_record_add('BATTLE_STATUS_S')
@@ -189,10 +190,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         # if self.ocr_appear(self.O_DOKAN_GATHERING):
         if self.appear(self.I_RYOU_DOKAN_GATHERING, threshold=0.95):
             logger.info(f"道馆集结中")
+            time.sleep(5)
             return True, DokanScene.RYOU_DOKAN_SCENE_GATHERING
         # 状态：是否在等待馆主战
         # if self.ocr_appear(self.O_DOKAN_BOSS_WAITING):
         if self.appear(self.I_DOKAN_BOSS_WAITING):
+            time.sleep(5)
             logger.info(f"等待馆主战中")
             return True, DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING
 
@@ -213,6 +216,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
         # 状态：达到失败次数，CD中
         if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
+            time.sleep(5)
             logger.info(f"等待挑战次数，观战中")
             return True, DokanScene.RYOU_DOKAN_SCENE_CD
 
@@ -220,6 +224,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         if self.appear(self.I_RYOU_DOKAN_FAIL, threshold=0.8):
             self.appear_then_click(self.I_RYOU_DOKAN_FAIL)
             logger.info("馆主战斗失败，返回")
+            return True, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
+        # 如果出现打败馆主的赢，就点击
+        if self.appear(self.I_RYOU_DOKAN_WIN, threshold=0.8):
+            self.appear_then_click(self.I_RYOU_DOKAN_WIN)
+            logger.info("馆主的赢，就点击.")
             return True, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
 
         # # 状态：加油中，左下角有鼓
@@ -266,6 +275,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
         while 1:
 
+            time.sleep(1)
             self.screenshot()
 
             # 打完一个小朋友，自动进入下一个小朋友
