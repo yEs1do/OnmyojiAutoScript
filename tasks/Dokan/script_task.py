@@ -86,8 +86,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         :return:
         """
         cfg: Dokan = self.config.dokan
-        current_scene: DokanScene = DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
-        in_dokan: bool = False
 
         # 攻击优先顺序
         attack_priority: int = cfg.dokan_config.dokan_attack_priority
