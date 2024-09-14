@@ -42,28 +42,36 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         # 在寮结界界面检查是否有收获
         self.check_utilize_harvest()
 
-        # 无论收不收到菜，都会进入看看至少看一眼时间还剩多少
-        time.sleep(0.5)
-        # 进入育成界面
-        self.realm_goto_grown()
-        self.screenshot()
-        if not self.appear(self.I_UTILIZE_ADD):
-            remaining_time = self.O_UTILIZE_RES_TIME.ocr(self.device.image)
-            if not isinstance(remaining_time, timedelta):
-                logger.warning('Ocr remaining time error')
-            logger.info(f'Utilize remaining time: {remaining_time}')
-            # 执行失败，推出下一次执行为失败的时间间隔
-            logger.info('Utilize failed, exit')
+        self.check_utilize_add()
+
+    def check_utilize_add(self):
+        con = self.config.kekkai_utilize.utilize_config
+        while 1:
+
+            # 进入寮结界
+            self.goto_realm()
+
+            # 无论收不收到菜，都会进入看看至少看一眼时间还剩多少
+            time.sleep(0.5)
+            # 进入育成界面
+            self.realm_goto_grown()
+            self.screenshot()
+
+            if not self.appear(self.I_UTILIZE_ADD):
+                remaining_time = self.O_UTILIZE_RES_TIME.ocr(self.device.image)
+                if not isinstance(remaining_time, timedelta):
+                    logger.warning('Ocr remaining time error')
+                logger.info(f'Utilize remaining time: {remaining_time}')
+                # 执行失败，推出下一次执行为失败的时间间隔
+                logger.info('Utilize failed, exit')
+                self.back_guild()
+                next_time = datetime.now() + remaining_time
+                self.set_next_run(task='KekkaiUtilize', target=next_time)
+                raise TaskEnd
+            if not self.grown_goto_utilize():
+                logger.info('Utilize failed, exit')
+            self.run_utilize(con.select_friend_list, con.shikigami_class, con.shikigami_order)
             self.back_guild()
-            next_time = datetime.now() + remaining_time
-            self.set_next_run(task='KekkaiUtilize', target=next_time)
-            raise TaskEnd
-        if not self.grown_goto_utilize():
-            logger.info('Utilize failed, exit')
-        self.run_utilize(con.select_friend_list, con.shikigami_class, con.shikigami_order)
-        self.back_guild()
-        self.set_next_run(task='KekkaiUtilize', success=True, finish=True)
-        raise TaskEnd
 
     def check_max_lv(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
         """
@@ -523,7 +531,7 @@ if __name__ == "__main__":
     d = Device(c)
     t = ScriptTask(c, d)
 
-    t.run_utilize()
+    t.run()
     # t.screenshot()
     # print(t.appear(t.I_BOX_EXP, threshold=0.6))
     # print(t.appear(t.I_BOX_EXP_MAX, threshold=0.6))
