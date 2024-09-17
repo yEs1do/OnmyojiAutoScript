@@ -157,6 +157,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE_NO:
                 pass
             else:
+                time.sleep(5)
                 logger.info(f"unknown scene, skipped")
 
             # 防封，随机移动，随机点击（安全点击），随机时延
@@ -185,18 +186,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         if self.appear(self.I_FANGSHOU, threshold=0.8):
             logger.info(f"在选寮界面中")
             return False, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
-
         # 状态：判断是否集结中
-        # if self.ocr_appear(self.O_DOKAN_GATHERING):
         if self.appear(self.I_RYOU_DOKAN_GATHERING, threshold=0.95):
             logger.info(f"道馆集结中")
             time.sleep(5)
             return True, DokanScene.RYOU_DOKAN_SCENE_GATHERING
         # 状态：是否在等待馆主战
-        # if self.ocr_appear(self.O_DOKAN_BOSS_WAITING):
         if self.appear(self.I_DOKAN_BOSS_WAITING):
-            time.sleep(5)
             logger.info(f"等待馆主战中")
+            time.sleep(5)
             return True, DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING
 
         # 状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
@@ -213,7 +211,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             logger.info(f"打完看到魂奖励中")
             self.appear_then_click(self.I_RYOU_DOKAN_BATTLE_OVER)
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
-
+        # 如果出现失败 就点击
+        if self.appear(GeneralBattle.I_FALSE, threshold=0.8):
+            self.appear_then_click(GeneralBattle.I_FALSE)
+            logger.info("战斗失败，返回")
+            return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
         # 状态：达到失败次数，CD中
         if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
             time.sleep(5)
@@ -369,12 +371,19 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 self.screenshot()
                 if not self.appear(self.I_PREPARE_HIGHLIGHT):
                     break
-
-            # 判断有无坐标的偏移
-            self.appear_then_click(self.I_LOCAL)
-            time.sleep(0.3)
-            # 点击绿标
-            self.device.click(x, y)
+                if self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD):
+                    continue
+            while 1:
+                self.screenshot()
+                if self.wait_until_appear(self.I_GREEN_MARK, wait_time=1):
+                    logger.info("识别到绿标，返回")
+                    return
+                # 判断有无坐标的偏移
+                self.appear_then_click(self.I_LOCAL)
+                time.sleep(0.3)
+                # 点击绿标
+                self.device.click(x, y)
+                time.sleep(0.3)
 
     def goto_dokan(self):
 
@@ -490,7 +499,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 break
 
         DOKAN_list = [DOKAN_1, DOKAN_2, DOKAN_3, DOKAN_4]
-        DOKAN_list_sort = sorted(DOKAN_list)
+        # 升序 reverse=True
+        # 降序 reverse=False
+        DOKAN_list_sort = sorted(DOKAN_list, reverse=True)
         DOKAN_click_list = [self.O_DOKAN_READY_SEL1, self.O_DOKAN_READY_SEL2,
                             self.O_DOKAN_READY_SEL3, self.O_DOKAN_READY_SEL4]
 
