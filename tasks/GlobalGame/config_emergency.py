@@ -4,7 +4,6 @@
 from datetime import datetime, time
 from enum import Enum
 from pydantic import BaseModel, ValidationError, validator, Field
-from tasks.Component.config_base import ConfigBase
 
 class FriendInvitation(str, Enum):
     '''
