@@ -27,10 +27,11 @@ from typing import List
 from tasks.GameUi.page import page_shikigami_records
 from tasks.Secret.config import Secret
 
-# 定义检查次数
-global_count = 0
+
 
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
+    # 定义检查次数
+    play_count = 0
 
     def run(self):
         # 悬赏换秘闻配置
@@ -105,21 +106,19 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=5))
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
 
-
     def pre_work(self):
         """
         前置工作，
         :return:
         """
-        global global_count
-        global_count += 1
+        self.play_count += 1
         self.ui_get_current_page()
         self.ui_goto(page_main)
         done_timer = Timer(5)
         while 1:
             self.screenshot()
             if self.appear(self.I_TARCE_DISENABLE):
-                if global_count >= 3:
+                if self.play_count >= 3:
                     self.ui_click_until_disappear(self.I_UI_BACK_RED)
                     return False
                 break
