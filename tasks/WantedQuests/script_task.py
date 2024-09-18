@@ -225,7 +225,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         # 不需要解锁
         # self.ui_click(self.I_WQC_LOCK, self.I_WQC_UNLOCK)
         self.ui_click_until_disappear(self.I_WQC_FIRE)
-        self.run_general_battle()
+        self.battle_config.lock_team_enable = True
+        self.run_general_battle(self.battle_config)
+        # self.run_general_battle()
         self.wait_until_appear(self.I_WQC_FIRE, wait_time=4)
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         # 我忘记了打完后是否需要关闭 挑战界面
