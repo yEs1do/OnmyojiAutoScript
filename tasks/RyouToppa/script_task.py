@@ -183,6 +183,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # 回 page_main 失败
         # self.ui_current = page_ryou_toppa
         # self.ui_goto(page_main)
+        self.set_next_run(task='TalismanPass', target=datetime.now())
         if success:
             self.set_next_run(task='RyouToppa', finish=True, server=True, success=True)
         else:

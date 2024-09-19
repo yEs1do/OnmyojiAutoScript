@@ -253,6 +253,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                         click_count = 0
                         self.device.click_record_clear()
                     continue
+            self.battle_config.lock_team_enable = False
             success = self.run_general_battle(self.battle_config)
         while 1:
             self.screenshot()
