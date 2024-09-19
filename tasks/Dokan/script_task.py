@@ -373,17 +373,23 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                     break
                 if self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD):
                     continue
+
+            wait_timer = Timer(5)
+            wait_timer.start()
             while 1:
                 self.screenshot()
                 if self.wait_until_appear(self.I_GREEN_MARK, wait_time=1):
-                    logger.info("识别到绿标，返回")
-                    return
+                    logger.info("识别到绿标,返回")
+                    break
+                if wait_timer.reached():
+                    logger.warning("识别绿标超时,返回")
+                    break
                 # 判断有无坐标的偏移
-                self.appear_then_click(self.I_LOCAL)
-                time.sleep(0.3)
+                # self.appear_then_click(self.I_LOCAL)
+                # time.sleep(0.3)
                 # 点击绿标
-                self.device.click(x, y)
                 time.sleep(0.3)
+                self.device.click(x, y)
 
     def goto_dokan(self):
 
@@ -472,6 +478,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             if self.appear_then_click(self.I_RED_CLOSE, interval=1):
                 continue
             if self.appear_then_click(self.I_CREATE_DAOGUAN_SURE, interval=1):
+                time.sleep(3)
                 continue
             if self.appear_rbg(self.I_CREATE_DAOGUAN_OK, self.device.image):
                 break
