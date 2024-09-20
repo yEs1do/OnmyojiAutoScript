@@ -18,6 +18,15 @@
     "description": "道馆"
   },
   {
+    "itemName": "guild_name_title",
+    "imageName": "Screenshots_guild_name_title.png",
+    "roiFront": "596,191,75,43",
+    "roiBack": "596,191,75,43",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮称号"
+  },
+  {
     "itemName": "fangshou",
     "imageName": "Screenshots_fangshou.png",
     "roiFront": "35,610,75,79",

@@ -407,6 +407,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 continue
             if self.appear_then_click(self.I_GUILD_SHRINE, interval=1):
                 continue
+            if self.appear_then_click(self.I_GUILD_NAME_TITLE, interval=1):
+                continue
             if self.appear(self.I_FANGSHOU, interval=1):
                 break
             if self.appear(self.I_RYOU_DOKAN_CHECK, threshold=0.6):

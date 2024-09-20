@@ -30,6 +30,8 @@ class DokanAssets:
 	I_GREEN_MARK = RuleImage(roi_front=(157,220,979,229,), roi_back=(157,220,979,229,), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/green_mark.png")
 	# 道馆 
 	I_DAOGUAN = RuleImage(roi_front=(462,159,100,100), roi_back=(462,159,100,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_daoguan.png")
+	# 寮称号 
+	I_GUILD_NAME_TITLE = RuleImage(roi_front=(596,191,75,43), roi_back=(596,191,75,43), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_guild_name_title.png")
 	# 防守战报 
 	I_FANGSHOU = RuleImage(roi_front=(35,610,75,79), roi_back=(35,610,75,79), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_fangshou.png")
 	# 建立道馆  
