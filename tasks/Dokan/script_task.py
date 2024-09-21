@@ -169,7 +169,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         '''
         time.sleep(1)
         self.screenshot()
-        self.device.click_record_clear()
+        self.device.stuck_record_clear()
         self.device.stuck_record_add('BATTLE_STATUS_S')
 
         # logger.info(f"检测当前场景")
