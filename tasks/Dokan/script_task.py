@@ -281,14 +281,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD)
 
-                self.device.stuck_record_clear()
-                self.device.stuck_record_add('BATTLE_STATUS_S')
+                # 绿标
+                self.green_mark(config.green_enable, config.green_mark)
 
                 self.battle_count += 1
                 logger.info(f"第 {self.battle_count} 次战斗")
 
-                # 绿标
-                self.green_mark(config.green_enable, config.green_mark)
+                self.device.stuck_record_clear()
+                self.device.stuck_record_add('BATTLE_STATUS_S')
 
             # 如果出现赢 就点击
             if self.appear(GeneralBattle.I_WIN, threshold=0.8):
@@ -374,14 +374,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 if self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD):
                     continue
 
-            wait_timer = Timer(5)
-            wait_timer.start()
+            Dokan_timer = Timer(5)
+            Dokan_timer.start()
             while 1:
                 self.screenshot()
                 if self.wait_until_appear(self.I_GREEN_MARK, wait_time=1):
                     logger.info("识别到绿标,返回")
                     break
-                if wait_timer.reached():
+                if Dokan_timer.reached():
                     logger.warning("识别绿标超时,返回")
                     break
                 # 判断有无坐标的偏移
