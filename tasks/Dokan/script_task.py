@@ -281,7 +281,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD)
 
-                self.device.click_record_clear()
+                self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')
 
                 self.battle_count += 1
