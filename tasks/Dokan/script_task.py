@@ -169,6 +169,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         '''
         time.sleep(1)
         self.screenshot()
+        self.device.click_record_clear()
         self.device.stuck_record_clear()
         self.device.stuck_record_add('BATTLE_STATUS_S')
 
@@ -287,6 +288,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 self.battle_count += 1
                 logger.info(f"第 {self.battle_count} 次战斗")
 
+                self.device.click_record_clear()
                 self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')
 
