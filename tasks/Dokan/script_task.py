@@ -433,7 +433,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         else:
             # 管理开道馆
             if self.config.dokan.dokan_config.dokan_enable:
-                self.open_dokan()
+                flag = False
+                if '2次' in DOKAN_STATUS_str:
+                    flag = True
+                self.open_dokan(flag)
             else:
                 # 寮成员十次未进入道馆结束任务
                 self.goto_dokan_num += 1
@@ -474,7 +477,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             return True
         return False
 
-    def open_dokan(self):
+    def open_dokan(self,flag):
 
         # 判断是否需要建立道馆
         while 1:
@@ -512,7 +515,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         DOKAN_list = [DOKAN_1, DOKAN_2, DOKAN_3, DOKAN_4]
         # 升序 reverse=True
         # 降序 reverse=False
-        DOKAN_list_sort = sorted(DOKAN_list, reverse=True)
+        DOKAN_list_sort = sorted(DOKAN_list, reverse=flag)
         DOKAN_click_list = [self.O_DOKAN_READY_SEL1, self.O_DOKAN_READY_SEL2,
                             self.O_DOKAN_READY_SEL3, self.O_DOKAN_READY_SEL4]
 
