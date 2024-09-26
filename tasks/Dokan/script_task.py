@@ -446,12 +446,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             self.goto_dokan_click()
             return True
         else:
+            if '2次' in DOKAN_STATUS_str:
+                self.battle_dokan_flag = True
+            else:
+                self.battle_dokan_flag = False
             # 管理开道馆
             if self.config.dokan.dokan_config.dokan_enable:
-                if '2次' in DOKAN_STATUS_str:
-                    self.battle_dokan_flag = True
-                else:
-                    self.battle_dokan_flag = False
                 self.open_dokan()
             else:
                 # 寮成员十次未进入道馆结束任务
