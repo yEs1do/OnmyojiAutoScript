@@ -82,6 +82,6 @@ xmltodict==0.13.0         # via apkutils2
 zerorpc==0.6.3            # via -r requirements-in.txt
 zope-event==5.0           # via gevent
 zope-interface==6.1       # via gevent
-
+pyside6==6.4.3
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
