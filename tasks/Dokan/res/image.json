@@ -110,8 +110,8 @@
   {
     "itemName": "crowd_quit_dokan",
     "imageName": "Screenshots_crowd_quit_dokan.png",
-    "roiFront": "1174,246,77,71",
-    "roiBack": "1174,246,77,71",
+    "roiFront": "1059,244,77,71",
+    "roiBack": "1059,244,77,71",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "寮友同意放弃突破"

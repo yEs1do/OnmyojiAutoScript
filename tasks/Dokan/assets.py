@@ -53,7 +53,7 @@ class DokanAssets:
 	# 确认放弃突破 
 	I_QUIT_DOKAN_SURE = RuleImage(roi_front=(669,387,144,73), roi_back=(669,387,144,73), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_quit_dokan_sure.png")
 	# 寮友同意放弃突破 
-	I_CROWD_QUIT_DOKAN = RuleImage(roi_front=(1174,246,77,71), roi_back=(1174,246,77,71), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_crowd_quit_dokan.png")
+	I_CROWD_QUIT_DOKAN = RuleImage(roi_front=(1059,244,77,71), roi_back=(1059,244,77,71), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_crowd_quit_dokan.png")
 	# 再战道馆 
 	I_CONTINUE_DOKAN = RuleImage(roi_front=(1177,246,71,67), roi_back=(1177,246,71,67), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_continue_dokan.png")
 	# 神社->道馆 

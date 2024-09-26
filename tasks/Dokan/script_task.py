@@ -129,9 +129,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING:
                 if self.battle_dokan_flag and self.config.dokan.dokan_config.dokan_enable:
                     logger.info("今日第一次道馆，放弃本次道馆")
-                    if self.appear_then_click(self.I_QUIT_DOKAN, interval=1):
-                        continue
                     if self.appear_then_click(self.I_QUIT_DOKAN_SURE, interval=1):
+                        self.screenshot()
+                        self.appear_then_click(self.I_QUIT_DOKAN, interval=1)
                         continue
 
                 if self.appear_then_click(self.I_CROWD_QUIT_DOKAN, interval=1):
