@@ -41,7 +41,7 @@ class DokanScene(Enum):
     RYOU_DOKAN_SCENE_FIGHTING = 5
     # 加油进行中
     RYOU_DOKAN_SCENE_CHEERING = 6
-    # 道馆失败投票保留
+    # 再战道馆投票
     RYOU_DOKAN_SCENE_FAILED_VOTE_NO = 7
     # 阴阳竂
     RYOU_DOKAN_RYOU = 8
@@ -127,14 +127,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                     self.attack_priority_selected = True
             # 场景状态：等待馆主战开始
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING:
-                if self.battle_dokan_flag:
-                    logger.info("今日第一次道馆，放弃本次道馆突破")
+                if self.battle_dokan_flag and self.config.dokan.dokan_config.dokan_enable:
+                    logger.info("今日第一次道馆，放弃本次道馆")
                     if self.appear_then_click(self.I_QUIT_DOKAN, interval=1):
                         continue
                     if self.appear_then_click(self.I_QUIT_DOKAN_SURE, interval=1):
                         continue
-                    if self.appear_then_click(self.I_CROWD_QUIT_DOKAN, interval=1):
-                        continue
+
+                if self.appear_then_click(self.I_CROWD_QUIT_DOKAN, interval=1):
+                    logger.info("同意，放弃本次道馆")
+                    continue
+
                     # if self.appear_then_click(self.I_CONTINUE_DOKAN, interval=1):
                     #     continue
                 # logger.debug(f"Ryou DOKAN boss battle waiting...")
@@ -166,12 +169,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 pass
             # 投票
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE_NO:
-                pass
-            else:
-                if self.battle_dokan_flag:
+                if self.appear_then_click(self.I_CONTINUE_DOKAN, interval=1):
                     logger.info("再战道馆")
-                    if self.appear_then_click(self.I_CONTINUE_DOKAN, interval=1):
-                        continue
+                    continue
+            else:
                 time.sleep(5)
                 logger.info(f"unknown scene, skipped")
 
@@ -256,8 +257,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         # # 状态：战斗中，左上角的加油图标
         # if self.appear(self.I_RYOU_DOKAN_FIGHTING, threshold=0.8):
         #     return True, DokanScene.RYOU_DOKAN_SCENE_FIGHTING
-        # if self.appear(self.I_RYOU_DOKAN_FAILED_VOTE_NO):
-        #     return True, DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE_NO
+        if self.appear(self.I_CONTINUE_DOKAN):
+            logger.info("再战道馆，投票场景")
+            return True, DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE_NO
 
         # 状态：道馆已经结束，图片位置会偏移，换OCR
         # if self.ocr_appear(self.O_DOKAN_SUCCEEDED):
