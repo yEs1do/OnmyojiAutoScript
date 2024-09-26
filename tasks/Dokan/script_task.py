@@ -128,11 +128,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             # 场景状态：等待馆主战开始
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING:
                 if self.battle_dokan_flag:
-                    logger.info("今日第一次道馆，放弃本次道馆突破，再战道馆")
-                    self.appear_then_click(self.I_QUIT_DOKAN, interval=1)
-                    self.appear_then_click(self.I_QUIT_DOKAN_SURE, interval=1)
-                    self.appear_then_click(self.I_CROWD_QUIT_DOKAN, interval=1)
-                    self.appear_then_click(self.I_CONTINUE_DOKAN, interval=1)
+                    logger.info("今日第一次道馆，放弃本次道馆突破")
+                    if self.appear_then_click(self.I_QUIT_DOKAN, interval=1):
+                        continue
+                    if self.appear_then_click(self.I_QUIT_DOKAN_SURE, interval=1):
+                        continue
+                    if self.appear_then_click(self.I_CROWD_QUIT_DOKAN, interval=1):
+                        continue
+                    # if self.appear_then_click(self.I_CONTINUE_DOKAN, interval=1):
+                    #     continue
                 # logger.debug(f"Ryou DOKAN boss battle waiting...")
             # 场景状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE:
@@ -164,6 +168,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE_NO:
                 pass
             else:
+                if self.battle_dokan_flag:
+                    logger.info("再战道馆")
+                    if self.appear_then_click(self.I_CONTINUE_DOKAN, interval=1):
+                        continue
                 time.sleep(5)
                 logger.info(f"unknown scene, skipped")
 
@@ -521,9 +529,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 break
 
         DOKAN_list = [DOKAN_1, DOKAN_2, DOKAN_3, DOKAN_4]
-        # 升序 reverse=True
-        # 降序 reverse=False
-        DOKAN_list_sort = sorted(DOKAN_list, reverse=self.battle_dokan_flag)
+        # reverse 可选。布尔值。False 将按升序排序，True 将按降序排序。默认为 False。
+        DOKAN_list_sort = sorted(DOKAN_list, reverse=False)
         DOKAN_click_list = [self.O_DOKAN_READY_SEL1, self.O_DOKAN_READY_SEL2,
                             self.O_DOKAN_READY_SEL3, self.O_DOKAN_READY_SEL4]
 
