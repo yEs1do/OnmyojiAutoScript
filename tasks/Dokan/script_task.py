@@ -69,6 +69,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     battle_count: int = 0
     # 寮友进入道馆次数
     goto_dokan_num: int = 0
+    # 今日是否第一次道馆
+    battle_dokan_flag: bool = True
     # CREATE_DAOGUAN_OK = (83, 87, 89)
     # CREATE_DAOGUAN = (103, 84, 58)
 
@@ -125,7 +127,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                     self.attack_priority_selected = True
             # 场景状态：等待馆主战开始
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_BOSS_WAITING:
-                pass
+                if self.battle_dokan_flag:
+                    logger.info("今日第一次道馆，放弃本次道馆突破，再战道馆")
+                    self.appear_then_click(self.I_QUIT_DOKAN, interval=1)
+                    self.appear_then_click(self.I_QUIT_DOKAN_SURE, interval=1)
+                    self.appear_then_click(self.I_CROWD_QUIT_DOKAN, interval=1)
+                    self.appear_then_click(self.I_CONTINUE_DOKAN, interval=1)
                 # logger.debug(f"Ryou DOKAN boss battle waiting...")
             # 场景状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_START_CHALLENGE:
@@ -433,10 +440,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         else:
             # 管理开道馆
             if self.config.dokan.dokan_config.dokan_enable:
-                flag = False
                 if '2次' in DOKAN_STATUS_str:
-                    flag = True
-                self.open_dokan(flag)
+                    self.battle_dokan_flag = True
+                else:
+                    self.battle_dokan_flag = False
+                self.open_dokan()
             else:
                 # 寮成员十次未进入道馆结束任务
                 self.goto_dokan_num += 1
@@ -477,7 +485,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             return True
         return False
 
-    def open_dokan(self,flag):
+    def open_dokan(self):
 
         # 判断是否需要建立道馆
         while 1:
@@ -515,7 +523,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         DOKAN_list = [DOKAN_1, DOKAN_2, DOKAN_3, DOKAN_4]
         # 升序 reverse=True
         # 降序 reverse=False
-        DOKAN_list_sort = sorted(DOKAN_list, reverse=flag)
+        DOKAN_list_sort = sorted(DOKAN_list, reverse=self.battle_dokan_flag)
         DOKAN_click_list = [self.O_DOKAN_READY_SEL1, self.O_DOKAN_READY_SEL2,
                             self.O_DOKAN_READY_SEL3, self.O_DOKAN_READY_SEL4]
 

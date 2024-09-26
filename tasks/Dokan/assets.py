@@ -46,6 +46,14 @@ class DokanAssets:
 	I_NEWTZ = RuleImage(roi_front=(798,482,44,39), roi_back=(0,0,1047,718), threshold=0.7, method="Template matching", file="./tasks/Dokan/res/Screenshots_newtz.png")
 	# 确定 
 	I_OK = RuleImage(roi_front=(706,407,100,48), roi_back=(706,407,100,48), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_ok.png")
+	# 放弃突破 
+	I_QUIT_DOKAN = RuleImage(roi_front=(60,612,53,53), roi_back=(60,612,53,53), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_quit_dokan.png")
+	# 确认放弃突破 
+	I_QUIT_DOKAN_SURE = RuleImage(roi_front=(669,387,144,73), roi_back=(669,387,144,73), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_quit_dokan_sure.png")
+	# 寮友同意放弃突破 
+	I_CROWD_QUIT_DOKAN = RuleImage(roi_front=(1174,246,77,71), roi_back=(1174,246,77,71), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_crowd_quit_dokan.png")
+	# 再战道馆 
+	I_CONTINUE_DOKAN = RuleImage(roi_front=(1177,246,71,67), roi_back=(1177,246,71,67), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_continue_dokan.png")
 	# 神社->道馆 
 	I_RYOU_DOKAN = RuleImage(roi_front=(476,173,62,24), roi_back=(476,173,62,24), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan.png")
 	# []选择竂 

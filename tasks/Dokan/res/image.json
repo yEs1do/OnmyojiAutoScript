@@ -90,6 +90,42 @@
     "description": "确定"
   },
   {
+    "itemName": "quit_dokan",
+    "imageName": "Screenshots_quit_dokan.png",
+    "roiFront": "60,612,53,53",
+    "roiBack": "60,612,53,53",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "放弃突破"
+  },
+  {
+    "itemName": "quit_dokan_sure",
+    "imageName": "Screenshots_quit_dokan_sure.png",
+    "roiFront": "669,387,144,73",
+    "roiBack": "669,387,144,73",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认放弃突破"
+  },
+  {
+    "itemName": "crowd_quit_dokan",
+    "imageName": "Screenshots_crowd_quit_dokan.png",
+    "roiFront": "1174,246,77,71",
+    "roiBack": "1174,246,77,71",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "寮友同意放弃突破"
+  },
+  {
+    "itemName": "continue_dokan",
+    "imageName": "Screenshots_continue_dokan.png",
+    "roiFront": "1177,246,71,67",
+    "roiBack": "1177,246,71,67",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "再战道馆"
+  },
+  {
     "itemName": "ryou_dokan",
     "imageName": "res_ryou_dokan.png",
     "roiFront": "476,173,62,24",
