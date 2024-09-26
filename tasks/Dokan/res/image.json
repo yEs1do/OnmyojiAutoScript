@@ -108,6 +108,15 @@
     "description": "确认放弃突破"
   },
   {
+    "itemName": "quit_dokan_over",
+    "imageName": "Screenshots_quit_dokan_over.png",
+    "roiFront": "1056,211,55,35",
+    "roiBack": "1056,211,55,35",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "管理放弃道馆over"
+  },
+  {
     "itemName": "crowd_quit_dokan",
     "imageName": "Screenshots_crowd_quit_dokan.png",
     "roiFront": "1059,244,77,71",
