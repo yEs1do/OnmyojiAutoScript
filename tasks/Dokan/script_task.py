@@ -379,7 +379,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                     x, y = self.C_GREEN_LEFT_4.coord()
                     logger.info("Green left 4")
                 case GreenMarkType.GREEN_LEFT5:
-                    x, y = self.C_GREEN_LEFT_5.coord()
+                    x, y = self.C_DOKAN_GREEN_LEFT_5.coord()
                     logger.info("Green left 5")
                 case GreenMarkType.GREEN_MAIN:
                     x, y = self.C_GREEN_MAIN.coord()
