@@ -70,7 +70,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     # 寮友进入道馆次数
     goto_dokan_num: int = 0
     # 今日是否第一次道馆
-    battle_dokan_flag: bool = True
+    battle_dokan_flag: bool = False
     # CREATE_DAOGUAN_OK = (83, 87, 89)
     # CREATE_DAOGUAN = (103, 84, 58)
 
