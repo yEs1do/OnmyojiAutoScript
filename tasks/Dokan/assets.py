@@ -23,8 +23,9 @@ class DokanAssets:
 	C_DOKAN_RANDOM_CLICK_AREA3 = RuleClick(roi_front=(333,44,107,20), roi_back=(333,44,107,20), name="dokan_random_click_area3")
 	# 准备战斗 
 	C_DOKAN_READY_FOR_BATTLE = RuleClick(roi_front=(42,94,1207,543), roi_back=(42,94,1207,543), name="dokan_ready_for_battle")
-	# 道馆从左开始第五个绿标
-	C_DOKAN_GREEN_LEFT_5 = RuleClick(roi_front=(993,474,67,104), roi_back=(993,474,67,104), name="green_left_5")
+	# 道馆从左开始第五个绿标 
+	C_DOKAN_GREEN_LEFT_5 = RuleClick(roi_front=(993,474,67,104), roi_back=(993,474,67,104), name="dokan_green_left_5")
+
 
 	# Image Rule Assets
 	# 区域找绿标 
