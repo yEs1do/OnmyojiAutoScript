@@ -78,9 +78,9 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             self.screenshot()
             if self.appear(self.I_L_LOVE):
                 break
-            if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
-                continue
             if self.appear_then_click(self.I_L_FRIENDS, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
         logger.info('Start friend love')
         check_timer = Timer(2)
