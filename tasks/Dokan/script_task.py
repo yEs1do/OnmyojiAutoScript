@@ -132,7 +132,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                     logger.info("今日第一次道馆，放弃本次道馆")
                     while 1:
                         self.screenshot()
+                        if self.appear(self.I_CONTINUE_DOKAN, interval=1):
+                            break
                         if self.appear(self.I_QUIT_DOKAN_OVER, interval=1):
+                            time.sleep(5)
                             break
                         if self.appear_then_click(self.I_QUIT_DOKAN_SURE, interval=1):
                             continue
@@ -172,6 +175,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 pass
             # 投票
             elif current_scene == DokanScene.RYOU_DOKAN_SCENE_FAILED_VOTE_NO:
+                if self.appear_then_click(self.I_QUIT_DOKAN_SURE, interval=1):
+                    pass
                 if self.appear_then_click(self.I_CONTINUE_DOKAN, interval=1):
                     logger.info("再战道馆")
                     continue
