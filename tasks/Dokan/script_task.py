@@ -241,6 +241,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             self.appear_then_click(GeneralBattle.I_FALSE)
             logger.info("战斗失败，返回")
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
+        # 如果出现成功 就点击
+        if self.appear(GeneralBattle.I_WIN, threshold=0.8):
+            self.appear_then_click(GeneralBattle.I_WIN)
+            logger.info("战斗成功，鼓，返回")
+            return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
         # 状态：达到失败次数，CD中
         if self.appear(self.I_RYOU_DOKAN_CD, threshold=0.8):
             time.sleep(5)
