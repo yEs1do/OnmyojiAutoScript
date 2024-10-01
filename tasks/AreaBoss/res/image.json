@@ -41,7 +41,7 @@
     "roiFront": "1083,235,65,54",
     "roiBack": "1083,235,65,54",
     "method": "Template matching",
-    "threshold": 0.6,
+    "threshold": 0.8,
     "description": "除悬赏外 选中第一个鬼王的"
   },
   {
@@ -50,7 +50,7 @@
     "roiFront": "1086,390,56,53",
     "roiBack": "1086,390,56,53",
     "method": "Template matching",
-    "threshold": 0.6,
+    "threshold": 0.8,
     "description": "除悬赏外 选中第二个鬼王的"
   },
   {
@@ -59,7 +59,7 @@
     "roiFront": "1083,545,66,53",
     "roiBack": "1083,545,66,53",
     "method": "Template matching",
-    "threshold": 0.6,
+    "threshold": 0.8,
     "description": "除悬赏外 选中第三个鬼王的"
   },
   {
