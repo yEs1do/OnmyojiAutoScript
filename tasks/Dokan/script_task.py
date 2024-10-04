@@ -542,8 +542,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 break
 
         DOKAN_list = [DOKAN_1, DOKAN_2, DOKAN_3, DOKAN_4]
+
         # reverse 可选。布尔值。False 将按升序排序，True 将按降序排序。默认为 False。
         DOKAN_list_sort = sorted(DOKAN_list, reverse=False)
+
+        # 使用 sorted 函数和 lambda 函数进行排序
+        DOKAN_list_sort = sorted(DOKAN_list, key=lambda x: (x < 550 or x >= 750, x))
+
         DOKAN_click_list = [self.O_DOKAN_READY_SEL1, self.O_DOKAN_READY_SEL2,
                             self.O_DOKAN_READY_SEL3, self.O_DOKAN_READY_SEL4]
 
