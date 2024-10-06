@@ -75,6 +75,7 @@ def random_delay(min_value: float = 1.0, max_value: float = 2.0, decimal: int = 
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
     medal_grid: ImageGrid = None
+    area_index = 0
 
     def run(self):
         """
@@ -155,7 +156,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # --------------------------------------------------------------------------------------------------------------
         # 开始突破
         # --------------------------------------------------------------------------------------------------------------
-        area_index = 0
         success = True
         while 1:
             if not self.has_ticket():
@@ -169,13 +169,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 logger.warning("We have attacked the limit time.")
                 break
             # 进攻
-            res = self.attack_area(area_index)
+            res = self.attack_area(self.area_index)
             # 如果战斗失败或区域不可用，则弹出当前区域索引，开始进攻下一个
             if not res:
-                area_index += 1
-                if area_index >= len(area_map):
+                self.area_index += 1
+                if self.area_index >= len(area_map):
                     logger.warning('All areas are not available, it will flush the area cache')
-                    area_index = 0
+                    self.area_index = 0
                     self.flush_area_cache()
                 continue
 
@@ -306,6 +306,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 if self.appear(self.I_TOPPA_RECORD, threshold=0.85):
                     continue
                 logger.info("Start attach area [%s]" % str(index + 1))
+                self.area_index = 0
                 return self.run_general_battle(config=self.config.ryou_toppa.general_battle_config)
 
             if self.appear_then_click(RealmRaidAssets.I_FIRE, interval=2, threshold=0.8):
