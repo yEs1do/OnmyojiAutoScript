@@ -705,12 +705,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         today_date = datetime.now().strftime('%Y-%m-%d')
         today_time = datetime.now().strftime('%H_%M_%S')
 
+        config_name = self.config.config_name
         # 设置保存图像的文件夹，包含今日日期
         save_folder = Path(f'./log/Dokan/{today_date}')
         save_folder.mkdir(parents=True, exist_ok=True)
 
         # 设置图像名称
-        image_name = image_name + "-" + today_time
+        image_name = config_name  + "-" + image_name + "-" + today_time
 
         # 保存图像
         cv2.imwrite(str(save_folder / f'{image_name}.png'), image)
