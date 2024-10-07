@@ -3,17 +3,20 @@
 # @author   jackyhwei
 # @note     draft version without full test
 # github    https://github.com/roarhill/oas
-import random
 import time
-from enum import Enum
 
 import cv2
 import numpy as np
 from cached_property import cached_property
 
+from datetime import datetime
+import random
+from enum import Enum
 from module.atom.image_grid import ImageGrid
+from module.base.timer import Timer
 from module.exception import TaskEnd
 from module.logger import logger
+from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Dokan.assets import DokanAssets
@@ -22,9 +25,7 @@ from tasks.Dokan.utils import detect_safe_area2
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_shikigami_records, page_guild
 from tasks.RichMan.assets import RichManAssets
-from module.base.timer import Timer
-from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
-
+from pathlib import Path
 
 class DokanScene(Enum):
     # 未知界面
@@ -234,6 +235,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         # 状态：战斗结算，可能是打完小朋友了，也可能是失败了。
         if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.85):
             logger.info(f"打完看到魂奖励中")
+            self.save_image(self.device.image)
             self.appear_then_click(self.I_RYOU_DOKAN_BATTLE_OVER)
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
         # 如果出现失败 就点击
@@ -349,6 +351,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
             # 如果领奖励
             if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.6):
+                self.save_image(self.device.image)
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_BATTLE_OVER)
                 logger.info("领奖励,那个魂")
                 break
@@ -687,6 +690,23 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         else:
             return False
 
+    def save_image(self, image):
+        logger.info("保存道馆奖励截图")
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+        # 获取今日日期并格式化为字符串
+        today_date = datetime.now().strftime('%Y-%m-%d')
+        today_time = datetime.now().strftime('%H_%M_%S')
+
+        # 设置保存图像的文件夹，包含今日日期
+        save_folder = Path(f'./log/Dokan/{today_date}')
+        save_folder.mkdir(parents=True, exist_ok=True)
+
+        # 设置图像名称
+        image_name = today_time
+
+        # 保存图像
+        cv2.imwrite(str(save_folder / f'{image_name}.png'), image)
 
 if __name__ == "__main__":
     from module.config.config import Config
