@@ -235,6 +235,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         # 状态：战斗结算，可能是打完小朋友了，也可能是失败了。
         if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.85):
             logger.info(f"打完看到魂奖励中")
+            time.sleep(2)
             self.save_image(self.device.image)
             self.appear_then_click(self.I_RYOU_DOKAN_BATTLE_OVER)
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
@@ -351,6 +352,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
             # 如果领奖励
             if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.6):
+                time.sleep(2)
                 self.save_image(self.device.image)
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_BATTLE_OVER)
                 logger.info("领奖励,那个魂")
