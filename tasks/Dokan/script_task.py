@@ -235,16 +235,18 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         # 状态：战斗结算，可能是打完小朋友了，也可能是失败了。
         if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.85):
             logger.info(f"打完看到魂奖励中")
-            self.save_image(self.device.image)
+            self.save_image(self.device.image, "I_RYOU_DOKAN_BATTLE_OVER")
             self.appear_then_click(self.I_RYOU_DOKAN_BATTLE_OVER)
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
         # 如果出现失败 就点击
         if self.appear(GeneralBattle.I_FALSE, threshold=0.8):
+            self.save_image(self.device.image, "GeneralBattle.I_FALSE")
             self.appear_then_click(GeneralBattle.I_FALSE)
             logger.info("战斗失败，返回")
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
         # 如果出现成功 就点击
         if self.appear(GeneralBattle.I_WIN, threshold=0.8):
+            self.save_image(self.device.image, "GeneralBattle.I_WIN")
             self.appear_then_click(GeneralBattle.I_WIN)
             logger.info("战斗成功，鼓，返回")
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
@@ -326,6 +328,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
             # 如果出现赢 就点击
             if self.appear(GeneralBattle.I_WIN, threshold=0.8):
+                self.save_image(self.device.image, "GeneralBattle.I_WIN" )
                 self.ui_click_until_disappear(GeneralBattle.I_WIN)
                 logger.info("Dokan guards eliminated, boss is on the way")
                 logger.info("战斗赢,红色鼓")
@@ -333,31 +336,35 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
             # 如果出现打败馆主的赢，就点击
             if self.appear(self.I_RYOU_DOKAN_WIN, threshold=0.8):
+                self.save_image(self.device.image, "I_RYOU_DOKAN_WIN")
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_WIN)
                 logger.info("馆主的赢，就点击.")
                 break
 
             # 如果出现失败 就点击，返回False。
             if self.appear(GeneralBattle.I_FALSE, threshold=0.8):
+                self.save_image(self.device.image, "GeneralBattle.I_FALSE")
                 self.ui_click_until_disappear(GeneralBattle.I_FALSE)
                 logger.info("战斗失败，返回")
                 break
 
             # 如果出现馆主战斗失败 就点击，返回False。
             if self.appear(self.I_RYOU_DOKAN_FAIL, threshold=0.8):
+                self.save_image(self.device.image, "I_RYOU_DOKAN_FAIL")
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_FAIL)
                 logger.info("馆主战斗失败，返回")
                 break
 
             # 如果领奖励
             if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.6):
-                self.save_image(self.device.image)
+                self.save_image(self.device.image,"I_RYOU_DOKAN_BATTLE_OVER")
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_BATTLE_OVER)
                 logger.info("领奖励,那个魂")
                 break
 
             # 如果领奖励出现金币
             if self.appear(GeneralBattle.I_REWARD_GOLD, threshold=0.8):
+                self.save_image(self.device.image,"GeneralBattle.I_REWARD_GOLD")
                 self.ui_click_until_disappear(GeneralBattle.I_REWARD_GOLD)
                 logger.info("领奖励,那个金币")
                 break
@@ -690,7 +697,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         else:
             return False
 
-    def save_image(self, image):
+    def save_image(self, image, image_name):
         logger.info("保存道馆奖励截图")
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -703,7 +710,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         save_folder.mkdir(parents=True, exist_ok=True)
 
         # 设置图像名称
-        image_name = today_time
+        image_name = image_name + "-" + today_time
 
         # 保存图像
         cv2.imwrite(str(save_folder / f'{image_name}.png'), image)
