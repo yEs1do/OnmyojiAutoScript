@@ -102,6 +102,8 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         now_time = now_datetime.time()
         if time(hour=5) <= now_time < time(hour=18):
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18))
+        elif time(hour=0) <= now_time < time(hour=5):
+            next_run_datetime = datetime.combine(now_datetime.date(), time(hour=9, minute=5))
         else:
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=5))
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
