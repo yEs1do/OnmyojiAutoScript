@@ -235,8 +235,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         # 状态：战斗结算，可能是打完小朋友了，也可能是失败了。
         if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.85):
             logger.info(f"打完看到魂奖励中")
-            time.sleep(2)
-            self.save_image(self.device.image)
+            self.save_image()
             self.appear_then_click(self.I_RYOU_DOKAN_BATTLE_OVER)
             return True, DokanScene.RYOU_DOKAN_SCENE_BATTLE_OVER
         # 如果出现失败 就点击
@@ -352,8 +351,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
             # 如果领奖励
             if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.6):
-                time.sleep(2)
-                self.save_image(self.device.image)
+                self.save_image()
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_BATTLE_OVER)
                 logger.info("领奖励,那个魂")
                 break
@@ -692,9 +690,11 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         else:
             return False
 
-    def save_image(self, image):
+    def save_image(self):
+        time.sleep(2)
+
         logger.info("保存道馆奖励截图")
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.cvtColor(self.device.image, cv2.COLOR_BGR2RGB)
 
         # 获取今日日期并格式化为字符串
         today_date = datetime.now().strftime('%Y-%m-%d')
