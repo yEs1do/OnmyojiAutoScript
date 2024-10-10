@@ -351,9 +351,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
             # 如果领奖励
             if self.appear(self.I_RYOU_DOKAN_BATTLE_OVER, threshold=0.6):
+                logger.info("领奖励,那个魂")
                 self.save_image()
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_BATTLE_OVER)
-                logger.info("领奖励,那个魂")
                 break
 
             # 如果领奖励出现金币
@@ -692,6 +692,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
     def save_image(self):
         time.sleep(2)
+        self.screenshot()
 
         logger.info("保存道馆奖励截图")
         image = cv2.cvtColor(self.device.image, cv2.COLOR_BGR2RGB)
