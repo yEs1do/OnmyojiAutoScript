@@ -327,27 +327,26 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
             # 如果出现赢 就点击
             if self.appear(GeneralBattle.I_WIN, threshold=0.8):
-                self.ui_click_until_disappear(GeneralBattle.I_WIN)
-                logger.info("Dokan guards eliminated, boss is on the way")
                 logger.info("战斗赢,红色鼓")
+                self.ui_click_until_disappear(GeneralBattle.I_WIN)
                 break
 
             # 如果出现打败馆主的赢，就点击
             if self.appear(self.I_RYOU_DOKAN_WIN, threshold=0.8):
-                self.ui_click_until_disappear(self.I_RYOU_DOKAN_WIN)
                 logger.info("馆主的赢，就点击.")
+                self.ui_click_until_disappear(self.I_RYOU_DOKAN_WIN)
                 break
 
             # 如果出现失败 就点击，返回False。
             if self.appear(GeneralBattle.I_FALSE, threshold=0.8):
-                self.ui_click_until_disappear(GeneralBattle.I_FALSE)
                 logger.info("战斗失败，返回")
+                self.ui_click_until_disappear(GeneralBattle.I_FALSE)
                 break
 
             # 如果出现馆主战斗失败 就点击，返回False。
             if self.appear(self.I_RYOU_DOKAN_FAIL, threshold=0.8):
-                self.ui_click_until_disappear(self.I_RYOU_DOKAN_FAIL)
                 logger.info("馆主战斗失败，返回")
+                self.ui_click_until_disappear(self.I_RYOU_DOKAN_FAIL)
                 break
 
             # 如果领奖励
@@ -359,8 +358,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
             # 如果领奖励出现金币
             if self.appear(GeneralBattle.I_REWARD_GOLD, threshold=0.8):
-                self.ui_click_until_disappear(GeneralBattle.I_REWARD_GOLD)
                 logger.info("领奖励,那个金币")
+                self.ui_click_until_disappear(GeneralBattle.I_REWARD_GOLD)
                 break
 
             # 如果开启战斗过程随机滑动
