@@ -312,13 +312,14 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
             # 打完一个小朋友，自动进入下一个小朋友
             if self.appear(self.I_RYOU_DOKAN_IN_FIELD):
+
+                self.battle_count += 1
+                logger.info(f"第 {self.battle_count} 次战斗")
+
                 self.ui_click_until_disappear(self.I_RYOU_DOKAN_IN_FIELD)
 
                 # 绿标
                 self.green_mark(config.green_enable, config.green_mark)
-
-                self.battle_count += 1
-                logger.info(f"第 {self.battle_count} 次战斗")
 
                 self.device.click_record_clear()
                 self.device.stuck_record_clear()
