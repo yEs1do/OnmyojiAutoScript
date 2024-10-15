@@ -255,7 +255,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             self.set_next_run(task='RyouToppa', finish=True, success=True)
             self.set_next_run_TalismanPass()
         # 如果该区域攻略失败返回 False
-        if self.appear(f1, threshold=0.8) or self.appear(f2, threshold=0.8):
+        if self.appear(f1, threshold=0.6) or self.appear(f2, threshold=0.6):
             logger.info('Area [%s] is futile attack, skip.' % str(index + 1))
             return False
         return True
