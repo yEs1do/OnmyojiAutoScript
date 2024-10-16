@@ -699,7 +699,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
         # 获取今日日期并格式化为字符串
         today_date = datetime.now().strftime('%Y-%m-%d')
-        today_time = datetime.now().strftime('%H_%M_%S')
+        today_time = datetime.now().strftime('%H-%M-%S')
 
         config_name = self.config.config_name
         # 设置保存图像的文件夹，包含今日日期
@@ -707,7 +707,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         save_folder.mkdir(parents=True, exist_ok=True)
 
         # 设置图像名称
-        image_name = config_name + "-" + today_time
+        image_name = config_name + " " + today_time
 
         # 保存图像
         cv2.imwrite(str(save_folder / f'{image_name}.png'), image)
