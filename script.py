@@ -92,11 +92,13 @@ class Script:
         if self.config.script.error.save_error:
             if not os.path.exists('./log/error'):
                 os.mkdir('./log/error')
-            folder = f'./log/error/{int(time.time() * 1000)}'
+            config_name = self.config.config_name
+            today_date = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+            folder = f'./log/error/{today_date}'
             logger.warning(f'Saving error: {folder}')
             os.mkdir(folder)
             for data in self.device.screenshot_deque:
-                image_time = datetime.strftime(data['time'], '%Y-%m-%d_%H-%M-%S-%f')
+                image_time = datetime.strftime(data['time'], config_name + ' %H-%M-%S')
                 image = handle_sensitive_image(data['image'])
                 save_image(image, f'{folder}/{image_time}.png')
             with open(logger.log_file, 'r', encoding='utf-8') as f:
