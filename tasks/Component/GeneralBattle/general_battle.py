@@ -18,7 +18,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
     使用这个通用的战斗必须要求这个任务的config有config_general_battle
     """
 
-    def run_general_battle(self, config: GeneralBattleConfig = None, buff: BuffClass or list[BuffClass] = None) -> bool:
+    def run_general_battle(self, config: GeneralBattleConfig = None, buff: BuffClass or list[BuffClass] = None, limit_count: int = None) -> bool:
         """
         运行脚本
         :return:
@@ -26,7 +26,7 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         # 本人选择的策略是只要进来了就算一次，不管是不是打完了
         logger.hr("General battle start", 2)
         self.current_count += 1
-        logger.info(f"Current count: {self.current_count}")
+        logger.info(f"Current count: {self.current_count} / " + str(limit_count))
         if config is None:
             config = GeneralBattleConfig()
 
