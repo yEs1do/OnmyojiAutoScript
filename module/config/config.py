@@ -349,7 +349,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             random_float = random.randint(-float_seconds, float_seconds)
             # 如果有强制运行时间
 
-            if target is None:
+            if target is None and success:
                 if scheduler.server_update == time(hour=9):
                     next_run += timedelta(seconds=random_float)
                 else:
