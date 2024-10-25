@@ -98,8 +98,6 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 self.set_next_run('Orochi', finish=False, success=False)
 
         self.set_next_run(task='RealmRaid', target=datetime.now())
-        self.set_next_run(task='TalismanPass', target=datetime.now())
-
         raise TaskEnd
 
     def orochi_enter(self) -> bool:
