@@ -115,7 +115,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             if self.is_in_room():
                 logger.info("契灵：进入组队房间！")
                 if self.wait_battle(wait_time=self.config.bondling_fairyland.invite_config.wait_time):
-                    self.run_battle(self.config.bondling_fairyland.battle_config)
+                    self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
                     wait_timer.reset()
                     # 进入战斗流程
                     self.device.stuck_record_add('BATTLE_STATUS_S')
@@ -386,7 +386,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         return success
                 case UserStatus.ALONE:
                     self.run_alone()
-                    if self.run_battle(battle_config):
+                    if self.run_battle(battle_config, limit_count=self.limit_count):
                         return success
                 case _:
                     logger.error('Unknown user status')
@@ -694,7 +694,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 # 点击挑战
                 if not is_first:
                     if self.run_invite(config=self.config.bondling_fairyland.invite_config):
-                        self.run_battle(self.config.bondling_fairyland.battle_config)
+                        self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
                     else:
                         # 邀请失败，退出任务
                         logger.warning('Invite failed and exit this bondling_fairyland task')
@@ -709,7 +709,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         break
                     else:
                         is_first = False
-                        self.run_battle(self.config.bondling_fairyland.battle_config)
+                        self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
                         continue
             if self.appear(self.I_CHECK_BONDLING_FAIRYLAND):
                 return True
