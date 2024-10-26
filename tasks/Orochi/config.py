@@ -35,10 +35,12 @@ class Layer(str, Enum):
 class Liao30Config(BaseModel):
     # 120模式
     orochi120_enable: bool = Field(title='120模式', default=True, description='120模式')
+    # 限制次数
+    limit_count: int = Field(default=120, description='limit_count_help')
     # 寮30模式
     liao30_enable: bool = Field(title='寮30模式', default=True, description='寮30模式')
     # 启动时间
-    liao30_time: Time = Field(default=Time(hour=11), description='启动时间')
+    start_time: Time = Field(default=Time(hour=11), description='启动时间')
 
 
 class OrochiConfig(ConfigBase):

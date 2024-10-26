@@ -23,7 +23,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
     def run(self):
         if self.config.orochi.liao30_config.orochi120_enable:
-            limit_count = 120
+            limit_count = self.config.orochi.liao30_config.limit_count
             layer = Layer.TWELVE
         elif self.config.orochi.liao30_config.liao30_enable:
             limit_count = 30
@@ -83,8 +83,8 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
         # 下一次运行时间
         if self.config.orochi.liao30_config.liao30_enable:
-            liao30_time = self.config.orochi.liao30_config.liao30_time
-            next_run = parse_tomorrow_server(liao30_time)
+            start_time = self.config.orochi.liao30_config.start_time
+            next_run = parse_tomorrow_server(start_time)
             self.set_next_run('Orochi', target=next_run)
         else:
             if success:
