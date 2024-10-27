@@ -51,6 +51,7 @@ class ScriptTask(OrochiScriptTask, PetsAssets):
         self.orochi_enter()
 
         self.check_layer(Layer.TEN)
+        self.check_lock(True)
         count_orochi_ten = 0
         while 1:
             self.screenshot()
