@@ -5,6 +5,10 @@ from enum import Enum
 from datetime import datetime, time
 from pydantic import BaseModel, ValidationError, validator, Field
 
+class AreaBossFloor(str, Enum):
+    ONE = '一层'
+    TEN = '十层'
+    DEFAULT = '不更改'
 
 class Boss(BaseModel):
     boss_number: int = Field(title='Boss Number',
@@ -15,6 +19,6 @@ class Boss(BaseModel):
     # 是否查找当日悬赏鬼王
     boss_reward: bool = Field(default=False, description='boss_reward_help')
     # 悬赏是否打较简单的一星鬼王，默认启用，若想要更高悬赏奖励可自行关闭
-    reward_floor_1: bool = Field(default=True, description='reward_floor_1_help')
+    reward_floor: AreaBossFloor = Field(default=AreaBossFloor.ONE, description='reward_floor_help')
     # 是否使用收藏的
     use_collect: bool = Field(default=False, description='use_collect_help')
