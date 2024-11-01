@@ -12,7 +12,7 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_area_boss, page_shikigami_records
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.AreaBoss.assets import AreaBossAssets
-
+from tasks.AreaBoss.config import AreaBossFloor
 from module.logger import logger
 from module.exception import TaskEnd
 from module.atom.image import RuleImage
@@ -126,7 +126,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.wait_until_appear(self.I_AB_CLOSE_RED)
         self.ui_click(self.I_AB_CLOSE_RED, self.I_FILTER)
 
-    def boss_fight(self, battle: RuleImage, ultra: bool = False) -> bool:
+    def boss_fight(self, battle: RuleImage, ultra: bool = False, reward_floor = AreaBossFloor) -> bool:
         """
             完成挑战一个鬼王的全流程
             从打开筛选界面开始 到关闭鬼王详情界面结束
@@ -163,9 +163,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
                         return False
                 # 切换到 极地鬼
                 self.switch_difficulty(True)
-            # 如果打较简单的一星悬赏
-            if con.reward_floor_1:
-                self.switch_to_floor_1()
+            # 调整悬赏层数
+            match reward_floor:
+                case AreaBossFloor.ONE: self.switch_to_floor_1()
+                case AreaBossFloor.TEN: self.switch_to_floor_10()
         result = True
         if not self.start_fight():
             result = False
@@ -236,6 +237,21 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
             self.swipe(self.S_AB_FLOOR_DOWN, interval=1)
             # 等待滑动动画
             self.wait_until_appear(self.I_AB_JI_FLOOR_ONE, False, 1)
+
+    def switch_to_floor_10(self):
+        """
+            更改层数为十层
+        """
+        # 打开选择列表
+        self.ui_click(self.C_AB_JI_FLOOR_SELECTED, self.I_AB_JI_FLOOR_LIST_CHECK, interval=3)
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_AB_JI_FLOOR_TEN):
+                self.click(self.I_AB_JI_FLOOR_TEN)
+                break
+            self.swipe(self.S_AB_FLOOR_UP, interval=1)
+            # 等待滑动动画
+            self.wait_until_appear(self.I_AB_JI_FLOOR_TEN, False, 1)
 
     def fight_reward_boss(self):
         index = self.get_hot_in_reward()
