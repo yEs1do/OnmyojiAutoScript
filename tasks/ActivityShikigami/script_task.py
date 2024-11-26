@@ -17,11 +17,18 @@ from tasks.GameUi.game_ui import GameUi
 from module.logger import logger
 from module.exception import TaskEnd
 <<<<<<< HEAD
+<<<<<<< HEAD
 from tasks.GameUi.page import page_exploration, page_shikigami_records, page_main
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
 class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
+=======
+from module.base.protect import random_sleep
+
+
+class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
 from module.base.protect import random_sleep
 

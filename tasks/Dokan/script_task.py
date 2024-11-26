@@ -4,6 +4,7 @@
 # @note     draft version without full test
 # github    https://github.com/roarhill/oas
 <<<<<<< HEAD
+<<<<<<< HEAD
 import random
 import time
 from enum import Enum
@@ -26,10 +27,25 @@ from datetime import datetime
 import random
 from enum import Enum
 from module.atom.image_grid import ImageGrid
+=======
+import time
+
+import cv2
+import numpy as np
+from cached_property import cached_property
+
+from datetime import datetime
+import random
+from enum import Enum
+from module.atom.image_grid import ImageGrid
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 from module.base.timer import Timer
 from module.exception import TaskEnd
 from module.logger import logger
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
@@ -40,7 +56,11 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_shikigami_records, page_guild
 from tasks.RichMan.assets import RichManAssets
 <<<<<<< HEAD
+<<<<<<< HEAD
 
+=======
+from pathlib import Path
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
 from pathlib import Path
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -122,6 +142,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
             self.run_switch_soul_by_name(cfg.switch_soul_config.group_name, cfg.switch_soul_config.team_name)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         success = True
         scene_err_count = 0
 
@@ -139,10 +160,15 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         else:
             self.goto_dokan()
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         # 进入道馆
         self.goto_dokan()
         # 开始道馆流程
         self.dokan_process(cfg, attack_priority)
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
     def dokan_process(self, cfg: Dokan, attack_priority: int):
@@ -236,10 +262,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         self.device.stuck_record_add('BATTLE_STATUS_S')
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         # 设置下次运行时间
         self.set_next_run(task='Dokan', finish=True, server=True, success=success)
         raise TaskEnd
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         # logger.info(f"检测当前场景")
         # 场景检测：阴阳竂
         if self.appear(self.I_SCENE_RYOU, threshold=0.8):
@@ -325,6 +354,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         #     return True, DokanScene.RYOU_DOKAN_SCENE_FINISHED
 
         return True, DokanScene.RYOU_DOKAN_SCENE_UNKNOWN
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
     def dokan_battle(self, cfg: Dokan):
@@ -340,6 +372,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         #     self.anti_detect(False, False, True)
 
         # 更换队伍
+<<<<<<< HEAD
 <<<<<<< HEAD
         if not self.team_switched:
             logger.info(
@@ -367,6 +400,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         # logger.info(f"等待战斗结果:config.random_click_swipt_enable={config.random_click_swipt_enable}")
         # logger.info("come on baby, let's go.")
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         # if not self.team_switched:
         #     logger.info(
         #         f"switch team preset: enable={config.preset_enable}, preset_group={config.preset_group}, preset_team={config.preset_team}")
@@ -374,6 +409,9 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         #     self.team_switched = True
         #     # 切完队伍后有时候会卡顿，先睡一觉，防止快速跳到绿标流程，导致未能成功绿标
         #     time.sleep(3)
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
         while 1:
@@ -749,6 +787,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 break
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         # 退出道馆地图
         while 1:
             self.screenshot()
@@ -819,6 +858,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         '''
 =======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         self.ui_get_current_page()
         self.ui_goto(page_main)
 
@@ -854,6 +895,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
         # 保存图像
         cv2.imwrite(str(save_folder / f'{image_name}.png'), image)
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         # 状态：检查右下角有没有挑战？通常是失败了，并退出来到集结界面，可重新开始点击右下角挑战进入战斗
         elif self.appear(self.I_RYOU_DOKAN_START_CHALLENGE, 0.95):
@@ -921,6 +963,8 @@ if __name__ == "__main__":
     t = ScriptTask(config, device)
     t.run()
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
@@ -933,4 +977,7 @@ if __name__ == "__main__":
     # test_ocr_locate_dokan_target()
     # test_anti_detect_random_click()
     # test_goto_main()
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6

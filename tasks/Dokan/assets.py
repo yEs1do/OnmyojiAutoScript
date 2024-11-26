@@ -29,6 +29,7 @@ class DokanAssets:
 
 	# Image Rule Assets
 <<<<<<< HEAD
+<<<<<<< HEAD
 	# 道馆 
 	I_DAOGUAN = RuleImage(roi_front=(462,159,100,100), roi_back=(462,159,100,100), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_daoguan.png")
 	# 防守战报 
@@ -36,6 +37,8 @@ class DokanAssets:
 	# 建立道馆  
 	I_CREATE_DAOGUAN = RuleImage(roi_front=(262,630,45,62), roi_back=(262,630,45,62), threshold=0.9, method="Template matching", file="./tasks/Dokan/res/Screenshots_create_daoguan.png")
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 	# 区域找绿标 
 	I_GREEN_MARK = RuleImage(roi_front=(157,220,979,229,), roi_back=(157,220,979,229,), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/green_mark.png")
 	# 道馆 
@@ -46,12 +49,20 @@ class DokanAssets:
 	I_FANGSHOU = RuleImage(roi_front=(35,610,75,79), roi_back=(35,610,75,79), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_fangshou.png")
 	# 建立道馆  
 	I_CREATE_DAOGUAN = RuleImage(roi_front=(262,630,45,62), roi_back=(262,630,45,62), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_create_daoguan.png")
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 	# 确定建立道馆 
 	I_CREATE_DAOGUAN_SURE = RuleImage(roi_front=(766,409,100,55), roi_back=(766,409,100,55), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_create_daoguan_sure.png")
 	# 已经建立道馆  
 	I_CREATE_DAOGUAN_OK = RuleImage(roi_front=(262,630,45,62), roi_back=(262,630,45,62), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_create_daoguan_ok.png")
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+	# 建立道馆弹出页，红色关闭 
+	I_RED_CLOSE = RuleImage(roi_front=(1175,108,41,42), roi_back=(1175,108,41,42), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_red_close.png")
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
 	# 建立道馆弹出页，红色关闭 
 	I_RED_CLOSE = RuleImage(roi_front=(1175,108,41,42), roi_back=(1175,108,41,42), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_red_close.png")
@@ -61,7 +72,10 @@ class DokanAssets:
 	# 确定 
 	I_OK = RuleImage(roi_front=(706,407,100,48), roi_back=(706,407,100,48), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_ok.png")
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 	# 放弃突破 
 	I_QUIT_DOKAN = RuleImage(roi_front=(60,612,53,53), roi_back=(60,612,53,53), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_quit_dokan.png")
 	# 确认放弃突破 
@@ -72,6 +86,9 @@ class DokanAssets:
 	I_CROWD_QUIT_DOKAN = RuleImage(roi_front=(1059,244,77,71), roi_back=(1059,244,77,71), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_crowd_quit_dokan.png")
 	# 再战道馆 
 	I_CONTINUE_DOKAN = RuleImage(roi_front=(1177,246,71,67), roi_back=(1177,246,71,67), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/Screenshots_continue_dokan.png")
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 	# 神社->道馆 
 	I_RYOU_DOKAN = RuleImage(roi_front=(476,173,62,24), roi_back=(476,173,62,24), threshold=0.8, method="Template matching", file="./tasks/Dokan/res/res_ryou_dokan.png")
@@ -137,6 +154,11 @@ class DokanAssets:
 
 	# Ocr Rule Assets
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+	# 道馆开启状态 
+	O_DOKAN_STATUS = RuleOcr(roi=(492,628,222,44), area=(492,628,222,44), mode="Full", method="Default", keyword="", name="dokan_status")
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
 	# 道馆开启状态 
 	O_DOKAN_STATUS = RuleOcr(roi=(492,628,222,44), area=(492,628,222,44), mode="Full", method="Default", keyword="", name="dokan_status")

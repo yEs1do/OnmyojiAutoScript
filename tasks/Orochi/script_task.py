@@ -23,6 +23,7 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
 
     def run(self):
 <<<<<<< HEAD
+<<<<<<< HEAD
         # 根据选层切换御魂
 
         orochi_switch_soul = self.config.orochi.switch_soul
@@ -45,6 +46,33 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         else:
             limit_count = self.config.orochi.orochi_config.limit_count
 
+=======
+        if self.config.orochi.liao30_config.orochi120_enable:
+            limit_count = self.config.orochi.liao30_config.limit_count
+            layer = Layer.TWELVE
+        elif self.config.orochi.liao30_config.liao30_enable:
+            limit_count = 30
+            layer = Layer.ELEVEN
+        else:
+            limit_count = self.config.orochi.orochi_config.limit_count
+            layer = self.config.orochi.orochi_config.layer
+
+        # 根据选层切换御魂
+        orochi_switch_soul = self.config.orochi.switch_soul
+        if orochi_switch_soul.auto_enable:
+            match layer:
+                case Layer.TEN:
+                    group_team = orochi_switch_soul.ten_switch
+                case Layer.ELEVEN:
+                    group_team = orochi_switch_soul.eleven_switch
+                case Layer.TWELVE:
+                    group_team = orochi_switch_soul.twelve_switch
+
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(group_team)
+
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
         if self.config.orochi.liao30_config.orochi120_enable:
             limit_count = self.config.orochi.liao30_config.limit_count
@@ -106,7 +134,10 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             self.soul(is_open=False)
             self.close_buff()
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
         # 下一次运行时间
         if self.config.orochi.liao30_config.liao30_enable:
@@ -118,6 +149,12 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 self.set_next_run('Orochi', finish=True, success=True)
             else:
                 self.set_next_run('Orochi', finish=False, success=False)
+<<<<<<< HEAD
+=======
+
+        self.set_next_run(task='RealmRaid', target=datetime.now())
+        self.set_next_run(task='TalismanPass', target=datetime.now())
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
         self.set_next_run(task='RealmRaid', target=datetime.now())
         self.set_next_run(task='TalismanPass', target=datetime.now())
@@ -332,12 +369,17 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
         self.ui_get_current_page()
         self.ui_goto(page_main)
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         return success
 =======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
         return success
+=======
+
+        return success
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
     def run_alone(self, layer):
         logger.info('Start run alone')

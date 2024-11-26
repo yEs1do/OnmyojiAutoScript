@@ -107,15 +107,21 @@ class GameUiAssets:
 	I_TOWN_GOTO_HYAKKISEN = RuleImage(roi_front=(192,145,48,67), roi_back=(86,130,447,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_town_goto_hyakkisen.png")
 	# description 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	I_CHECK_DUEL = RuleImage(roi_front=(1045,610,50,53), roi_back=(1018,579,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel.png")
 	# 斗技页面 
 	I_CHECK_DUEL_NEW = RuleImage(roi_front=(95,5,100,46), roi_back=(95,5,100,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel_new.png")
 	# description 
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 	I_CHECK_DUEL = RuleImage(roi_front=(110,10,64,38), roi_back=(79,1,110,74), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel.png")
 	# 斗技页面
 	I_CHECK_DUEL_NEW = RuleImage(roi_front=(95,5,100,46), roi_back=(95,5,100,46), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_duel_new.png")
 	# description
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 	I_CHECK_DEMON_ENCOUNTER = RuleImage(roi_front=(26,658,42,43), roi_back=(2,619,100,100), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_demon_encounter.png")
 	# description 

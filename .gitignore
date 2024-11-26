@@ -42,11 +42,14 @@ oas-backend.bat
 .eslintignore
 .eslintrc.js
 .prettierrc.js
+<<<<<<< HEAD
 
 
 
 
 
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
 
 
@@ -279,7 +282,11 @@ adb_port.ini
 console.bat
 .vscode/*
 <<<<<<< HEAD
+<<<<<<< HEAD
 /dev_tools/assets_test.py
+=======
+
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
 
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6

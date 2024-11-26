@@ -1,6 +1,7 @@
 [
   {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "itemName": "daoguan",
     "imageName": "Screenshots_daoguan.png",
     "roiFront": "462,159,100,100",
@@ -17,6 +18,14 @@
     "roiBack": "157,220,979,229,",
     "method": "Template matching",
     "threshold": 0.8,
+=======
+    "itemName": "green_mark",
+    "imageName": "green_mark.png",
+    "roiFront": "157,220,979,229,",
+    "roiBack": "157,220,979,229,",
+    "method": "Template matching",
+    "threshold": 0.8,
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
     "description": "区域找绿标"
   },
   {
@@ -38,6 +47,9 @@
     "description": "寮称号"
   },
   {
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
     "itemName": "fangshou",
     "imageName": "Screenshots_fangshou.png",
@@ -48,7 +60,11 @@
     "description": "防守战报"
   },
 <<<<<<< HEAD
+<<<<<<< HEAD
     {
+=======
+  {
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
   {
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -61,7 +77,11 @@
     "description": "建立道馆 "
   },
 <<<<<<< HEAD
+<<<<<<< HEAD
     {
+=======
+  {
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
   {
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -74,7 +94,11 @@
     "description": "确定建立道馆"
   },
 <<<<<<< HEAD
+<<<<<<< HEAD
       {
+=======
+  {
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
   {
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -88,7 +112,10 @@
   },
   {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
     "itemName": "red_close",
     "imageName": "Screenshots_red_close.png",
     "roiFront": "1175,108,41,42",
@@ -98,6 +125,9 @@
     "description": "建立道馆弹出页，红色关闭"
   },
   {
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
     "itemName": "newtz",
     "imageName": "Screenshots_newtz.png",
@@ -116,7 +146,10 @@
     "threshold": 0.8,
     "description": "确定"
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
   },
   {
     "itemName": "quit_dokan",
@@ -162,6 +195,9 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "再战道馆"
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
   },
   {

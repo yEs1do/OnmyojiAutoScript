@@ -24,7 +24,11 @@ class WhenNetworkError(str, Enum):
 
 class Emergency(BaseModel):
 <<<<<<< HEAD
+<<<<<<< HEAD
     accept_now: bool = Field(default=True, description='accept_now')
+=======
+    # accept_now: bool = Field(default=True, description='accept_now')
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
     # accept_now: bool = Field(default=True, description='accept_now')
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6

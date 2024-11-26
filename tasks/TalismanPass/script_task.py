@@ -35,7 +35,11 @@ class ScriptTask(GameUi, TalismanPassAssets):
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=21, minute=30))
         else:
 <<<<<<< HEAD
+<<<<<<< HEAD
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=10))
+=======
+            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=5))
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=5))
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
