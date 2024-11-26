@@ -55,17 +55,23 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         if not reuse_screenshot:
             self.screenshot()
 
-        if self.appear(self.I_CHECK_EXPLORATION):
+        if self.appear(self.I_CHECK_EXPLORATION) and not (self.appear(self.I_E_SETTINGS_BUTTON) or self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_E_AUTO_ROTATE_OFF)):
+            logger.info("在探索大世界中")
             return Scene.WORLD
         elif self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
+            logger.info("在探索入口弹窗中")
             return Scene.ENTRANCE
         elif self.appear(self.I_E_SETTINGS_BUTTON) or self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_E_AUTO_ROTATE_OFF):
+            logger.info("在探索里面")
             return Scene.MAIN
         elif self.is_in_prepare():
+            logger.info("在战斗准备")
             return Scene.BATTLE_PREPARE
         elif self.is_in_battle():
+            logger.info("在战斗中")
             return Scene.BATTLE_FIGHTING
         elif self.is_in_room() or self.appear(self.I_CREATE_ENSURE):
+            logger.info("在组队界面中")
             return Scene.TEAM
 
         logger.info("Unknown scene")
@@ -105,6 +111,7 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         self.ui_goto(page_exploration)
 
     def post_process(self):
+        self.wait_until_stable(self.I_UI_BACK_RED)
         self.ui_get_current_page()
         self.ui_goto(page_main)
         con = self._config.exploration_config
@@ -172,7 +179,7 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
             logger.warning('Opening settings failed due to now in battle')
             return
         cu, res, total = self.O_E_ALTERNATE_NUMBER.ocr(self.device.image)
-        if cu >= 40:
+        if cu >= 20:
             logger.info("Alternate number is full")
             self.ui_click_until_disappear(self.I_E_SURE_BUTTON)
             return
@@ -336,6 +343,30 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
             if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1.5):
                 continue
 
+<<<<<<< HEAD
+=======
+    def fire(self, button) -> bool:
+        self.ui_click_until_disappear(button, interval=3)
+        if (self.appear(self.I_E_SETTINGS_BUTTON) or
+                self.appear(self.I_E_AUTO_ROTATE_ON) or
+                self.appear(self.I_E_AUTO_ROTATE_OFF)):
+            # 如果还在探索说明，这个是显示滑动导致挑战按钮不在范围内
+            logger.warning('Fire button disappear, but still in exploration')
+            return False
+        self.run_general_battle(self._config.general_battle_config)
+        self.minions_cnt += 1
+        return True
+
+    def get_box(self):
+        if self.appear(self.I_MAP_BOX_CLICK):
+            # 地图宝箱
+            logger.info('Treasure box appear, get it.')
+            self.ui_click_until_disappear(self.I_MAP_BOX_CLICK)
+        if self.appear(self.I_TREASURE_BOX_CLICK):
+            # 宝箱
+            logger.info('Treasure box appear, get it.')
+            self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
 if __name__ == "__main__":
     from module.config.config import Config

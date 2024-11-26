@@ -31,13 +31,17 @@ class SoloExploration(BaseExploration):
         logger.hr('solo')
         explore_init = False
         search_fail_cnt = 0
+<<<<<<< HEAD
         explore_first = False
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
 
             #
             if scene == Scene.WORLD:
+<<<<<<< HEAD
                 if self.appear(self.I_MAP_BOX_CLICK):
                     # 地图宝箱
                     logger.info('Treasure box appear, get it.')
@@ -46,21 +50,23 @@ class SoloExploration(BaseExploration):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
                     self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+=======
+                self.get_box()
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                 if self.check_exit():
                     break
                 self.open_expect_level()
-                explore_init = False
                 continue
             #
             elif scene == Scene.ENTRANCE:
                 if self.check_exit():
                     break
                 self.ui_click(self.I_E_EXPLORATION_CLICK, stop=self.I_E_SETTINGS_BUTTON)
-                explore_init = False
                 continue
             #
             elif scene == Scene.MAIN:
                 # 是否第一次进
+<<<<<<< HEAD
                 if not explore_first:
                     if not explore_init:
                         self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
@@ -69,24 +75,28 @@ class SoloExploration(BaseExploration):
                         explore_init = True
                         explore_first = True
                         continue
+=======
+                if not explore_init:
+                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                    if self._config.exploration_config.auto_rotate == AutoRotate.yes:
+                        self.enter_settings_and_do_operations()
+                    explore_init = True
+                    continue
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
                         continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                    self.ui_click_until_disappear(self.I_BOSS_BATTLE_BUTTON)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
+                    if self.fire(self.I_BOSS_BATTLE_BUTTON):
+                        logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
-                    self.ui_click_until_disappear(fight_button)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    logger.info(f'Fight, minions cnt {self.minions_cnt}')
+                    if self.fire(fight_button):
+                        logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
@@ -143,10 +153,8 @@ class SoloExploration(BaseExploration):
                     break
                 if self.appear(self.I_UI_CONFIRM):
                     self.ui_click_until_disappear(self.I_UI_CONFIRM)
-                    # 可以加一下，清空第一次 explore_init
                     continue
                 self.open_expect_level()
-                explore_init = False
                 continue
 
             # 邀请好友, 非常有可能是后面邀请好友，然后直接跳到组队了
@@ -169,7 +177,11 @@ class SoloExploration(BaseExploration):
                 if self.appear(self.I_FIRE, threshold=0.8) and not self.appear(self.I_ADD_2):
                     self.ui_click_until_disappear(self.I_FIRE, interval=1)
                     continue
+<<<<<<< HEAD
                 if self.run_invite(config=self._invite_config, is_first=True):
+=======
+                if self.appear(self.I_ADD_2) and self.run_invite(config=self._invite_config, is_first=True):
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                     continue
                 else:
                     logger.warning('Invite failed, quit')
@@ -208,21 +220,19 @@ class SoloExploration(BaseExploration):
                         logger.warning('Exit team')
                         self.quit_explore()
                         continue
+                else:
+                    logger.warning('Team emoji appear again, clear friend_leave_timer')
+                    friend_leave_timer = Timer(10)
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                    self.ui_click_until_disappear(self.I_BOSS_BATTLE_BUTTON, interval=4)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    friend_leave_timer = Timer(10)
-                    logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
+                    if self.fire(self.I_BOSS_BATTLE_BUTTON):
+                        logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
-                    self.ui_click_until_disappear(fight_button, interval=3)
-                    self.run_general_battle(self._config.general_battle_config)
-                    self.minions_cnt += 1
-                    logger.info(f'Fight, minions cnt {self.minions_cnt}')
+                    if self.fire(fight_button):
+                        logger.info(f'Fight, minions cnt {self.minions_cnt}')
                     continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
@@ -251,6 +261,7 @@ class SoloExploration(BaseExploration):
             scene = self.get_current_scene()
             #
             if scene == Scene.WORLD:
+<<<<<<< HEAD
                 if self.appear(self.I_MAP_BOX_CLICK):
                     # 地图宝箱
                     logger.info('Treasure box appear, get it.')
@@ -259,6 +270,9 @@ class SoloExploration(BaseExploration):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
                     self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+=======
+                self.get_box()
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                 if self.check_exit():
                     break
                 if self.check_then_accept():
@@ -266,8 +280,6 @@ class SoloExploration(BaseExploration):
                 if wait_timer.started() and wait_timer.reached():
                     logger.warning('Wait timer reached')
                     break
-
-                explore_init = False
                 continue
             #
             elif scene == Scene.ENTRANCE:
@@ -301,6 +313,9 @@ class SoloExploration(BaseExploration):
                         wait_timer = Timer(50)
                         wait_timer.start()
                         continue
+                else:
+                    logger.warning('Team emoji appear again, clear friend_leave_timer')
+                    friend_leave_timer = Timer(10)
             #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)

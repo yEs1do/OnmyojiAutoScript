@@ -45,6 +45,7 @@ from tasks.SixRealms.config import SixRealms
 from tasks.RealmRaid.config import RealmRaid
 from tasks.CollectiveMissions.config import CollectiveMissions
 from tasks.Hunt.config import Hunt
+from tasks.AbyssShadows.config import AbyssShadows
 
 # 这一部分是活动的配置-----------------------------------------------------------------------------------------------------
 from tasks.ActivityShikigami.config import ActivityShikigami
@@ -59,6 +60,8 @@ from tasks.BondlingFairyland.config import BondlingFairyland
 from tasks.EvoZone.config import EvoZone
 from tasks.GoryouRealm.config import GoryouRealm
 from tasks.Hyakkiyakou.config import Hyakkiyakou
+from tasks.HeroTest.config import HeroTest
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 # 每周任务---------------------------------------------------------------------------------------------------------------
@@ -115,6 +118,7 @@ class ConfigModel(ConfigBase):
     evo_zone: EvoZone = Field(default_factory=EvoZone)
     goryou_realm: GoryouRealm = Field(default_factory=GoryouRealm)
     hyakkiyakou: Hyakkiyakou = Field(default_factory=Hyakkiyakou)
+    hero_test: HeroTest = Field(default_factory=HeroTest)
 
     # 这些是每周任务
     true_orochi: TrueOrochi = Field(default_factory=TrueOrochi)
@@ -128,6 +132,7 @@ class ConfigModel(ConfigBase):
     collective_missions: CollectiveMissions = Field(default_factory=CollectiveMissions)
     hunt: Hunt = Field(default_factory=Hunt)
     dokan: Dokan = Field(default_factory=Dokan)
+    abyss_shadows: AbyssShadows = Field(default_factory=AbyssShadows)
 
     # @validator('script')
     # def script_validator(cls, v):
@@ -156,8 +161,6 @@ class ConfigModel(ConfigBase):
         super().__setattr__(key, value)
         logger.info("auto save config")
         self.save()
-
-
 
     @staticmethod
     def read_json(config_name: str) -> dict:
@@ -282,7 +285,7 @@ class ConfigModel(ConfigBase):
         except (AttributeError, KeyError):
             return False
 
-# ----------------------------------- fastapi -----------------------------------
+    # ----------------------------------- fastapi -----------------------------------
     def script_task(self, task: str) -> dict:
         """
 
@@ -377,7 +380,7 @@ class ConfigModel(ConfigBase):
         if argument_object is None:
             logger.error(f'Set arg {task}.{group}.{argument}.{value} failed')
             return False
-        
+
         # XXX temp implementation to enable oasx control the datetime configuration globally rather than a single task
         if task == "restart" and group == "task_config" and argument == "reset_task_datetime_enable" and value == True:
             date_time = self.restart.task_config.reset_task_datetime
@@ -432,5 +435,3 @@ if __name__ == "__main__":
 
     # c.save()
     print(c.script_task('Orochi'))
-
-

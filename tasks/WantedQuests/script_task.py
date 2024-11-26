@@ -26,11 +26,17 @@ from tasks.Component.Costume.config import MainType
 from typing import List
 from tasks.GameUi.page import page_shikigami_records
 from tasks.Secret.config import Secret
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
 # 定义检查次数
 global_count = 0
 
 class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
+    # 定义检查次数
+    play_count = 0
 
     def run(self):
         # 悬赏换秘闻配置
@@ -100,9 +106,17 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         now_datetime = datetime.now()
         now_time = now_datetime.time()
         if time(hour=5) <= now_time < time(hour=18):
+<<<<<<< HEAD
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18, minute=10))
         else:
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=10))
+=======
+            next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18))
+        elif time(hour=0) <= now_time < time(hour=5):
+            next_run_datetime = datetime.combine(now_datetime.date(), time(hour=9, minute=5))
+        else:
+            next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=5))
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
 
 
@@ -111,15 +125,23 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         前置工作，
         :return:
         """
+<<<<<<< HEAD
         global global_count
         global_count += 1
+=======
+        self.play_count += 1
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         self.ui_get_current_page()
         self.ui_goto(page_main)
         done_timer = Timer(5)
         while 1:
             self.screenshot()
             if self.appear(self.I_TARCE_DISENABLE):
+<<<<<<< HEAD
                 if global_count >= 3:
+=======
+                if self.play_count >= 3:
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                     self.ui_click_until_disappear(self.I_UI_BACK_RED)
                     return False
                 break
@@ -226,7 +248,9 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         # 不需要解锁
         # self.ui_click(self.I_WQC_LOCK, self.I_WQC_UNLOCK)
         self.ui_click_until_disappear(self.I_WQC_FIRE)
-        self.run_general_battle()
+        self.battle_config.lock_team_enable = True
+        self.run_general_battle(self.battle_config)
+        # self.run_general_battle()
         self.wait_until_appear(self.I_WQC_FIRE, wait_time=4)
         self.ui_click_until_disappear(self.I_UI_BACK_RED)
         # 我忘记了打完后是否需要关闭 挑战界面
@@ -252,6 +276,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
                         click_count = 0
                         self.device.click_record_clear()
                     continue
+            self.battle_config.lock_team_enable = False
             success = self.run_general_battle(self.battle_config)
         while 1:
             self.screenshot()

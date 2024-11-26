@@ -7,19 +7,27 @@ from datetime import datetime, timedelta, time
 from tasks.base_task import BaseTask
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.AreaBoss.assets import AreaBossAssets
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 from tasks.Component.BaseActivity.base_activity import BaseActivity
 from tasks.Component.BaseActivity.config_activity import ApMode
 from tasks.ActivityShikigami.assets import ActivityShikigamiAssets
-from tasks.GameUi.page import page_main
+from tasks.GameUi.page import page_main, page_shikigami_records
 from tasks.GameUi.game_ui import GameUi
 
 from module.logger import logger
 from module.exception import TaskEnd
+<<<<<<< HEAD
 from tasks.GameUi.page import page_exploration, page_shikigami_records, page_main
 from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
 
 
 class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
+=======
+from module.base.protect import random_sleep
+
+
+class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
     def run(self) -> None:
 
@@ -44,16 +52,28 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
                                         seconds=self.limit_time.second)
         self.limit_count = config.general_climb.limit_count
 
+        if config.switch_soul_config.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(config.switch_soul_config.switch_group_team)
+        if config.switch_soul_config.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(
+                config.switch_soul_config.group_name,
+                config.switch_soul_config.team_name
+            )
+
         self.ui_get_current_page()
         self.ui_goto(page_main)
         self.home_main()
 
-        # # 2024-04-04 ---------------------start
-        # config.general_climb.ap_mode = ApMode.AP_GAME
-        # # 2024-04-04 ---------------------end
+        # # 2024-11-06 ---------------------start
+        config.general_climb.ap_mode = ApMode.AP_GAME
         # 选择是游戏的体力还是活动的体力
         current_ap = config.general_climb.ap_mode
-        self.switch(current_ap)
+        # self.switch(current_ap)
+        # # 2024-11-06 ---------------------end
 
         # 设定是否锁定阵容
         if config.general_battle.lock_team_enable:
@@ -103,6 +123,9 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
                     logger.info("Activity ap out")
                     break
 
+            # 随机休息
+            if config.general_climb.random_sleep:
+                random_sleep()
             # 点击战斗
             logger.info("Click battle")
             while 1:
@@ -122,6 +145,8 @@ class ScriptTask(GameUi, BaseActivity,SwitchSoul, ActivityShikigamiAssets):
                 logger.info("General battle success")
 
         self.main_home()
+        if config.general_climb.active_souls_clean:
+            self.set_next_run(task='SoulsTidy', success=False, finish=False, target=datetime.now())
         self.set_next_run(task="ActivityShikigami", success=True)
         raise TaskEnd
 

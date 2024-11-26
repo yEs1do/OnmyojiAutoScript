@@ -1,5 +1,6 @@
 ### AzurLaneAutoScript
 log
+dev_tools/assets_test.py
 config/backup/*
 config/*.ini
 !config/template.ini
@@ -38,6 +39,9 @@ hya
 deploy/launcher/oas-backend.bat
 deploy/launcher/oas-server.bat
 oas-backend.bat
+.eslintignore
+.eslintrc.js
+.prettierrc.js
 
 
 
@@ -274,4 +278,8 @@ adb_port.ini
 *.zip
 console.bat
 .vscode/*
+<<<<<<< HEAD
 /dev_tools/assets_test.py
+=======
+
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6

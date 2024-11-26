@@ -336,6 +336,24 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
 
         run = min(run).replace(microsecond=0)
         next_run = run
+<<<<<<< HEAD
+=======
+
+        if server and hasattr(scheduler, 'server_update'):
+            # 加入随机浮动时间
+            float_seconds = (scheduler.float_time.hour * 3600 +
+                             scheduler.float_time.minute * 60 +
+                             scheduler.float_time.second)
+            random_float = random.randint(-float_seconds, float_seconds)
+            # 如果有强制运行时间
+
+            if target is None and success:
+                if scheduler.server_update == time(hour=9):
+                    next_run += timedelta(seconds=random_float)
+                else:
+                    next_run = parse_tomorrow_server(scheduler.server_update, random_float)
+
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         # 将这些连接起来，方便日志输出
         kv = dict_to_kv(
             {

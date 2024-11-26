@@ -250,14 +250,17 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 break
         logger.info(f'Select team {teamName}')
         # 切换御魂
-        for i in range(5):
-            sleep(0.8)
+        cnt_click: int = 0
+        self.O_SS_TEAM_NAME.keyword = teamName
+        while 1:
             self.screenshot()
-            self.O_SS_TEAM_NAME.keyword = teamName
-            if self.ocr_appear_click_by_rule(self.O_SS_TEAM_NAME, self.I_SOU_CLICK_PRESENT, interval=1):
-                continue
-            if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=1):
+            if cnt_click >= 4:
                 break
+            if self.appear_then_click(self.I_SOU_SWITCH_SURE, interval=0.8):
+                continue
+            if self.ocr_appear_click_by_rule(self.O_SS_TEAM_NAME, self.I_SOU_CLICK_PRESENT, interval=1.5):
+                cnt_click += 1
+                continue
         logger.info(f'Switch soul_one group {groupName} team {teamName}')
 
     def ocr_appear_click_by_rule(self,
@@ -279,7 +282,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             return False
 
         x1, y1, w1, h1 = target.area
-        x, y, w, h = action.roi_back
+        x, y = action.coord()
 
         self.device.click(x=x, y=y1, control_name=target.name)
         return True

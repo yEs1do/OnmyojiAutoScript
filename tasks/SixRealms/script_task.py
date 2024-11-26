@@ -49,7 +49,7 @@ class ScriptTask(GameUi, SwitchSoul, MoonSea):
             if self.appear_then_click(self.I_BACK_EXIT, interval=2):
                 continue
 
-        self.set_next_run('SixRealms', success=True, finish=True)
+        self.set_next_run('SixRealms', success=True, finish=False)
         raise TaskEnd
 
     def run_moon_sea(self):

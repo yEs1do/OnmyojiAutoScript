@@ -82,9 +82,12 @@ class WantedQuestsConfig(BaseModel):
     # before_end: Time = Field(default=Time(0, 0, 0), description='before_end_help')
     invite_friend_name: str = Field(default=str(""), description="invite_friend_name_help")
     cooperation_type: CooperationSelectMaskDescription = Field(default=CooperationSelectMaskDescription.Any, description="cooperation_type_help")
+    # 找怪优先级  挑战 > 秘闻 > 探索
+    battle_priority: str = Field(default='挑战 > 秘闻 > 探索', description='battle_priority_help')
 
 
 
 class WantedQuests(ConfigBase):
     scheduler: Scheduler = Field(default_factory=Scheduler)
     wanted_quests_config: WantedQuestsConfig = Field(default_factory=WantedQuestsConfig)
+    switch_soul_config: SwitchSoulConfig = Field(default_factory=SwitchSoulConfig)

@@ -115,7 +115,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             if self.is_in_room():
                 logger.info("契灵：进入组队房间！")
                 if self.wait_battle(wait_time=self.config.bondling_fairyland.invite_config.wait_time):
+<<<<<<< HEAD
                     self.run_battle(self.config.bondling_fairyland.battle_config)
+=======
+                    self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                     wait_timer.reset()
                     # 进入战斗流程
                     self.device.stuck_record_add('BATTLE_STATUS_S')
@@ -386,7 +390,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         return success
                 case UserStatus.ALONE:
                     self.run_alone()
+<<<<<<< HEAD
                     if self.run_battle(battle_config):
+=======
+                    if self.run_battle(battle_config, limit_count=self.limit_count):
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                         return success
                 case _:
                     logger.error('Unknown user status')
@@ -694,7 +702,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 # 点击挑战
                 if not is_first:
                     if self.run_invite(config=self.config.bondling_fairyland.invite_config):
+<<<<<<< HEAD
                         self.run_battle(self.config.bondling_fairyland.battle_config)
+=======
+                        self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                     else:
                         # 邀请失败，退出任务
                         logger.warning('Invite failed and exit this bondling_fairyland task')
@@ -709,7 +721,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         break
                     else:
                         is_first = False
+<<<<<<< HEAD
                         self.run_battle(self.config.bondling_fairyland.battle_config)
+=======
+                        self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                         continue
             if self.appear(self.I_CHECK_BONDLING_FAIRYLAND):
                 return True

@@ -63,7 +63,11 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                 raise TaskEnd('TrueOrochi')
 
             self.check_layer(Layer.TEN)
+<<<<<<< HEAD
             # self.check_lock(False)
+=======
+            self.check_lock(True)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
             count_orochi_ten = 0
             while 1:
                 self.screenshot()

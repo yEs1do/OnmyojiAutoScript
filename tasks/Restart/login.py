@@ -131,7 +131,11 @@ class LoginHandler(BaseTask, RestartAssets):
                 continue
 
             # 勾玉
-            if self.appear_then_click(self.I_HARVEST_JADE, interval=1):
+            if self.appear_then_click(self.I_HARVEST_JADE, interval=2):
+                timer_harvest.reset()
+                continue
+            # 缘庭
+            if self.appear_then_click(self.I_HARVEST_JADE_9, interval=1):
                 timer_harvest.reset()
                 continue
             # 缘庭

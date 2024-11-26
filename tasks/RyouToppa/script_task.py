@@ -75,6 +75,7 @@ def random_delay(min_value: float = 1.0, max_value: float = 2.0, decimal: int = 
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
     medal_grid: ImageGrid = None
+    area_index = 0
 
     def run(self):
         """
@@ -138,12 +139,12 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
             else:
                 logger.info("The ryou toppa is not open and you are a ryou member.")
                 self.set_next_run(task='RyouToppa', finish=True, server=True, success=False)
-                raise TaskEnd
+                self.set_next_run_TalismanPass()
 
         # 100% 攻破, 第二天再执行
         if ryou_toppa_success_penetration:
             self.set_next_run(task='RyouToppa', finish=True, success=True)
-            raise TaskEnd
+            self.set_next_run_TalismanPass()
         if self.config.ryou_toppa.general_battle_config.lock_team_enable:
             logger.info("Lock team.")
             self.ui_click(self.I_TOPPA_UNLOCK_TEAM, self.I_TOPPA_LOCK_TEAM)
@@ -153,7 +154,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # --------------------------------------------------------------------------------------------------------------
         # 开始突破
         # --------------------------------------------------------------------------------------------------------------
-        area_index = 0
         success = True
         while 1:
             if not self.has_ticket():
@@ -167,13 +167,13 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 logger.warning("We have attacked the limit time.")
                 break
             # 进攻
-            res = self.attack_area(area_index)
+            res = self.attack_area(self.area_index)
             # 如果战斗失败或区域不可用，则弹出当前区域索引，开始进攻下一个
             if not res:
-                area_index += 1
-                if area_index >= len(area_map):
+                self.area_index += 1
+                if self.area_index >= len(area_map):
                     logger.warning('All areas are not available, it will flush the area cache')
-                    area_index = 0
+                    self.area_index = 0
                     self.flush_area_cache()
                 continue
 
@@ -181,10 +181,17 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # 回 page_main 失败
         # self.ui_current = page_ryou_toppa
         # self.ui_goto(page_main)
+
         if success:
             self.set_next_run(task='RyouToppa', finish=True, server=True, success=True)
         else:
             self.set_next_run(task='RyouToppa', finish=True, server=True, success=False)
+        
+        self.set_next_run_TalismanPass()
+
+    # 执行花合战
+    def set_next_run_TalismanPass(self):
+        self.set_next_run(task='TalismanPass', target=datetime.now())
         raise TaskEnd
 
     def start_ryou_toppa(self):
@@ -244,7 +251,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
         # Ps: 这时候能打过的都打过了，没有能攻打的结界了, 代表任务已经完成，set_next_run time=1d
         if self.appear(f3, threshold=0.8) or self.appear(f4, threshold=0.8):
             self.set_next_run(task='RyouToppa', finish=True, success=True)
-            raise TaskEnd
+            self.set_next_run_TalismanPass()
         # 如果该区域攻略失败返回 False
         if self.appear(f1, threshold=0.8) or self.appear(f2, threshold=0.8):
             logger.info('Area [%s] is futile attack, skip.' % str(index + 1))
@@ -297,6 +304,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RyouToppaAssets):
                 if self.appear(self.I_TOPPA_RECORD, threshold=0.85):
                     continue
                 logger.info("Start attach area [%s]" % str(index + 1))
+                self.area_index = 0
                 return self.run_general_battle(config=self.config.ryou_toppa.general_battle_config)
 
             if self.appear_then_click(RealmRaidAssets.I_FIRE, interval=2, threshold=0.8):

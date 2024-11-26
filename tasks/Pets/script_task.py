@@ -51,6 +51,10 @@ class ScriptTask(OrochiScriptTask, PetsAssets):
         self.orochi_enter()
 
         self.check_layer(Layer.TEN)
+<<<<<<< HEAD
+=======
+        self.check_lock(True)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         count_orochi_ten = 0
         while 1:
             self.screenshot()
@@ -66,7 +70,13 @@ class ScriptTask(OrochiScriptTask, PetsAssets):
             # 否则点击挑战
             if self.appear(self.I_OROCHI_FIRE):
                 self.ui_click_until_disappear(self.I_OROCHI_FIRE)
+<<<<<<< HEAD
                 self.run_general_battle()
+=======
+                self.config.orochi.general_battle_config.lock_team_enable = True
+                self.run_general_battle(config=self.config.orochi.general_battle_config)
+                # self.run_general_battle()
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                 count_orochi_ten += 1
                 continue
 

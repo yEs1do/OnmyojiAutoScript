@@ -34,5 +34,11 @@
     "roiFront": "42,94,1207,543",
     "roiBack": "42,94,1207,543",
     "description": "准备战斗"
+  },
+  {
+    "itemName": "dokan_green_left_5",
+    "roiFront": "993,474,67,104",
+    "roiBack": "993,474,67,104",
+    "description": "道馆从左开始第五个绿标"
   }
 ]

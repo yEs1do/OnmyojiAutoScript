@@ -33,10 +33,22 @@ class Layer(str, Enum):
     TWELVE = '神罚'
 
 class Liao30Config(BaseModel):
+<<<<<<< HEAD
     # 寮30模式
     liao30_enable: bool = Field(title='寮30模式', default=True, description='只打30次结束到第二天运行')
     # 启动时间
     liao30_time: Time = Field(default=Time(hour=10), description='启动时间')
+=======
+    # 120模式
+    orochi120_enable: bool = Field(title='120模式', default=True, description='120模式')
+    # 限制次数
+    limit_count: int = Field(default=120, description='limit_count_help')
+    # 寮30模式
+    liao30_enable: bool = Field(title='寮30模式', default=True, description='寮30模式')
+    # 启动时间
+    start_time: Time = Field(default=Time(hour=11), description='启动时间')
+
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
 class OrochiConfig(ConfigBase):
     # 身份

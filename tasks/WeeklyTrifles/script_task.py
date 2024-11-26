@@ -25,7 +25,7 @@ class ScriptTask(GameUi, WeeklyTriflesAssets):
         if con.broken_amulet:
             self._broken_amulet(con.broken_amulet)
 
-        self.set_next_run(task='WeeklyTrifles', success=True, finish=True)
+        self.set_next_run(task='WeeklyTrifles', success=True, finish=False)
         raise TaskEnd('WeeklyTrifles')
 
 
