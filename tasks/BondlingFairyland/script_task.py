@@ -116,7 +116,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 logger.info("契灵：进入组队房间！")
                 if self.wait_battle(wait_time=self.config.bondling_fairyland.invite_config.wait_time):
 <<<<<<< HEAD
+<<<<<<< HEAD
                     self.run_battle(self.config.bondling_fairyland.battle_config)
+=======
+                    self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
                     self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -391,7 +395,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 case UserStatus.ALONE:
                     self.run_alone()
 <<<<<<< HEAD
+<<<<<<< HEAD
                     if self.run_battle(battle_config):
+=======
+                    if self.run_battle(battle_config, limit_count=self.limit_count):
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
                     if self.run_battle(battle_config, limit_count=self.limit_count):
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -703,7 +711,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 if not is_first:
                     if self.run_invite(config=self.config.bondling_fairyland.invite_config):
 <<<<<<< HEAD
+<<<<<<< HEAD
                         self.run_battle(self.config.bondling_fairyland.battle_config)
+=======
+                        self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
                         self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -722,7 +734,11 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                     else:
                         is_first = False
 <<<<<<< HEAD
+<<<<<<< HEAD
                         self.run_battle(self.config.bondling_fairyland.battle_config)
+=======
+                        self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
                         self.run_battle(self.config.bondling_fairyland.battle_config, limit_count=self.limit_count)
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6

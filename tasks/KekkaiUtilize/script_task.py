@@ -43,6 +43,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         self.check_utilize_harvest()
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         # 无论收不收到菜，都会进入看看至少看一眼时间还剩多少
         time.sleep(0.5)
         # 进入育成界面
@@ -90,6 +91,63 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         while 1:
             self.screenshot()
 
+=======
+        self.check_utilize_add()
+
+    def check_utilize_add(self):
+        con = self.config.kekkai_utilize.utilize_config
+        while 1:
+
+            # 进入寮结界
+            self.goto_realm()
+
+            # 无论收不收到菜，都会进入看看至少看一眼时间还剩多少
+            time.sleep(0.5)
+            # 进入育成界面
+            self.realm_goto_grown()
+            self.screenshot()
+
+            if not self.appear(self.I_UTILIZE_ADD):
+                remaining_time = self.O_UTILIZE_RES_TIME.ocr(self.device.image)
+                if not isinstance(remaining_time, timedelta):
+                    logger.warning('Ocr remaining time error')
+                logger.info(f'Utilize remaining time: {remaining_time}')
+                # 执行失败，推出下一次执行为失败的时间间隔
+                logger.info('Utilize failed, exit')
+                self.back_guild()
+                next_time = datetime.now() + remaining_time
+                self.set_next_run(task='KekkaiUtilize', target=next_time)
+                raise TaskEnd
+            if not self.grown_goto_utilize():
+                logger.info('Utilize failed, exit')
+            self.run_utilize(con.select_friend_list, con.shikigami_class, con.shikigami_order)
+            self.back_guild()
+
+    def check_max_lv(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
+        """
+        在结界界面，进入式神育成，检查是否有满级的，如果有就换下一个
+        退出的时候还是结界界面
+        :return:
+        """
+        self.realm_goto_grown()
+        if self.appear(self.I_RS_LEVEL_MAX):
+            # 存在满级的式神
+            logger.info('Exist max level shikigami and replace it')
+            self.unset_shikigami_max_lv()
+            self.switch_shikigami_class(shikigami_class)
+            self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
+        else:
+            logger.info('No max level shikigami')
+        if self.detect_no_shikigami():
+            logger.warning('There are no any shikigami grow room')
+            self.switch_shikigami_class(shikigami_class)
+            self.set_shikigami(shikigami_order=7, stop_image=self.I_RS_NO_ADD)
+
+        # 回到结界界面
+        while 1:
+            self.screenshot()
+
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
         self.check_utilize_add()
 

@@ -346,6 +346,15 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
                              scheduler.float_time.second)
             random_float = random.randint(-float_seconds, float_seconds)
             # 如果有强制运行时间
+<<<<<<< HEAD
+=======
+
+            if target is None and success:
+                if scheduler.server_update == time(hour=9):
+                    next_run += timedelta(seconds=random_float)
+                else:
+                    next_run = parse_tomorrow_server(scheduler.server_update, random_float)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
             if target is None and success:
                 if scheduler.server_update == time(hour=9):

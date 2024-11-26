@@ -18,13 +18,19 @@ class GlobalGameAssets:
 	# 勾玉 
 	I_G_JADE = RuleImage(roi_front=(661,466,43,46), roi_back=(661,466,43,46), threshold=0.6, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_jade.png")
 <<<<<<< HEAD
+<<<<<<< HEAD
 	# 猫粮 
 	I_G_CAT_FOOD = RuleImage(roi_front=(565,463,59,65), roi_back=(565,463,59,65), threshold=0.8, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_cat_food.png")
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 	# 体力
 	I_G_SUSHI = RuleImage(roi_front=(661,466,43,46), roi_back=(661,466,43,46), threshold=0.6, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_sushi.png")
 	# 猫粮
 	I_G_CAT_FOOD = RuleImage(roi_front=(565,463,59,65), roi_back=(565,463,59,65), threshold=0.6, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_cat_food.png")
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 	# 狗粮 
 	I_G_DOG_FOOD = RuleImage(roi_front=(565,464,60,63), roi_back=(565,464,60,63), threshold=0.6, method="Template matching", file="./tasks/GlobalGame/gg/gg_g_dog_food.png")

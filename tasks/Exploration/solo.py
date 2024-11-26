@@ -32,7 +32,10 @@ class SoloExploration(BaseExploration):
         explore_init = False
         search_fail_cnt = 0
 <<<<<<< HEAD
+<<<<<<< HEAD
         explore_first = False
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         while 1:
@@ -42,6 +45,7 @@ class SoloExploration(BaseExploration):
             #
             if scene == Scene.WORLD:
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if self.appear(self.I_MAP_BOX_CLICK):
                     # 地图宝箱
                     logger.info('Treasure box appear, get it.')
@@ -50,6 +54,9 @@ class SoloExploration(BaseExploration):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
                     self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+=======
+                self.get_box()
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
                 self.get_box()
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -67,6 +74,7 @@ class SoloExploration(BaseExploration):
             elif scene == Scene.MAIN:
                 # 是否第一次进
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if not explore_first:
                     if not explore_init:
                         self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
@@ -76,6 +84,8 @@ class SoloExploration(BaseExploration):
                         explore_first = True
                         continue
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                 if not explore_init:
                     self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
                     if self._config.exploration_config.auto_rotate == AutoRotate.yes:
@@ -178,7 +188,11 @@ class SoloExploration(BaseExploration):
                     self.ui_click_until_disappear(self.I_FIRE, interval=1)
                     continue
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if self.run_invite(config=self._invite_config, is_first=True):
+=======
+                if self.appear(self.I_ADD_2) and self.run_invite(config=self._invite_config, is_first=True):
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
                 if self.appear(self.I_ADD_2) and self.run_invite(config=self._invite_config, is_first=True):
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -262,6 +276,7 @@ class SoloExploration(BaseExploration):
             #
             if scene == Scene.WORLD:
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if self.appear(self.I_MAP_BOX_CLICK):
                     # 地图宝箱
                     logger.info('Treasure box appear, get it.')
@@ -270,6 +285,9 @@ class SoloExploration(BaseExploration):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
                     self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+=======
+                self.get_box()
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
                 self.get_box()
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6

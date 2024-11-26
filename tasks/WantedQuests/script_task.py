@@ -27,7 +27,11 @@ from typing import List
 from tasks.GameUi.page import page_shikigami_records
 from tasks.Secret.config import Secret
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
@@ -107,15 +111,21 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         now_time = now_datetime.time()
         if time(hour=5) <= now_time < time(hour=18):
 <<<<<<< HEAD
+<<<<<<< HEAD
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18, minute=10))
         else:
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=10))
 =======
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=18))
         elif time(hour=0) <= now_time < time(hour=5):
             next_run_datetime = datetime.combine(now_datetime.date(), time(hour=9, minute=5))
         else:
             next_run_datetime = datetime.combine(now_datetime.date() + timedelta(days=1), time(hour=9, minute=5))
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
         self.set_next_run(task='WantedQuests', target=next_run_datetime)
 
@@ -126,8 +136,12 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
         :return:
         """
 <<<<<<< HEAD
+<<<<<<< HEAD
         global global_count
         global_count += 1
+=======
+        self.play_count += 1
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
         self.play_count += 1
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
@@ -138,7 +152,11 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             self.screenshot()
             if self.appear(self.I_TARCE_DISENABLE):
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if global_count >= 3:
+=======
+                if self.play_count >= 3:
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
                 if self.play_count >= 3:
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6

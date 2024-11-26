@@ -136,10 +136,13 @@ class LoginHandler(BaseTask, RestartAssets):
                 continue
             # 缘庭
             if self.appear_then_click(self.I_HARVEST_JADE_9, interval=1):
+<<<<<<< HEAD
                 timer_harvest.reset()
                 continue
             # 缘庭
             if self.appear_then_click(self.I_HARVEST_JADE_9, interval=1):
+=======
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
                 timer_harvest.reset()
                 continue
             # 签到

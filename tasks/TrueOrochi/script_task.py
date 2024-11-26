@@ -64,7 +64,11 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
 
             self.check_layer(Layer.TEN)
 <<<<<<< HEAD
+<<<<<<< HEAD
             # self.check_lock(False)
+=======
+            self.check_lock(True)
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
             self.check_lock(True)
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6

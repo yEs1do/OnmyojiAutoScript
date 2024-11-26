@@ -35,7 +35,11 @@ class ActivityShikigamiAssets:
 	# Image Rule Assets
 	# 进入活动 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	I_SHI = RuleImage(roi_front=(64,175,1110,326), roi_back=(64,175,1110,326), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
+=======
+	I_SHI = RuleImage(roi_front=(545,254,33,34), roi_back=(64,115,1110,427), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 =======
 	I_SHI = RuleImage(roi_front=(545,254,33,34), roi_back=(64,115,1110,427), threshold=0.7, method="Template matching", file="./tasks/ActivityShikigami/as/as_shi.png")
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6

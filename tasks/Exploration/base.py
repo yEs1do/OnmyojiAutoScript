@@ -366,6 +366,9 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
             # 宝箱
             logger.info('Treasure box appear, get it.')
             self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+<<<<<<< HEAD
+>>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
+=======
 >>>>>>> 2f966614481189a9805470d0d1fd6c4bcdc004d6
 
 if __name__ == "__main__":
