@@ -32,13 +32,12 @@ class FriendshipPoints(Special):
             self.buy_mall_more(buy_button=self.I_FS_BROKEN, remain_number=False, money_ocr=self.O_MALL_RESOURCE_5,
                                  buy_number=con.broken_amulet, buy_max=99, buy_money=100)
 
-    def buy_mall_one(self, buy_button: RuleImage, buy_check: RuleImage, money_ocr: RuleOcr, buy_money: int, check_money: bool=True):
+    def buy_mall_one(self, buy_button: RuleImage, buy_check: RuleImage, money_ocr: RuleOcr, buy_money: int):
         """
         针对只能买一个的
         :param buy_button:
         :param buy_check:
         :param money_ocr:
-        :param check_money:
         :param buy_money: 买这一个花多少
         :return:
         """
@@ -54,20 +53,19 @@ class FriendshipPoints(Special):
             logger.warning('Remain number is 0')
             return False
         # 检查钱
-        if check_money:
-            current_money = money_ocr.ocr(self.device.image)
-            if not isinstance(current_money, int):
-                logger.warning('Money ocr failed')
-                return False
-            money_enough = current_money >= buy_money
-            if not money_enough:
-                logger.warning(f'No enough money {current_money}')
-                return False
+        current_money = money_ocr.ocr(self.device.image)
+        if not isinstance(current_money, int):
+            logger.warning('Money ocr failed')
+            return False
+        money_enough = current_money >= buy_money
+        if not money_enough:
+            logger.warning(f'No enough money {current_money}')
+            return False
         # 点击购买
         return self.buy_one(buy_button, buy_check)
 
     def buy_mall_more(self, buy_button: RuleImage, remain_number: bool, money_ocr: RuleOcr,
-                       buy_number: int, buy_max: int, buy_money: int, check_money: bool=True):
+                       buy_number: int, buy_max: int, buy_money: int):
         """
         针对可以买多个的
         :param money_ocr:  检查钱的第几个
@@ -97,19 +95,18 @@ class FriendshipPoints(Special):
                 logger.warning(f'Remain number is {_remain}, buy number is {buy_number}')
                 buy_number = _remain
         # 检查钱够不够
-        if check_money:
-            current_money = money_ocr.ocr(self.device.image)
-            if not isinstance(current_money, int):
-                logger.warning('Money ocr failed')
+        current_money = money_ocr.ocr(self.device.image)
+        if not isinstance(current_money, int):
+            logger.warning('Money ocr failed')
+            return
+        money_enough = current_money >= buy_money * buy_number
+        if not money_enough:
+            logger.warning(f'Money is not enough {current_money}')
+            # 判断够不够买2个
+            if current_money < buy_money * 2:
+                logger.warning('Money is not enough 2')
                 return
-            money_enough = current_money >= buy_money * buy_number
-            if not money_enough:
-                logger.warning(f'Money is not enough {current_money}')
-                # 判断够不够买2个
-                if current_money < buy_money * 2:
-                    logger.warning('Money is not enough 2')
-                    return
-                buy_number = current_money // buy_money
+            buy_number = current_money // buy_money
         # 购买
         logger.info(f'Buy number is {buy_number}')
         if buy_number >= buy_max:
