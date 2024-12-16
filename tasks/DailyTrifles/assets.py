@@ -25,6 +25,8 @@ class DailyTriflesAssets:
 	I_CLICK_BLESS = RuleImage(roi_front=(617,442,92,39), roi_back=(617,442,92,39), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_click_bless.png")
 	# 吉闻页 
 	I_LUCK_TITLE = RuleImage(roi_front=(600,52,131,67), roi_back=(600,52,131,67), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/Screenshots_luck_title.png")
+	# 好友羁绊提升弹窗 
+	I_FRIENDSHIP_UP = RuleImage(roi_front=(1147,80,27,28), roi_back=(1147,80,27,28), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/love/friendship_up.png")
 
 
 	# Image Rule Assets
@@ -34,5 +36,7 @@ class DailyTriflesAssets:
 	I_GIFT_RECOMMEND = RuleImage(roi_front=(1186,98,53,64), roi_back=(1172,83,83,306), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_recommend.png")
 	# 免费一抽 
 	I_GIFT_SIGN = RuleImage(roi_front=(236,129,306,218), roi_back=(236,129,306,218), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_gift_sign.png")
+	# 下载拓展包弹窗 
+	I_DLC_CLOSE = RuleImage(roi_front=(916,147,24,25), roi_back=(916,147,24,25), threshold=0.8, method="Template matching", file="./tasks/DailyTrifles/store/store_dlc_close.png")
 
 
