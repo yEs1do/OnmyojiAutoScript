@@ -109,8 +109,6 @@ class ScriptTask(GameUi, Summon, DailyTriflesAssets):
             self.screenshot()
             if self.appear(self.I_GIFT_RECOMMEND):
                 break
-            if self.appear_then_click(self.I_DLC_CLOSE, interval=1):
-                continue
             if self.appear_then_click(self.I_ROOM_GIFT, interval=1):
                 continue
         self.screenshot()
