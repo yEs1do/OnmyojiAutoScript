@@ -789,6 +789,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             self.exit_room()
 
         return success
+
     def exit_team(self) -> bool:
         """
         在组队界面 退出组队的界面， 返回到庭院或者是你一开始进入的入口
