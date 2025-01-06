@@ -231,6 +231,9 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
         logger.info("Get reward")
         while 1:
             self.screenshot()
+            # 检查御魂溢出
+            if self.appear_then_click(self.I_OVER_GHOST, interval=1):
+                continue
             # 如果出现领奖励
             action_click = random.choice(
                 [self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3]
