@@ -5,10 +5,13 @@ from enum import Enum
 from pydantic import BaseModel, ValidationError, validator, Field
 
 from module.logger import logger
+from tasks.Component.config_base import ConfigBase, Time
 
 class WhenTaskQueueEmpty(str, Enum):
     GOTO_MAIN = 'goto_main'
     CLOSE_GAME = 'close_game'
+    CLOSE_emulator = 'close_emulator'
+
 
 class ScheduleRule(str, Enum):
     FILTER = 'Filter'  # 默认的基于过滤器，（按照开发者设定的调度规则进行调度）
@@ -24,5 +27,6 @@ class Optimization(BaseModel):
                                           description='task_hoarding_duration_help')
     when_task_queue_empty: WhenTaskQueueEmpty = Field(default=WhenTaskQueueEmpty.GOTO_MAIN,
                                                       description='when_task_queue_empty_help')
+    limit_time: Time = Field(default=Time(minute=30), description='limit_time_help')
     schedule_rule: ScheduleRule = Field(default=ScheduleRule.FILTER, description='schedule_rule_help')
 
