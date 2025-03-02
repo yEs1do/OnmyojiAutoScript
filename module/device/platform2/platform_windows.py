@@ -316,6 +316,7 @@ class PlatformWindows(PlatformBase, EmulatorManager):
             break
 
         emulator_window_minimize = self.config.script.device.emulator_window_minimize
+        logger.info(f'Minimize new emulator window: {emulator_window_minimize}')
         if emulator_window_minimize:
             if new_window != 0 and new_window != current_window:
                 # 如果有新窗口且新窗口不是当前窗口，最小化新窗口
