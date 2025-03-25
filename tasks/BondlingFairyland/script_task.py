@@ -124,6 +124,8 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         self.appear_then_click(self.I_CREATE_TEAM, interval=2)
                         continue
                     # 求援
+                    if self.appear(self.I_CHECK_BONDLING_FAIRYLAND, interval=1):
+                        return False
                     if self.appear(self.I_BALL_HELP, interval=1):
                         cu, res, total = self.O_B_BALL_NUMBER.ocr(self.device.image)
                         logger.info(f'ball is cu {cu}, total {total}')
@@ -374,10 +376,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         self.screenshot()
                         if not self.appear(self.I_STONE_SURE):
                             break
-                        for i in range(0, 5):
-                            if self.appear_then_click(self.I_BUY_ADD, interval=1):
+                        for i in range(0, 3):
+                            if self.appear_then_click(self.I_BUY_PLUS, interval=1):
                                 sleep(0.5)
-                                continue
                         if self.appear_then_click(self.I_GI_SURE, interval=1):
                             continue
                         # current = self.O_B_SUMMON_BALL_NUMBER.ocr(self.device.image)
