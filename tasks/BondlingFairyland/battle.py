@@ -67,8 +67,12 @@ class BondlingBattle(GeneralBattle, BondlingFairylandAssets):
             # 如果领奖励
             if self.appear(self.I_REWARD, threshold=0.6):
                 break
-            if self.appear(self.I_WIN, threshold=0.6):
-                break
+            if self.appear_then_click(self.I_WIN, threshold=0.6):
+                continue
+            if self.appear_then_click(self.I_BATTLE_SUCCESS, threshold=0.6):
+                continue
+            if self.appear_then_click(self.I_BATTLE_FAIL, threshold=0.6):
+                continue
             # 如果开启战斗过程随机滑动
             if random_click_swipt_enable:
                 self.random_click_swipt()
@@ -85,7 +89,11 @@ class BondlingBattle(GeneralBattle, BondlingFairylandAssets):
             if self.appear_then_click(self.I_REWARD, action=action_click, interval=1.5):
                 continue
             if self.appear_then_click(self.I_WIN, threshold=0.6):
-                break
+                continue
+            if self.appear_then_click(self.I_BATTLE_SUCCESS, threshold=0.6):
+                continue
+            if self.appear_then_click(self.I_BATTLE_FAIL, threshold=0.6):
+                continue
             if not self.appear(self.I_REWARD):
                 break
         logger.info("Get reward")
