@@ -97,6 +97,10 @@ class BondlingFairylandAssets:
 	I_CAP_SUCCESS = RuleImage(roi_front=(210,445,22,21), roi_back=(210,445,22,21), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_success.png")
 	# description 
 	I_CAP_FAILURE = RuleImage(roi_front=(1192,608,30,39), roi_back=(1192,608,30,39), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/capture_cap_failure.png")
+	# description 
+	I_BATTLE_FAIL = RuleImage(roi_front=(740,267,79,84), roi_back=(740,267,79,84), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_fail.png")
+	# description 
+	I_BATTLE_SUCCESS = RuleImage(roi_front=(651,203,70,81), roi_back=(651,203,70,81), threshold=0.8, method="Template matching", file="./tasks/BondlingFairyland/capture/battle_success.png")
 
 
 	# Image Rule Assets
