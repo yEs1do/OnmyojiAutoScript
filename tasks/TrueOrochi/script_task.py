@@ -9,6 +9,7 @@ from module.exception import TaskEnd
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
+from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
@@ -152,6 +153,9 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                     if self.appear_then_click(self.I_ST_FRAME, interval=1):
                         continue
                 break
+            # 检查御魂溢出
+            if self.appear_then_click(self.I_OVER_GHOST, interval=1):
+                continue
             if self.appear_then_click(self.I_ST_FRAME, interval=1):
                 continue
             if check_timer.reached():
