@@ -148,14 +148,14 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                     self.screenshot()
                     if not self.appear(self.I_GREED_GHOST):
                         break
+                    # 检查御魂溢出
+                    if self.appear_then_click(self.I_OVER_GHOST, interval=1):
+                        continue
                     if self.appear_then_click(self.I_GREED_GHOST, interval=1):
                         continue
                     if self.appear_then_click(self.I_ST_FRAME, interval=1):
                         continue
                 break
-            # 检查御魂溢出
-            if self.appear_then_click(self.I_OVER_GHOST, interval=1):
-                continue
             if self.appear_then_click(self.I_ST_FRAME, interval=1):
                 continue
             if check_timer.reached():
