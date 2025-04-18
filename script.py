@@ -40,6 +40,7 @@ class Script:
         self.failure_record = {}
         # 运行loop的线程
         self.loop_thread: Thread = None
+        self.start_loop_count = 1
 
     @cached_property
     def config(self) -> "Config":
@@ -402,6 +403,11 @@ class Script:
         # 初始化日志
         logger.set_file_logger(self.config_name)
 
+        # 重置状态
+        logger.info(f'[准备] 正在重置状态...')
+        self.failure_record = {}
+        self.device = None
+        self.device_status = False
         is_first_task = True
         stop_requested = False
         self.config.model.running_task = None
@@ -410,22 +416,10 @@ class Script:
         try:
             while not stop_requested:
                 try:
-                    # ------------------------- 设备初始化检查 -------------------------
-                    if not self.device:
-                        logger.info('[设备] 正在初始化设备...')
-                        self.device = Device(self.config)
-                        self.device_status = True
-
                     # ------------------------- 获取任务 -------------------------
                     task = self.get_next_task()
-                    logger.info(f'[任务] 获取到待执行任务 | {I18n.trans_zh_cn(task)}')
-
-                    # ------------------------- 设备重连逻辑 -------------------------
-                    if not self.device_status:
-                        logger.warning('[设备] 检测到设备断开，尝试重新连接')
-                        self.device = Device(self.config)
-                        self.device_status = True
-                        logger.info('[设备] 重连成功')
+                    task_chinese_name = I18n.trans_zh_cn(task)
+                    logger.info(f'[任务] 获取到待执行任务 | {task_chinese_name}')
 
                     # ------------------------- 跳过首次重启任务 -------------------------
                     if is_first_task and task == 'Restart':
@@ -434,46 +428,58 @@ class Script:
                         del_cached_property(self, 'config')
                         is_first_task = False
                         continue
-    
+
+                    # ------------------------- 设备重连逻辑 -------------------------
+                    if not (self.device_status and self.device):
+                        logger.warning('[设备] 检测到设备断开，尝试重新连接')
+                        self.device = Device(self.config)
+                        self.device_status = True
+                        logger.info('[设备] 重连成功')
+
                     # ------------------------- 执行前清理 -------------------------
                     if self.device and self.device_status:
                         self.device.stuck_record_clear()
                         self.device.click_record_clear()
     
                     # ------------------------- 任务执行 -------------------------
-                    logger.hr(f'{I18n.trans_zh_cn(task)} Start', 0)
+                    logger.hr(f'{task_chinese_name} Start', 0)
                     self.config.model.running_task = task
                     success = self.run(inflection.camelize(task))
                     self.config.model.running_task = None
-                    logger.hr(f'{I18n.trans_zh_cn(task)} End', 0)
+                    logger.hr(f'{task_chinese_name} End', 0)
                     is_first_task = False
                     del_cached_property(self, 'config')
     
                     # ------------------------- 失败处理 -------------------------
-                    failed = self.failure_record.get(task, 0)
-                    failed = 0 if success else failed + 1
-                    self.failure_record[task] = failed
-                    MAX_FAIL_COUNT = 3
-                    # logger.info(f'[任务统计] 任务: {I18n.trans_zh_cn(task)} | 累计失败次数: {failed}/{MAX_FAIL_COUNT}')
-    
-                    if failed >= MAX_FAIL_COUNT:
-                        logger.critical(f'[错误] 任务连续失败超过阈值 | 任务: {I18n.trans_zh_cn(task)} | 次数: {failed}')
-                        stop_requested = True
+                    if success:
+                        self.start_loop_count = 1
+                        self.failure_record[task] = 0
+                        continue
+                    else:
+                        failed = self.failure_record.get(task, 0) + 1
+                        self.failure_record[task] = failed
+                        MAX_FAIL_COUNT = 3
 
-                        # 失败次数超限，关闭任务
-                        # task_name = convert_to_underscore(task)
-                        # task_object = getattr(self.config.model, task_name, None)
-                        # scheduler = getattr(task_object, 'scheduler', None)
-                        # scheduler.enable = False
-                        # self.config.save()
+                        logger.info(f'[任务统计] 任务: {task_chinese_name} | 累计失败次数: {failed}/{MAX_FAIL_COUNT}')
 
-                        # 失败次数超限, 默认任务成功，设置下次执行时间
-                        self.config.task_delay(task, success=True, server=True)
+                        if failed >= MAX_FAIL_COUNT:
+                            logger.critical(f'[错误] 任务连续失败超过阈值 | 任务: {task_chinese_name} | 次数: {failed}/{MAX_FAIL_COUNT}')
+                            stop_requested = True
 
-                        self.config.notifier.push(title={I18n.trans_zh_cn(task)}, content=f"失败次数超限, 默认任务执行成功")
+                            # 失败次数超限，关闭任务
+                            # task_name = convert_to_underscore(task)
+                            # task_object = getattr(self.config.model, task_name, None)
+                            # scheduler = getattr(task_object, 'scheduler', None)
+                            # scheduler.enable = False
+                            # self.config.save()
 
-                        logger.error('[错误] 退出调度器')
-                        exit(1)
+                            # 失败次数超限, 默认任务执行成功
+                            self.config.task_delay(task, success=True, server=True)
+
+                            self.config.notifier.push(title={task_chinese_name}, content=f"失败次数超限, 默认任务执行成功")
+
+                            logger.error('[错误] 退出调度器')
+                            exit(1)
     
                 except Exception as e:
                     logger.error(f'[异常] 循环运行崩溃: {str(e)}', exc_info=True)
@@ -502,36 +508,30 @@ class Script:
         logger.set_file_logger(self.config_name)
 
         logger.info('[启动] 启动循环守护线程')
-        max_starts = 3
-        starts = 1
+        max_start_loop_count = 3
 
-        while starts <= max_starts:
+        while self.start_loop_count <= max_start_loop_count:
             # 启动新线程
             self.loop_thread = Thread(target=self.loop)
             self.loop_thread.start()
-            logger.info(f'[启动线程] 工作线程已启动 | 启动次数: {starts}/{max_starts}')
+            logger.info(f'[线程] 工作线程已启动 | 启动次数: {self.start_loop_count}/{max_start_loop_count}')
 
             # 等待线程结束（无限等待，确保线程完成）
             self.loop_thread.join()
 
             # 线程结束后准备启动
-            starts += 1
+            self.start_loop_count += 1
 
             # 检查是否超过最大启动次数
-            if starts > max_starts:
+            if self.start_loop_count > max_start_loop_count:
                 break
-
-            # 重置状态
-            logger.info(f'[启动准备] 正在重置状态...')
-            self.failure_record = {}
-            self.device = None
-            self.device_status = False
 
         # 达到最大启动次数后的处理
         logger.error('[终止] 达到最大启动次数，系统退出')
         self.config.notifier.push(title='系统退出',content=f"[终止] 达到最大启动次数，系统退出")
         time.sleep(5)
         exit(1)
+
 
 if __name__ == "__main__":
     script = Script("oa")
