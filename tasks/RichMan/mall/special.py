@@ -38,19 +38,20 @@ class Special(Buy, MallNavbar):
                 self._special_low(con.low_bondling_discs)
                 low_bought = True
 
-            if totem_bought and medium_bought and low_bought:
-                if self.swipe(self.S_SP_DOWN, interval=2):
-                    time.sleep(2)
-                logger.info('All bought')
-                break
+            # if totem_bought and medium_bought and low_bought:
+            #     if self.swipe(self.S_SP_DOWN, interval=2):
+            #         time.sleep(2)
+            #     logger.info('All bought')
+            #     break
             if self.appear(self.I_SP_SWIPE_CHECK_JADE):
                 # 如果滑动到底了
                 logger.info('Swipe to bottom')
+                self.save_image()
                 break
 
             if self.swipe(self.S_SP_DOWN, interval=2):
                 time.sleep(2)
-        self.save_image()
+
 
     def _special_totom(self, totem_pass: bool):
         """
@@ -180,7 +181,7 @@ if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
 
-    c = Config('oas1')
+    c = Config('oa')
     d = Device(c)
     t = Special(c, d)
 
