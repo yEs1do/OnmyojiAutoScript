@@ -482,7 +482,8 @@ class Script:
                             exit(1)
     
                 except Exception as e:
-                    logger.error(f'[异常] 循环运行崩溃: {str(e)}', exc_info=True)
+                    error_type = type(e).__name__  # 获取异常类型名称
+                    logger.error(f'[异常] 循环运行崩溃: {error_type} | {str(e)}', exc_info=True)
                     self.config.notifier.push(title="循环崩溃", content=str(e))
                     stop_requested = True
                 finally:

@@ -36,28 +36,42 @@ class Device(Platform, Screenshot, Control, AppControl):
 
     def __init__(self, *args, **kwargs):
         max_retries = 4
-        for trial in range(max_retries):
+        success = False
+        last_exception = None  # 记录最后一次异常
+
+        for trial in range(1, max_retries + 1):  # trial从1开始更符合语义
             try:
                 super().__init__(*args, **kwargs)
                 if IS_WINDOWS:
                     self._validate_window_handle()
-                break
+                success = True
+                break  # 成功则跳出循环
+
             except (EmulatorNotRunningError, pywintypes.error) as e:
-                # 处理窗口句柄异常
+                last_exception = e
+                # ------------------------- 异常处理分支 -------------------------
+                # (1) 窗口句柄无效错误 (Windows API error 1400)
                 if isinstance(e, pywintypes.error) and e.winerror == 1400:
-                    logger.warning(f"窗口句柄无效，尝试清理残留进程 (重试 {trial+1}/{max_retries})")
+                    logger.warning(f"窗口句柄无效，清理残留进程 (第{trial}次重试/共{max_retries}次)")
                     self.force_cleanup()
                     time.sleep(5)
-                # 模拟器未运行的原有处理逻辑
+
+                # (2) 模拟器未运行错误
                 elif isinstance(e, EmulatorNotRunningError):
-                    if trial >= max_retries:
-                        logger.critical('模拟器启动失败')
-                        self.config.notifier.push(title=self.config.task, content=f"模拟器启动失败{max_retries}次")
-                        raise RequestHumanTakeover
+                    logger.warning(f"模拟器未运行，尝试启动 (第{trial}次重试/共{max_retries}次)")
                     self.emulator_start()
-                # 其他异常继续抛出
+
+                # (3) 其他已知异常
                 else:
-                    raise
+                    self.config.notifier.push(title=self.config.task, content=f"遇到异常 [{type(e).__name__}]，准备重试 (第{trial}次/共{max_retries}次)")
+                    logger.warning(f"遇到异常 [{type(e).__name__}]，准备重试 (第{trial}次/共{max_retries}次)")
+
+        # ------------------------- 最终状态判断 -------------------------
+        if not success:
+            logger.critical(f"模拟器启动失败，已达最大重试次数 {max_retries} 次，最后一次错误: {last_exception}")
+            self.config.notifier.push(title=self.config.task, content=f"模拟器启动失败{max_retries}次，错误类型: {type(last_exception).__name__}")
+            # 抛出异常时携带原始错误栈信息
+            raise RequestHumanTakeover("设备初始化失败") from last_exception
 
         # Auto-fill emulator info
         if IS_WINDOWS and self.config.script.device.emulatorinfo_type == 'auto':
