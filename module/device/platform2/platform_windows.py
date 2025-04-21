@@ -1,3 +1,5 @@
+import time
+
 import ctypes
 import re
 import subprocess
@@ -129,6 +131,13 @@ class PlatformWindows(PlatformBase, EmulatorManager):
         """
         Stop a emulator without error handling
         """
+        # 增加空值检查
+        if instance is None:
+            logger.error("无法停止模拟器: 实例未初始化")
+            return
+        if not hasattr(instance, 'emulator'):
+            logger.error(f"无效的模拟器实例: {instance}")
+            return
         exe: str = instance.emulator.path
         if instance == Emulator.MuMuPlayer:
             # MuMu6 does not have multi instance, kill one means kill all
@@ -195,6 +204,7 @@ class PlatformWindows(PlatformBase, EmulatorManager):
         Returns:
             bool: If success
         """
+        logger.info(f"执行模拟器操作: {func.__name__}, 当前实例: {self.emulator_instance}")
         try:
             func(self.emulator_instance)
             return True
