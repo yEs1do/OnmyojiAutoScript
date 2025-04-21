@@ -89,9 +89,11 @@ class LoginHandler(LoginBase, BaseTask, RestartAssets):
                 continue
             # 关闭各种邀请弹窗(主要时结界卡寄养邀请)
             from tasks.Component.GeneralInvite.assets import GeneralInviteAssets as gia
-            if self.appear_then_click(gia.I_I_REJECT, interval=0.8):
-                logger.info("reject invites")
-                continue
+            if not hasattr(self, "invite_handled"):
+                if self.appear_then_click(gia.I_I_REJECT, interval=0.8):
+                    logger.info("reject invites")
+                    self.invite_handled = True  # 标记为已处理
+                    continue
             # 关闭阴阳师精灵提示
             if self.appear_then_click(self.I_LOGIN_LOGIN_ONMYOJI_GENIE):
                 logger.info("click onmyoji genie")
