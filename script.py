@@ -76,7 +76,7 @@ class Script:
         """
         return None
 
-    def save_error_log(self, title='', content=''):
+    def save_error_log(self, task='taskname', error_type='Error'):
         """
         Save last 60 screenshots in ./log/error/<timestamp>
         Save logs to ./log/error/<timestamp>/log.txt
@@ -86,7 +86,7 @@ class Script:
                                                    handle_sensitive_logs)
         if self.config.script.error.save_error:
 
-            folder = f'{error_path}/{title}'
+            folder = f'{error_path}/{task}/{error_type}'
             filename = get_filename(self.config.config_name.upper())
             error_path_base = f'{folder}/{filename}'
             error_log_path = f'{error_path_base}.log'
@@ -105,7 +105,7 @@ class Script:
             with open(error_log_path, 'w', encoding='utf-8') as f:
                 f.writelines(lines)
             # asyncio.run(self.config.pushtg.telegram_send(title, error_path_image, error_path_log))
-            self.config.notifier.send_push(title, content, self.device.image, error_log_path)
+            self.config.notifier.send_push(task, error_type, self.device.image, error_log_path)
 
     def init_server(self, port: int) -> int:
         """
@@ -393,7 +393,7 @@ class Script:
                 logger.critical(e)
             else:
                 logger.exception(e)
-            self.save_error_log(title=command, content=error_type)
+            self.save_error_log(task=command, error_type=error_type)
             return False
 
     def loop(self):

@@ -2,8 +2,8 @@ import os
 import psutil
 import pywintypes
 from collections import deque
-from datetime import datetime, time
-
+from datetime import datetime
+import time
 # Patch pkg_resources before importing adbutils and uiautomator2
 from module.device.pkg_resources import get_distribution
 # Just avoid being removed by import optimization
