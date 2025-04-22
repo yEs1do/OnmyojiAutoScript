@@ -59,6 +59,20 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         current, remain, total = self.O_CM_NUMBER.ocr(self.device.image)
         if current == total == 30:
             logger.warning('Today\'s missions have been completed')
+
+            check_timer = Timer(3)
+            check_timer.start()
+            while 1:
+                self.screenshot()
+                if self.ui_reward_appear_click(True):
+                    check_timer.reset()
+                    continue
+                if self.appear_then_click(self.I_CM_REWARDS, interval=1):
+                    check_timer.reset()
+                    continue
+                if check_timer.reached():
+                    break
+
             self.ui_get_current_page()
             self.ui_goto(page_main)
 
