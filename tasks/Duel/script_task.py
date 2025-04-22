@@ -16,10 +16,12 @@ from tasks.Duel.config import Duel, Onmyoji
 from tasks.Duel.assets import DuelAssets
 
 """ 斗技 """
+
+
 class ScriptTask(GameUi, GeneralBattle, DuelAssets):
 
     def run(self):
-        self.duel_week_over = False
+
         current_time = datetime.now().time()
         if not (time(12, 00) <= current_time < time(23, 00)):
             logger.warning('不在斗技时间段')
@@ -49,6 +51,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             self.switch_all_soul()
 
         # 循环
+        duel_week_over = False
         while 1:
             self.screenshot()
             if self.appear_then_click(self.I_REWARD, interval=0.6):
@@ -75,11 +78,11 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 logger.info('Duel task is over score')
                 # 是否刷满荣誉就退出
                 if con.honor_full_exit:
-                    if  self.check_honor():
+                    if self.check_honor():
                         # 荣誉满了，退出
-                        self.save_image()
+                        self.save_image(content=f'分数: {current_score}, 本周斗技结束', push_flag=True)
                         logger.info('Duel task is over honor')
-                        self.duel_week_over = True
+                        duel_week_over = True
                         break
                 else:
                     break
@@ -87,9 +90,7 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
         # 记得退回去到町中
         self.ui_click(self.I_UI_BACK_YELLOW, self.I_CHECK_TOWN)
 
-        if self.duel_week_over:
-            self.push_notify(title='Duel', content=f'本周斗技已完成，请查看截图')
-            # 设置下一次运行时间
+        if duel_week_over:
             self.next_run_week(2)
         else:
             self.set_next_run(task='Duel', success=True, finish=False)
@@ -227,8 +228,8 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 continue
             return current_score
 
-    def duel_one(self, current_score: int, enable: bool=False,
-                 mark_mode: GreenMarkType=GreenMarkType.GREEN_MAIN) -> bool:
+    def duel_one(self, current_score: int, enable: bool = False,
+                 mark_mode: GreenMarkType = GreenMarkType.GREEN_MAIN) -> bool:
         """
         进行一次斗技， 返回输赢结果
         :param mark_mode:
@@ -330,15 +331,13 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
                 self.device.stuck_record_clear()
                 self.device.stuck_record_add('BATTLE_STATUS_S')
 
-
         return battle_win
-
-
 
 
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
+
     c = Config('oas1')
     d = Device(c)
     t = ScriptTask(c, d)
