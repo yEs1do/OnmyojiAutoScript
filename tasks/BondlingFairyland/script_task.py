@@ -43,10 +43,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         self.ui_click(self.I_MALL_SCCALES, self.I_MALL_SCCALES_CHECK)
         self.ui_click(self.I_MALL_BONDLINGS_SURE, self.I_MALL_BONDLINGS_ON)
 
-        MAX_COUNT = 3000
+        MAX_COUNT = 2000
         next_run_week = 2
         cu, re, total = self.O_BL_CHECK_MONEY.ocr(self.device.image)
-        self.push_notify(content=f'契忆数量: {cu}')
 
         if cu >= MAX_COUNT or cu <= 100:
             message = f'契忆数量: {cu} 大于 {MAX_COUNT}, 设置下周{next_run_week}运行'
@@ -57,7 +56,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             self.next_run_week(next_run_week)
             raise TaskEnd
 
-        logger.info(f'契忆数量: {cu}, 未足够: {MAX_COUNT}, 继续任务')
+        message = f'契忆数量: {cu} 小于 {MAX_COUNT}, 继续任务'
+        self.push_notify(content=message)
+        logger.info(message)
         logger.hr('第二步, 切换御魂', 2)
         # 引用配置
         cong = self.config.bondling_fairyland
