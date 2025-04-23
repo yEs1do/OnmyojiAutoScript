@@ -281,81 +281,65 @@ class Script:
             if self.config.should_reload():
                 return False
 
-    def countdown(self, num, action):
-        """
-        倒计时函数，参数为倒计时的总秒数
-        """
-        for i in range(num, 0, -1):
-            logger.warning(f"{i} seconds to {action}")  # 动态刷新当前剩余时间
-            time.sleep(1)
-        logger.warning("倒计时完成！")
-
-    def get_wait_task(self, task) -> str:
-        logger.hr(f"模拟器状态 {self.device_status}", level=1)
-        logger.info(f'Wait `{I18n.trans_zh_cn(task.command)}` ({task.next_run})')
-
     def get_next_task(self) -> str:
-        """
-        获取下一个任务的名字, 大驼峰。
-        :return:
-        """
-        while 1:
+        """获取下一个任务名(大驼峰格式)"""
+        while True:
+            # 准备任务配置
             task = self.config.get_next()
             self.config.task = task
             if self.state_queue:
                 self.state_queue.put({"schedule": self.config.get_schedule_data()})
 
-            if task.next_run > datetime.now():
-                # logger.info(f'Wait until {task.next_run} for task `{task.command}`')
+            now = datetime.now()
+            if task.next_run <= now:
+                break
 
-                close_game_time = self.config.script.optimization.close_game_time
-                close_emulator_time = self.config.script.optimization.close_emulator_time
+            # 处理等待策略
+            opt = self.config.script.optimization
+            wait_duration = task.next_run - now
 
-                close_game_time_flag = False if close_game_time.hour == 0 and close_game_time.minute == 0 and close_game_time.second == 0 else True
-                close_emulator_time_flag = False if close_emulator_time.hour == 0 and close_emulator_time.minute == 0 and close_emulator_time.second == 0 else True
+            # 转换关闭时间为时间差
+            def to_delta(t):
+                delta = timedelta(hours=t.hour, minutes=t.minute, seconds=t.second)
+                return delta if delta.total_seconds() > 0 else None
 
-                close_game_time = timedelta(hours=close_game_time.hour, minutes=close_game_time.minute,
-                                            seconds=close_game_time.second)
-                close_emulator_time = timedelta(hours=close_emulator_time.hour, minutes=close_emulator_time.minute,
-                                                seconds=close_emulator_time.second)
+            # 策略判断条件
+            close_emu_delta = to_delta(opt.close_emulator_time)
+            close_game_delta = to_delta(opt.close_game_time)
+            should_close_emu = close_emu_delta and wait_duration > close_emu_delta
+            should_close_game = close_game_delta and wait_duration > close_game_delta
 
-                if close_emulator_time_flag and task.next_run > datetime.now() + close_emulator_time:
-                    # self.config.notifier.push(title='CloseMuMu',content=f'Wait `{task.command}` {str(task.next_run.time())}')
+            # 执行等待策略
+            if opt.do_noting:
+                logger.warning("保持当前状态, 等待下一个任务")
+            elif should_close_emu:
+                if self.device_status:
+                    logger.debug("模拟器关闭前等待30秒...")
+                    time.sleep(30)
+                    self.device.emulator_stop()
+                    self.device_status = False
+            elif should_close_game:
+                try:
                     if self.device_status:
-                        wait_time = 30
-                        logger.warning(f"等待{wait_time}秒后, 关闭模拟器")
-                        time.sleep(wait_time)
-                        self.device.emulator_stop()
-                        self.device_status = False
-                        self.device.release_during_wait()
-                    self.get_wait_task(task)
-                    if not self.wait_until(task.next_run):
-                        del_cached_property(self, 'config')
-                        continue
-                elif close_game_time_flag and task.next_run > datetime.now() + close_game_time:
-                    try:
-                        if self.device_status:
-                            wait_time = 10
-                            logger.warning(f"等待{wait_time}秒后, 关闭游戏")
-                            time.sleep(wait_time)
-                            self.device.app_stop()
-                            self.device.release_during_wait()
-                    except Exception as e:
-                        logger.error("app stop error")
-                        logger.error(e)
-                    self.get_wait_task(task)
-                    if not self.wait_until(task.next_run):
-                        del_cached_property(self, 'config')
-                        continue
-                else:
-                    logger.warning(f"等待中, 无需任何操作")
-                    self.get_wait_task(task)
-                    if self.device_status:
-                        self.device.release_during_wait()
-                    if not self.wait_until(task.next_run):
-                        del_cached_property(self, 'config')
-                        continue
-            break
+                        logger.debug("游戏关闭前等待10秒...")
+                        time.sleep(10)
+                        self.device.app_stop()
+                except Exception as e:
+                    logger.error(f"关闭游戏出错: {str(e)}")
+            else:
+                logger.warning("保持当前状态, 等待下一个任务")
+
+            # 执行等待操作
+            logger.hr(f"模拟器状态 {self.device_status}", level=1)
+            wait_info = f'{I18n.trans_zh_cn(task.command)}({task.next_run.strftime("%H:%M:%S")})'
+            delta_str = str(task.next_run - now).split('.')[0]
+            logger.info(f'🕒 等待任务 | {wait_info} | 剩余时长: {delta_str}')
+            if self.device_status:
+                self.device.release_during_wait()
+            if not self.wait_until(task.next_run):
+                logger.warning("检测到配置变更，重新加载任务配置")
+                del_cached_property(self, 'config')
+                continue
 
         return task.command
 
