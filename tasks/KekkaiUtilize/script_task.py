@@ -24,7 +24,7 @@ from tasks.GameUi.page import page_main, page_guild
 
 class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
     last_best_index = 99
-    utilize_erroe_num = 0
+    utilize_add_count = 0
     ap_max_num = 0
     jade_max_num = 0
     first_utilize = True
@@ -63,8 +63,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
     def check_utilize_add(self):
         con = self.config.kekkai_utilize.utilize_config
         while 1:
-            self.utilize_erroe_num += 1
-            if self.utilize_erroe_num >= 5:
+            self.utilize_add_count += 1
+            if self.utilize_add_count >= 5:
                 logger.warning('没有合适可以蹭的卡, 5分钟后再次执行蹭卡')
                 self.push_notify(title=self.config.task.command, content=f"没有合适可以蹭的卡, 5分钟后再次执行蹭卡")
                 self.set_next_run(task='KekkaiUtilize', target=datetime.now() + timedelta(minutes=5))
@@ -430,10 +430,12 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         # 调用结界卡选择逻辑，根据返回值判断是否继续后续流程
         if not self._select_optimal_resource_card():
             return False
-
+        
+        # 找到卡,重置次数
+        self.utilize_add_count = 0
         logger.info('开始执行进入结界蹭卡流程')
-        # 进入结界
         self.screenshot()
+        # 进入结界
         if not self.appear(self.I_U_ENTER_REALM):
             logger.warning('Cannot find enter realm button')
             # 可能是滑动的时候出错
@@ -444,6 +446,14 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         while 1:
             self.screenshot()
             if self.appear(self.I_U_ADD_1) or self.appear(self.I_U_ADD_2):
+                logger.info('Appear enter friend realm button')
+                break
+            if self.appear(self.I_CHECK_FRIEND_REALM_1):
+                self.wait_until_stable(self.I_CHECK_FRIEND_REALM_1)
+                logger.info('Appear enter friend realm button')
+                break
+            if self.appear(self.I_CHECK_FRIEND_REALM_3):
+                self.wait_until_stable(self.I_CHECK_FRIEND_REALM_3)
                 logger.info('Appear enter friend realm button')
                 break
             if wait_timer.reached():
@@ -503,8 +513,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             if self.ap_max_num == 0 and self.jade_max_num == 0:
                 logger.hr('第一阶段：初始记录获取', 2)
                 if self._current_select_best():
-                    message = f'✅ 发现完美结界卡直接选择'
-                    logger.info(message)
+                    logger.info(f'✅ 完美结界卡确认成功，重置状态')
+                    self.ap_max_num, self.jade_max_num = 0, 0
                     return True
                 logger.info(f'📝 记录最佳值 | 斗鱼:{self.ap_max_num} 太鼓:{self.jade_max_num}')
                 return False
@@ -527,8 +537,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             # 第三阶段：执行选卡操作
             logger.hr('第三阶段：执行选卡操作', 2)
             if self._current_select_best(res_type, target, selected_card=True):
-                message = f'🎉 成功选择: {res_type}'
-                logger.info(message)
+                logger.info(f'✅ {res_type}卡确认成功，重置状态')
+                self.ap_max_num, self.jade_max_num = 0, 0
                 return True
             else:
                 logger.warning(f'❌ {res_type}卡确认失败，重置状态')
