@@ -584,10 +584,10 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             # 处理无卡情况
             if not cards:
                 miss_count += 1
-                logger.info(f'第[{swipe_count}]次滑动未发现所需卡' if swipe_count > 0 else '初始界面未发现所需卡')
+                logger.info(f'第{swipe_count}次滑动 | 未检测到结界卡' if swipe_count > 0 else '初始界面 | 未检测到结界卡')
                 # 连续无卡超过阈值则终止
                 if miss_count > CONSEC_MISS:
-                    logger.warning(f'⚠️ 连续[{miss_count}]次未发现所需卡, 终止流程')
+                    logger.warning(f'⚠️ 连续{miss_count}次 | 未检测到结界卡, 终止流程')
                     return None
                 # 执行滑动操作
                 self.perform_swipe_action()
@@ -597,7 +597,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
             # ------ 步骤2: 处理识别到的结界卡 ------
             cards_list = [target for target, _, _ in cards]
-            logger.info((f'第[{swipe_count}]次滑动' if swipe_count > 0 else '初始界面') + f' | 检测到结界卡：{cards_list}')
+            logger.info((f'第{swipe_count}次滑动' if swipe_count > 0 else '初始界面') + f' | 检测到结界卡：{cards_list}')
 
             # 遍历所有结界卡（已按位置排序）
             for _, _, area in cards:
