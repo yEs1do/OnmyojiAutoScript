@@ -403,7 +403,7 @@ class Script:
                     # ------------------------- 获取任务 -------------------------
                     task = self.get_next_task()
                     task_chinese_name = I18n.trans_zh_cn(task)
-                    logger.info(f'[任务] 获取到待执行任务 | {task_chinese_name}')
+                    logger.info(f'[任务] 获取到任务 | {task_chinese_name}')
 
                     # ------------------------- 跳过首次重启任务 -------------------------
                     if is_first_task and task == 'Restart':
@@ -448,7 +448,6 @@ class Script:
 
                         if failed >= MAX_FAIL_COUNT:
                             logger.critical(f'[错误] 任务连续失败超过阈值 | 任务: {task_chinese_name} | 次数: {failed}/{MAX_FAIL_COUNT}')
-                            stop_requested = True
 
                             # 失败次数超限，关闭任务
                             # task_name = convert_to_underscore(task)
@@ -457,12 +456,12 @@ class Script:
                             # scheduler.enable = False
                             # self.config.save()
 
-                            # 失败次数超限, 默认任务执行成功
+                            self.config.notifier.push(title=task_chinese_name, content=f"任务连续失败{failed}次, 按照任务成功处理")
+                            # 任务连续失败, 按照执行成功处理
                             self.config.task_delay(task, success=True, server=True)
 
-                            self.config.notifier.push(title={task_chinese_name}, content=f"失败次数超限, 默认任务执行成功")
-
                             logger.error('[错误] 退出调度器')
+                            stop_requested = True
                             exit(1)
     
                 except Exception as e:
