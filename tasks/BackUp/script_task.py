@@ -252,11 +252,16 @@ class ScriptTask(BaseTask):
                 if dir_name in self.exclude_dirs:
                     logger.warning(f"⏩ 跳过排除目录：{dir_name}")
                     continue
+
                 dir_path = os.path.join(root, dir_name)
-                # 排除符号链接目录和根目录
-                is_symbolic_link = os.path.islink(dir_path)
-                is_root_dir = os.path.samefile(dir_path, abs_path)
-                is_empty = not os.listdir(dir_path)
+                try:
+                    # 排除符号链接目录和根目录
+                    is_symbolic_link = os.path.islink(dir_path)
+                    is_root_dir = os.path.samefile(dir_path, abs_path)
+                    is_empty = not os.listdir(dir_path)
+                except Exception as e:
+                    logger.error(f"检查目录 {dir_path} 时发生意外错误: {e}")
+                    continue
 
                 if not is_symbolic_link and not is_root_dir and is_empty:
                     try:
