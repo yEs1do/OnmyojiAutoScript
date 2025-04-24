@@ -124,13 +124,16 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
             next_run = parse_tomorrow_server(start_time)
             self.set_next_run('Orochi', target=next_run)
 
+        datetime_now = datetime.now()
         # 个人突破
-        self.set_next_run(task='RealmRaid', target=datetime.now())
+        self.set_next_run(task='RealmRaid', target=datetime_now)
         # 花合战
-        self.set_next_run(task='TalismanPass', target=datetime.now())
+        self.set_next_run(task='TalismanPass', target=datetime_now)
+        # 集体任务
+        self.set_next_run(task='CollectiveMissions', target=datetime_now)
         # 御魂整理
         if self.config.orochi.next_day_orochi_config.soulstidy_enabled or self.limit_count >= 99:
-            self.set_next_run(task='SoulsTidy',target=datetime.now())
+            self.set_next_run(task='SoulsTidy',target=datetime_now)
 
         raise TaskEnd
 
