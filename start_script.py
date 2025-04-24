@@ -42,10 +42,10 @@ def start_websocket(config_name):
 
 
 if __name__ == "__main__":
-    # argv = ["", "DU"]
     # 保证通过命令行运行时传入参数，例如：python script.py MI
 
     config_name = sys.argv[1]
+    # config_name = "du"
     print(f'[{config_name}]启动...')
     start_websocket(config_name)
 
