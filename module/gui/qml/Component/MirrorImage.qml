@@ -208,7 +208,7 @@ Item {
                 width: 200
                 model: ["Device Image", "Local Image"]
                 Component.onCompleted:{
-                    currentIndex = 0
+                    currentIndex = 1
                 }
             }
         }
