@@ -57,7 +57,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
             self.screenshot()
 
             if self.appear(self.I_WQ_BOX):
-                logger.debug("检测到奖励宝箱，尝试领取")
+                logger.info("检测到奖励宝箱，尝试领取")
                 self.ui_get_reward(self.I_WQ_BOX)
                 wq_timer.reset()
                 continue

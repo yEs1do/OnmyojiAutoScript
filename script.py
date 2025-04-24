@@ -314,14 +314,14 @@ class Script:
                 logger.warning("保持当前状态, 等待下一个任务")
             elif should_close_emu:
                 if self.device_status:
-                    logger.debug("模拟器关闭前等待30秒...")
+                    logger.info("模拟器关闭前等待30秒...")
                     time.sleep(30)
                     self.device.emulator_stop()
                     self.device_status = False
             elif should_close_game:
                 try:
                     if self.device_status:
-                        logger.debug("游戏关闭前等待10秒...")
+                        logger.info("游戏关闭前等待10秒...")
                         time.sleep(10)
                         self.device.app_stop()
                 except Exception as e:
