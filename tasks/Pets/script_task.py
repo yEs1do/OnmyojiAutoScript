@@ -51,7 +51,8 @@ class ScriptTask(OrochiScriptTask, PetsAssets):
         #     self.custom_next_run(task='Pets', custom_time=Time(hour=23, minute=30, second=0), time_delta=1)
 
         self.set_next_run(task='Pets', success=True, finish=True)
-
+        # 八岐大蛇
+        self.set_next_run(task='Orochi', target=datetime.now())
         raise TaskEnd('Pets')
 
     def orochi_ten(self):
