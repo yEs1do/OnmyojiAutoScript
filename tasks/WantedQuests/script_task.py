@@ -103,7 +103,7 @@ class ScriptTask(SecretScriptTask, GeneralInvite, WantedQuestsAssets):
 
             if wq_timer.reached():
                 logger.info('悬赏未检测到残留任务，退出循环')
-                self.save_image(task_name='悬赏未检测到残留任务', wait_time=0, image_type='png')
+                # self.save_image(task_name='悬赏未检测到残留任务', wait_time=0, image_type='png')
                 break
 
     def next_run(self):
