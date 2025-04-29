@@ -68,7 +68,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         while 1:
             self.screenshot()
             if self.timer_wait.reached():
-                self.push_notify(title=self.config.task.command, content=f"组队等待超时...")
+                self.push_notify(title=self.config.task.command, content=f"队长等待超时...")
                 logger.warning('Wait timeout')
                 return False
             if self.appear(self.I_MATCHING):
