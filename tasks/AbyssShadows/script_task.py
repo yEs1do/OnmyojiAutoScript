@@ -83,11 +83,28 @@ class CilckArea:
 
 class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
     
-
     boss_fight_count = 0  # 首领战斗次数
     general_fight_count = 0  # 副将战斗次数
     elite_fight_count = 0  # 精英战斗次数
-    
+
+    def get_selected_areas(self):
+        boss_type_list = []
+        cfg: AbyssShadows = self.config.abyss_shadows
+        dragon = cfg.abyss_shadows_boss_type.dragon
+        peacock = cfg.abyss_shadows_boss_type.peacock
+        fox = cfg.abyss_shadows_boss_type.fox
+        leopard = cfg.abyss_shadows_boss_type.leopard
+        if dragon:
+            boss_type_list.append(AreaType.DRAGON)
+        if peacock:
+            boss_type_list.append(AreaType.PEACOCK)
+        if fox:
+            boss_type_list.append(AreaType.FOX)
+        if leopard:
+            boss_type_list.append(AreaType.LEOPARD)
+        return boss_type_list
+
+
     def run(self):
         """ 狭间暗域主函数
 
@@ -112,7 +129,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         # 进入狭间
         self.goto_abyss_shadows()
         # 第一次默认选择神龙暗域
-        if not self.select_boss(AreaType.DRAGON):
+        boss_type_list = self.get_selected_areas()
+        logger.info(f"Selected boss type: {boss_type_list}")
+        logger.info(f"Starting abyss shadows {cfg.abyss_shadows_boss_type}")
+        if not self.select_boss(boss_type_list[self.boss_fight_count]):
             logger.warning("Failed to enter abyss shadows")
             self.goto_main()
             self.set_next_run(task='AbyssShadows', finish=False, server=True, success=False)
@@ -127,7 +147,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         # 准备攻打精英、副将、首领
         while 1:
             # 点击战报按钮
-            find_list = [EmemyType.BOSS, EmemyType.GENERAL, EmemyType.ELITE]
+            find_list = [EmemyType.ELITE, EmemyType.GENERAL, EmemyType.BOSS]
             for enemy_type in find_list:
                 # 寻找敌人并开始战斗,
                 if not self.find_enemy(enemy_type):
@@ -139,20 +159,22 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 success = True
                 break
             else:
-                current_area = self.check_current_area()
-                logger.info(f"Current area is {current_area}, switch to next area")
-                if current_area == AreaType.DRAGON:
-                    self.change_area(AreaType.PEACOCK)
-                    continue
-                elif current_area == AreaType.PEACOCK:
-                    self.change_area(AreaType.FOX)
-                    continue
-                elif current_area == AreaType.FOX:  
-                    self.change_area(AreaType.LEOPARD)
-                    continue
-                else:
-                    logger.warning("All enemy types have been defeated, but not enough emeny to fight, exit")
-                    break
+                self.change_area(boss_type_list[self.boss_fight_count])
+                continue
+                # current_area = self.check_current_area()
+                # logger.info(f"Current area is {current_area}, switch to next area")
+                # if current_area == AreaType.DRAGON:
+                #     self.change_area(AreaType.PEACOCK)
+                #     continue
+                # elif current_area == AreaType.PEACOCK:
+                #     self.change_area(AreaType.FOX)
+                #     continue
+                # elif current_area == AreaType.FOX:  
+                #     self.change_area(AreaType.LEOPARD)
+                #     continue
+                # else:
+                #     logger.warning("All enemy types have been defeated, but not enough emeny to fight, exit")
+                #     break
         
 
         # 保持好习惯，一个任务结束了就返回到庭院，方便下一任务的开始
@@ -312,7 +334,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         logger.info(f"Run boss fight") 
         if self.click_emeny_area(CilckArea.BOSS):
             logger.info(f"Click {CilckArea.BOSS.name}")
-            self.run_general_battle_back()
+            self.run_general_battle()
             self.boss_fight_count += 1
             logger.info(f'Fight, boss_fight_count {self.boss_fight_count} times')
         else:
@@ -332,8 +354,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 break
             if self.click_emeny_area(general):
                 logger.info(f"Click {general.name}")
+                self.run_general_battle()
                 self.general_fight_count += 1
-                self.run_general_battle_back()
                 logger.info(f'Fight, general_fight_count {self.general_fight_count} times')
         return True
 
@@ -351,8 +373,8 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 break
             if self.click_emeny_area(elite):
                 logger.info(f"Click {elite.name}")
+                self.run_general_battle()
                 self.elite_fight_count += 1
-                self.run_general_battle_back()
                 logger.info(f'Fight, elite_fight_count {self.elite_fight_count} times')
         return True
 
@@ -380,7 +402,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             # 如果点3次还没进去就表示目标已死亡,跳过
             if click_times >= 3:
                 logger.warning(f"Failed to click {click_area}")
-                return 
+                return False
             # 出现前往按钮就退出
             if self.appear(self.I_ABYSS_GOTO_ENEMY):
                 break
@@ -422,7 +444,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             
         return suceess
 
-    def run_general_battle_back(self) -> bool:
+    def run_general_battle(self) -> bool:
         """
         重写父类方法，因为狭间暗域的准备和战斗流程不一样
         进入挑战然后直接返回
@@ -435,27 +457,30 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 continue
             if not self.appear(self.I_PRESET):
                 break
-        logger.info(f"Click {self.I_PREPARE_HIGHLIGHT.name}")
 
-        # 点击返回
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_EXIT, interval=1.5):
-                continue
-            if self.appear(self.I_EXIT_ENSURE):
-                break
-        logger.info(f"Click {self.I_EXIT.name}")
+        # # 点击返回
+        # while 1:
+        #     self.screenshot()
+        #     if self.appear_then_click(self.I_EXIT, interval=1.5):
+        #         continue
+        #     if self.appear(self.I_EXIT_ENSURE):
+        #         break
+        # logger.info(f"Click {self.I_EXIT.name}")
 
         # 点击返回确认
+        self.device.stuck_record_add('BATTLE_STATUS_S')
         while 1:
             self.screenshot()
-            if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
-                continue
+            # if self.appear_then_click(self.I_EXIT_ENSURE, interval=1.5):
+            #     continue
             if self.appear_then_click(self.I_WIN, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_REWARD, interval=1.5):
+                continue
+            if self.appear_then_click(self.I_FALSE, interval=1.5):
                 continue
             if self.appear(self.I_ABYSS_NAVIGATION):
                 break
-        logger.info(f"Click {self.I_EXIT_ENSURE.name}")
 
         return True
 
@@ -465,7 +490,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('zhu')
+    config = Config('oa')
     device = Device(config)
     t = ScriptTask(config, device)
     t.run()
