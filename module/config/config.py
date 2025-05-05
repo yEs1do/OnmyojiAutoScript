@@ -9,6 +9,7 @@ import random
 
 from datetime import datetime, timedelta
 from cached_property import cached_property
+from module.server.i18n import I18n
 from threading import Lock
 
 from module.base.filter import Filter
@@ -333,6 +334,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         # 任务预处理
         if not task:
             task = self.task.command
+        old_task = task
         task = convert_to_underscore(task)
         task_object = getattr(self.model, task, None)
         if not task_object:
@@ -407,7 +409,6 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
             },
             allow_none=False,
         )
-        logger.warning(f"Delay task `{task}` to {next_run} ({kv})")
 
         # 保证线程安全的
         self.lock_config.acquire()
@@ -417,7 +418,7 @@ class Config(ConfigState, ConfigManual, ConfigWatcher, ConfigMenu):
         finally:
             self.lock_config.release()
         # 设置
-        logger.attr(f'{task}.scheduler.next_run', next_run)
+        logger.hr(f'设置任务（`{I18n.trans_zh_cn(old_task)}` | {next_run}）执行', 2)
 
     # @cached_property
     # def notifier(self):

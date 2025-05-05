@@ -38,7 +38,7 @@ class Plan(str, Enum):
     ELEVEN30 = '悲鸣-30'
     TWELVE50 = '神罚-50'
     TWELVE120 = '神罚-120'
-    end = '设置明天运行-TEN30'
+    end = '设置明天运行(拾层-30)'
 
 class NextDayOrochiConfig(BaseModel):
     # 设定时间为第二天的启动时间
