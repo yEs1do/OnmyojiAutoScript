@@ -6,6 +6,7 @@
 import time
 
 import cv2
+from datetime import datetime
 from enum import Enum
 
 from module.base.timer import Timer
@@ -61,7 +62,20 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
     # 上一个场景
     last_scene = None
 
+    def check_current_weekday(self, success = False):
+        today = datetime.today()
+        current_weekday = today.weekday()  # 周一为0，周日为6
+        next_run_weekday = 1
+        if current_weekday in [4, 5, 6] or (current_weekday == 3 and success):
+            logger.warning(f"周{current_weekday + 1}，不执行道馆, 设置下周{next_run_weekday}执行")
+            self.next_run_week(next_run_weekday)
+            self.push_notify(title=self.config.task.command, content=f"周{current_weekday + 1}，不执行道馆, 设置下周{next_run_weekday}执行")
+            raise TaskEnd
+
     def run(self):
+        # 检查今天周几
+        self.check_current_weekday()
+
         cfg: Dokan = self.config.dokan
 
         # 自动换御魂
@@ -400,6 +414,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
 
         if '挑战成功' in dokan_status_str or '0次' in dokan_status_str:
             self.goto_main()
+            self.check_current_weekday(True)
             self.set_next_run(task='Dokan', finish=True, server=True, success=True)
             raise TaskEnd
         elif '集结中' in dokan_status_str:
@@ -421,6 +436,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, DokanAssets, RichManAssets):
                 if self.goto_dokan_num >= 10:
                     logger.info(f"寮成员{self.goto_dokan_num}次未进入道馆, 结束任务!")
                     self.goto_main()
+                    self.check_current_weekday(True)
                     self.set_next_run(task='Dokan', finish=True, server=True, success=True)
                     raise TaskEnd
 
