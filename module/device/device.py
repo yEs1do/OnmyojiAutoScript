@@ -1,3 +1,5 @@
+from win32gui import IsWindow
+
 import os
 import psutil
 import pywintypes
@@ -85,6 +87,9 @@ class Device(Platform, Screenshot, Control, AppControl):
 
     def _validate_window_handle(self):
         """Windows平台专用句柄验证"""
+        # 添加快速检查
+        if hasattr(self, '_screenshot_handle_num') and not IsWindow(getattr(self, '_screenshot_handle_num', 0)):
+            raise pywintypes.error(1400, "GetWindowRect", "无效窗口句柄")
         try:
             # 触发窗口属性检查
             _ = self.screenshot_size
