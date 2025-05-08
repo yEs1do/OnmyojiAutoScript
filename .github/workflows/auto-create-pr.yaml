@@ -11,7 +11,7 @@ jobs:
     steps:
       # 步骤1：检出当前仓库的 ove 分支（目标分支）
       - name: Install GitHub CLI
-        uses: actions/setup-github-cli@v2  # 官方 Action 名称
+        uses: actions/checkout@v4
         with:
           ref: ove
           token: ${{ secrets.GITHUB_TOKEN }}
