@@ -32,7 +32,7 @@
     "roiFront": "794,186,74,73",
     "roiBack": "315,164,584,370",
     "method": "Template matching",
-    "threshold": 0.8,
+    "threshold": 0.6,
     "description": "蓝票"
   },
   {
