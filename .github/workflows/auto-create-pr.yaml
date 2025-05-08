@@ -1,36 +1,54 @@
-name: Auto Create PR from dev to master
+name: Auto Sync from Upstream dev to ove
 
 on:
   schedule:
-    # 每周四北京时间21点触发（UTC时间13点）
-    - cron: '0 13 * * 4'
-  workflow_dispatch:
+    - cron: '0 13 * * 4'  # 每周四 UTC 13点（北京时间21点）
+  workflow_dispatch:       # 允许手动触发
 
 jobs:
-  create-pr:
+  sync-and-create-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      # 步骤1：检出当前仓库的 ove 分支（目标分支）
+      - name: Checkout ove branch
         uses: actions/checkout@v4
+        with:
+          ref: ove
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install GitHub CLI
+      # 步骤2：配置上游仓库（无需 Token）
+      - name: Add upstream remote
         run: |
-          sudo apt-get update
-          sudo apt-get install -y curl
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install -y gh
+          git remote add upstream https://github.com/runhey/OnmyojiAutoScript.git
+          git fetch upstream dev  # 拉取上游 dev 分支
 
+      # 步骤3：创建同步分支并合并上游代码
+      - name: Merge upstream changes
+        run: |
+          # 创建临时分支（若不存在则新建）
+          git checkout -B sync-upstream-dev
+          # 合并上游 dev 分支（允许无关历史）
+          git merge --no-commit --allow-unrelated-histories upstream/dev
+          # 推送同步分支到当前仓库
+          git push origin sync-upstream-dev --force
+
+      # 步骤4：安装 GitHub CLI
+      - name: Install GitHub CLI
+        uses: actions/setup-gh@v2  # 更简洁的安装方式
+
+      # 步骤5：创建 PR（仅当存在差异时）
       - name: Create Pull Request
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TZ: Asia/Shanghai
         run: |
-          CURRENT_DATE=$(date +%Y.%m.%d)
-          gh pr create \
-            --base master \
-            --head dev \
-            --title "Automated PR $CURRENT_DATE" \
-            --body "Automated PR created by GitHub Actions. Merge dev into master" \
-            --label automated
+          # 检查差异（当前 ove 分支 vs 同步分支）
+          if git diff --quiet ove..sync-upstream-dev; then
+            echo "No changes to merge"
+          else
+            gh pr create \
+              --base ove \                    # 目标分支
+              --head sync-upstream-dev \      # 来源分支
+              --title "Sync from upstream dev ($(date +%Y-%m-%d))" \
+              --body "Automated sync from upstream dev branch" \
+              --label upstream-sync
+          fi
