@@ -92,7 +92,15 @@ class Script:
             error_log_path = f'{error_path_base}.log'
             error_image_path = f'{error_path_base}.png'
             Path(folder).mkdir(parents=True, exist_ok=True)
-            save_image(self.device.image, error_image_path)
+
+            if hasattr(self.device, 'image') and self.device.image is not None:
+                try:
+                    save_image(self.device.image, error_image_path)
+                except Exception as e:
+                    logger.warning(f"保存错误截图失败: {str(e)}")
+            else:
+                self.device.image = ""
+
             with open(logger.log_file, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
                 start = 0
