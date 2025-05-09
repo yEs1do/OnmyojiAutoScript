@@ -60,10 +60,10 @@ class AbyssShadowsAssets:
 	I_ABYSS_NAVIGATION = RuleImage(roi_front=(1200,372,50,44), roi_back=(1200,372,50,44), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_navigation.png")
 	# 式神录 
 	I_ABYSS_SHIKI = RuleImage(roi_front=(1199,462,47,53), roi_back=(1199,462,47,53), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_shiki.png")
-	# 狭间暗域 
+	# 寮-狭间暗域 
 	I_ABYSS_SHADOWS = RuleImage(roi_front=(711,489,107,38), roi_back=(711,489,107,38), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_shadows.png")
-	# 开启狭间暗域 
-	I_OPEN_ABYSS_SHADOWS = RuleImage(roi_front=(1133,602,74,58), roi_back=(1133,602,74,58), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_open_abyss_shadows.png")
+	# 狭间暗域主页面 
+	I_ABYSS_SHADOWS_SURE = RuleImage(roi_front=(95,19,136,41), roi_back=(95,19,136,41), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_shadows_sure.png")
 	# 战报页面 
 	I_ABYSS_MAP = RuleImage(roi_front=(306,147,170,48), roi_back=(306,147,170,48), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_map.png")
 	# 战报退出按钮 
@@ -74,8 +74,6 @@ class AbyssShadowsAssets:
 	I_ABYSS_GOTO_ENEMY = RuleImage(roi_front=(1120,610,75,45), roi_back=(1120,610,75,45), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_goto_enemy.png")
 	# description 
 	I_CHANGE_AREA = RuleImage(roi_front=(993,610,63,61), roi_back=(993,610,63,61), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_change_area.png")
-	# description 
-	I_ENSURE_BUTTON = RuleImage(roi_front=(672,405,169,55), roi_back=(672,405,169,55), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ensure_button.png")
 	# 进攻中 
 	I_IS_ATTACK = RuleImage(roi_front=(586,62,73,27), roi_back=(586,62,73,27), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_is_attack.png")
 	# description 
@@ -90,6 +88,16 @@ class AbyssShadowsAssets:
 	I_DRAGON_AREA = RuleImage(roi_front=(584,15,111,34), roi_back=(584,15,111,34), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_dragon_area.png")
 	# description 
 	I_WAIT_TO_START = RuleImage(roi_front=(588,64,70,26), roi_back=(588,64,70,26), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_wait_to_start.png")
+	# 切换狭间难度级别 
+	I_CHANGE_BATTLE_LEVEL = RuleImage(roi_front=(715,659,24,24), roi_back=(715,659,24,24), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/change_battle_level.png")
+	# 易难度 
+	I_BATTLE_LEVEL_EASY = RuleImage(roi_front=(639,463,41,38), roi_back=(639,463,41,38), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/battle_level_easy.png")
+	# 易难度-已选择 
+	I_BATTLE_LEVEL_EASY_SURE = RuleImage(roi_front=(570,652,105,38), roi_back=(570,652,105,38), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/battle_level_easy_sure.png")
+	# 开启狭间暗域 
+	I_OPEN_ABYSS_SHADOWS = RuleImage(roi_front=(1133,602,74,58), roi_back=(1133,602,74,58), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_open_abyss_shadows.png")
+	# 确认开启狭间暗域 
+	I_ENSURE_BUTTON = RuleImage(roi_front=(672,405,169,55), roi_back=(672,405,169,55), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ensure_button.png")
 
 
 	# List Rule Assets
