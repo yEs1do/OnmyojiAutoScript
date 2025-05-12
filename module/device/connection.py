@@ -589,7 +589,7 @@ class Connection(ConnectionAttr):
         del_cached_property(self, 'droidcast_session')
         del_cached_property(self, 'minitouch_builder')
         del_cached_property(self, 'reverse_server')
-        self.force_cleanup()
+        # self.force_cleanup()
 
     def force_cleanup(self):
         """精准终止当前模拟器实例关联进程"""
