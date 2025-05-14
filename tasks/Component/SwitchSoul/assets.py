@@ -25,6 +25,8 @@ class SwitchSoulAssets:
 	C_SOU_GROUP_6 = RuleClick(roi_front=(1088,437,156,57), roi_back=(1088,437,156,57), name="sou_group_6")
 	# description 
 	C_SOU_GROUP_7 = RuleClick(roi_front=(1090,505,156,62), roi_back=(1090,505,156,62), name="sou_group_7")
+	# description 
+	C_SOU_GROUP_8 = RuleClick(roi_front=(1088,569,156,62), roi_back=(1088,569,156,62), name="sou_group_8")
 	# 阵容选择按钮位置 
 	C_SOU_TEAM_SELECT = RuleClick(roi_front=(977,157,21,21), roi_back=(977,157,21,21), name="sou_team_select")
 
@@ -60,6 +62,8 @@ class SwitchSoulAssets:
 	I_SOU_CHECK_GROUP_6 = RuleImage(roi_front=(1085,443,23,54), roi_back=(1085,443,23,54), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_check_group_6.png")
 	# description 
 	I_SOU_CHECK_GROUP_7 = RuleImage(roi_front=(1088,512,21,54), roi_back=(1088,512,21,54), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_check_group_7.png")
+	# description 
+	I_SOU_CHECK_GROUP_8 = RuleImage(roi_front=(1090,571,21,54), roi_back=(1090,571,21,54), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_check_group_8.png")
 	# 匹配队伍预设 
 	I_SOU_TEAM_PRESENT = RuleImage(roi_front=(737,82,148,43), roi_back=(727,71,165,63), threshold=0.8, method="Template matching", file="./tasks/Component/SwitchSoul/ss/ss_sou_team_present.png")
 	# 需要切换的预设按钮(颜色深一点) 

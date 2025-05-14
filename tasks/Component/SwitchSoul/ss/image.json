@@ -135,6 +135,15 @@
     "description": "description"
   },
   {
+    "itemName": "sou_check_group_8",
+    "imageName": "ss_sou_check_group_8.png",
+    "roiFront": "1090,571,21,54",
+    "roiBack": "1090,571,21,54",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
     "itemName": "sou_team_present",
     "imageName": "ss_sou_team_present.png",
     "roiFront": "737,82,148,43",
