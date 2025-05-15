@@ -71,7 +71,7 @@ class GeneralInvite(BaseTask, GeneralInviteAssets):
             self.screenshot()
             if self.timer_wait.reached():
                 logger.warning('Wait timeout')
-                self.push_notify(title=self.config.task.command, content=f"组队等待超时...")
+                self.push_notify(title=self.config.task.command, content=f"队长等待超时...")
                 return False
             if self.appear(self.I_MATCHING):
                 logger.warning('Timeout, now is no room')

@@ -228,7 +228,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             self.screenshot()
 
             if wait_timer.reached():
-                message = f"等待队员超时:{wait_timer.current()}, 退出"
+                message = f"队员等待超时:{wait_timer.current()}, 退出"
                 logger.warning(message)
                 self.push_notify(title=self.config.task.command, content=message)
                 break
