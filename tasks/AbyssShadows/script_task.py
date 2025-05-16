@@ -219,20 +219,21 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         """ 切换到下个区域
         :return 
         """
+        logger.info(f"切换到 {area_name.name} 区域")
         while 1:
             self.screenshot()
             # 判断当前区域是否正确
             current_area = self.check_current_area()
             if current_area == area_name:
+                logger.info(f"当前区域 {current_area.name} 正确")
                 break
             # 切换区域界面
-            if self.appear(self.I_ABYSS_DRAGON):
+            if self.appear(self.I_ABYSS_DRAGON_OVER):
                 self.select_boss(area_name)
-                logger.info(f"Switch to {area_name.name}")
+                logger.info(f"选择 {area_name.name}")
                 continue
-                # 点击战报按钮
+            # 点击切换区域按钮
             if self.appear_then_click(self.I_CHANGE_AREA, interval=4):
-                logger.info(f"Click {self.I_CHANGE_AREA.name}")
                 continue
 
         return True
@@ -306,7 +307,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             self.screenshot()
             # 区域图片与入口图片不一致，使用点击进去
 
-            if self.appear(self.I_ABYSS_SHADOWS_SURE):
+            if self.appear(self.I_ABYSS_DRAGON_OVER) or self.appear(self.I_ABYSS_DRAGON):
                 match area_name:
                     case AreaType.DRAGON:
                         is_click = self.click(self.C_ABYSS_DRAGON, interval=2)
@@ -408,7 +409,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
         suceess = True
         """ 点击敌人区域  """
         logger.info(f"点击敌人区域: {click_area.name}")
-        # 点击战报
+        click_times = 0
         while 1:
             self.screenshot()
             if self.appear_then_click(self.I_ABYSS_NAVIGATION, interval=1.5):
@@ -416,41 +417,29 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
                 continue
             if self.appear(self.I_ABYSS_MAP):
                 logger.info(f"找到狭间地图，退出")
-                break
-        click_times = 0
-        # 点击攻打区域
-        while 1:
-            self.screenshot()
-
-            # 如果点3次还没进去就表示目标已死亡,跳过
-            if click_times >= 3:
-                logger.warning(f"多次点击未进入 {click_area.name},跳过")
-                return False
-            # 出现前往按钮就退出
-            if self.appear(self.I_ABYSS_GOTO_ENEMY):
-                break
-            if self.appear(self.I_ABYSS_FIRE):
-                break    
-            if self.click(click_area, interval=1.5):
-                click_times += 1
-                continue
-            if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
-                continue
-            # TODO 有时出现bug，点了前往之后不动，需要再点一次，带解决
-
-        # 点击前往按钮
-        while 1:
-            self.screenshot()
-            if self.appear_then_click(self.I_ABYSS_GOTO_ENEMY, interval=1):
-                # 点击敌人后，如果是不同区域会确认框，点击确认                
+                # 如果点3次还没进去就表示目标已死亡,跳过
+                if click_times >= 3:
+                    logger.warning(f"多次点击未进入 {click_area.name},跳过")
+                    return False
+                if self.click(click_area, interval=1.5):
+                    click_times += 1
+                    continue
                 if self.appear_then_click(self.I_ENSURE_BUTTON, interval=1):
-                    logger.info(f"点击 {self.I_ENSURE_BUTTON.name}")
-                # 跑动画比较花时间
-                sleep(3)
-                continue
-            if self.appear(self.I_ABYSS_FIRE):
-                break
-        logger.info(f"点击前往按钮")
+                    continue
+                if self.appear_then_click(self.I_ABYSS_GOTO_ENEMY, interval=1):
+                    click_times = 0
+                    logger.info(f"点击前往按钮")
+                    # 动态等待逻辑
+                    timer = Timer(5)  # 最大等待5秒
+                    while not timer.reached():
+                        self.screenshot()
+                        if self.appear(self.I_ABYSS_FIRE):
+                            logger.info(f"等待中... 已经过 {timer.current()} 秒")
+                            logger.info(f"检测到战斗按钮，退出等待")
+                            break
+                        sleep(0.2)  # 每秒检查一次
+                if self.appear(self.I_ABYSS_FIRE):
+                    break
 
         # 点击战斗按钮
         self.wait_until_appear(self.I_ABYSS_FIRE)
@@ -458,7 +447,7 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             self.screenshot()
             if self.appear_then_click(self.I_ABYSS_FIRE, interval=1):
                 logger.info(f"点击挑战按钮")
-                # 挑战敌人后，如果是奖励次数上限，会出现确认框   
+                # 挑战敌人后，如果是奖励次数上限，会出现确认框
                 self.appear_then_click(self.I_ENSURE_BUTTON, interval=1)
                 continue
             if self.appear(self.I_PREPARE_HIGHLIGHT):

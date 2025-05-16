@@ -50,6 +50,8 @@ class AbyssShadowsAssets:
 	I_RYOU_ABYSS_SHADOWS = RuleImage(roi_front=(707,492,110,27), roi_back=(707,492,110,27), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_ryou_abyss_shadows.png")
 	# 狭间_神龙入口 
 	I_ABYSS_DRAGON = RuleImage(roi_front=(227,211,55,151), roi_back=(190,147,140,283), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_dragon.png")
+	# 狭间_神龙入口_已封印 
+	I_ABYSS_DRAGON_OVER = RuleImage(roi_front=(253,185,33,100), roi_back=(253,185,33,100), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_dragon_over.png")
 	# 狭间_孔雀入口 
 	I_ABYSS_PEACOCK = RuleImage(roi_front=(521,152,48,165), roi_back=(465,104,145,312), threshold=0.8, method="Template matching", file="./tasks/AbyssShadows/res/res_abyss_peacock.png")
 	# 狭间_白藏主入口 

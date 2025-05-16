@@ -27,6 +27,15 @@
     "description": "狭间_神龙入口"
   },
   {
+    "itemName": "abyss_dragon_over",
+    "imageName": "res_abyss_dragon_over.png",
+    "roiFront": "253,185,33,100",
+    "roiBack": "253,185,33,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "狭间_神龙入口_已封印"
+  },
+  {
     "itemName": "abyss_peacock",
     "imageName": "res_abyss_peacock.png",
     "roiFront": "521,152,48,165",
