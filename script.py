@@ -319,7 +319,7 @@ class Script:
 
             # 执行等待策略
             if opt.do_noting:
-                logger.warning("保持当前状态, 等待下一个任务")
+                logger.warning("不关闭游戏, 等待下一个任务")
             elif should_close_emu:
                 if self.device_status:
                     logger.info("模拟器关闭前, 等待30秒...")
@@ -335,7 +335,7 @@ class Script:
                 except Exception as e:
                     logger.error(f"关闭游戏出错: {str(e)}")
             else:
-                logger.warning("保持当前状态, 等待下一个任务")
+                logger.warning("不关闭游戏, 等待下一个任务")
 
             # 执行等待操作
             logger.hr(f"模拟器状态 {self.device_status}", level=1)

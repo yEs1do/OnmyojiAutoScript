@@ -123,7 +123,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
             #     continue
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
-        logger.info("Start battle process")
+        logger.info("真蛇战斗开始")
         check_timer = Timer(280)
         check_timer.start()
         while 1:
@@ -153,7 +153,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                 self.device.stuck_record_add('BATTLE_STATUS_S')
             sleep(0.5)
 
-        logger.info("Battle process end")
+        logger.info("真蛇战斗结束")
         # 真蛇战斗完成，次数加一
         conf.current_success += 1
         self.config.save()
