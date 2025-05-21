@@ -9,7 +9,6 @@
     "description": "奖励，就是那个魂"
   },
   {
-<<<<<<< HEAD
     "itemName": "activity_items",
     "imageName": "gb_activity_items.png",
     "roiFront": "609,252,62,58",
@@ -17,7 +16,8 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动掉落"
-=======
+  },
+  {
     "itemName": "over_ghost",
     "imageName": "gb_over_ghost.png",
     "roiFront": "609,410,65,28",
@@ -25,7 +25,6 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "御魂溢出"
->>>>>>> origin/ove
   },
   {
     "itemName": "preset",
