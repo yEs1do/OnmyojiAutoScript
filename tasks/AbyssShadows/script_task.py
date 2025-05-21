@@ -509,7 +509,6 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AbyssShadowsAssets):
             self.screenshot()
             if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=1):
                 self.device.stuck_record_add('BATTLE_STATUS_S')
-                sleep(3)
                 continue
             if self.appear_then_click(self.I_WIN, interval=1):
                 continue
