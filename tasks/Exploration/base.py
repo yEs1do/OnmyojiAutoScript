@@ -343,7 +343,7 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         return False
 
     def quit_explore(self):
-        logger.info('Quit explore')
+        logger.info('退出 探索')
         while 1:
             self.screenshot()
             if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):

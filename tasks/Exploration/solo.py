@@ -59,8 +59,10 @@ class SoloExploration(BaseExploration):
                     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
-                    if self.ui_get_reward(self.I_BATTLE_REWARD):
-                        continue
+                    # if self.ui_get_reward(self.I_BATTLE_REWARD):
+                    logger.info('识别到小纸人')
+                    self.quit_explore()
+                    continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
@@ -435,7 +437,7 @@ class ScriptTask(SoloExploration):
             pass
         # 换御魂
         self.pre_process()
-
+        self.limit_count = self._config.exploration_config.minions_cnt
         match self._config.exploration_config.user_status:
             case UserStatus.ALONE: self.run_solo()
             case UserStatus.LEADER: self.run_leader()
@@ -449,7 +451,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('oas1')
+    config = Config('du')
     device = Device(config)
     t = ScriptTask(config, device)
     t.run()
