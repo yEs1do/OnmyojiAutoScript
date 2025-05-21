@@ -221,6 +221,9 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
         logger.info("Get reward")
         while 1:
             self.screenshot()
+            # 检查活动掉落
+            if self.appear_then_click(self.I_ACTIVITY_ITEMS, interval=1):
+                continue
             # 检查御魂溢出
             if self.appear_then_click(self.I_OVER_GHOST, interval=1):
                 continue
