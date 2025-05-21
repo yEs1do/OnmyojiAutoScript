@@ -39,7 +39,7 @@ class Scene(Enum):
 
 class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigami, GameUi, SwitchSoul, ExplorationAssets):
     minions_cnt = 0
-
+    last_scene_log = None  # 新增：用于缓存上一次的日志内容
     @cached_property
     def _config(self):
         self.config.exploration.general_battle_config.lock_team_enable = True
@@ -55,27 +55,40 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         if not reuse_screenshot:
             self.screenshot()
 
+        # 初始化 scene 变量
+        scene = Scene.UNKNOWN
+        log_message = "UNKNOWN"
         if self.appear(self.I_CHECK_EXPLORATION) and not (self.appear(self.I_E_SETTINGS_BUTTON) or self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_E_AUTO_ROTATE_OFF)):
-            logger.info("在探索大世界中")
-            return Scene.WORLD
+            scene = Scene.WORLD
+            log_message = "在探索大世界中"
         elif self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
-            logger.info("在探索入口弹窗中")
-            return Scene.ENTRANCE
+            scene = Scene.ENTRANCE
+            log_message = "在探索入口弹窗中"
         elif self.appear(self.I_E_SETTINGS_BUTTON) or self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_E_AUTO_ROTATE_OFF):
-            logger.info("在探索里面")
-            return Scene.MAIN
+            scene = Scene.MAIN
+            log_message = "在探索里面"
         elif self.is_in_prepare():
-            logger.info("在战斗准备")
-            return Scene.BATTLE_PREPARE
+            scene = Scene.BATTLE_PREPARE
+            log_message = "在战斗准备"
         elif self.is_in_battle():
-            logger.info("在战斗中")
-            return Scene.BATTLE_FIGHTING
+            scene = Scene.BATTLE_FIGHTING
+            log_message = "在战斗中"
         elif self.is_in_room() or self.appear(self.I_CREATE_ENSURE):
-            logger.info("在组队界面中")
-            return Scene.TEAM
+            scene = Scene.TEAM
+            log_message = "在组队界面中"
+        elif self.appear(self.I_BUFF_1):
+            scene = Scene.UNKNOWN
+            log_message = "在庭院中"
+            self.ui_get_current_page()
+            # 探索页面
+            self.ui_goto(page_exploration)
 
-        logger.info("Unknown scene")
-        return Scene.UNKNOWN
+        # 新增：判断日志是否重复，避免重复打印
+        if log_message != self.last_scene_log:
+            logger.info(f"当前场景: {log_message}")
+            self.last_scene_log = log_message
+
+        return scene
 
     def pre_process(self):
         explorationConfig = self._config
@@ -190,10 +203,12 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
             return
         cu, res, total = self.O_E_ALTERNATE_NUMBER.ocr(self.device.image)
         if cu >= 20:
+            logger.info(f"当前狗粮数量：{cu}, 大于20，无需补充")
             logger.info("Alternate number is full")
             self.ui_click_until_disappear(self.I_E_SURE_BUTTON)
             return
         else:
+            logger.info(f"当前狗粮数量：{cu}, 小于20，补充狗粮")
             self.add_shiki()
 
     # 添加式神
@@ -228,6 +243,7 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
                 return
             cu, res, total = self.O_E_ALTERNATE_NUMBER.ocr(self.device.image)
             if cu >= 40:
+                logger.info(f"当前狗粮数量：{cu}, 大于40，补充完毕")
                 break
             self.swipe(self.S_SWIPE_SHIKI_TO_LEFT_ONE)
             # 慢一点
@@ -300,7 +316,7 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
         # 判断突破票数量
         if cu < con_scrolls.scrolls_threshold:
             return
-
+        logger.info(f"突破票数量:{cu}, 结束探索任务")
         # 关闭加成
         if self.appear(self.I_RED_CLOSE):
             self.ui_click_until_disappear(self.I_RED_CLOSE)
@@ -324,29 +340,34 @@ class BaseExploration(GeneralBattle, GeneralRoom, GeneralInvite, ReplaceShikigam
 
         self.set_next_run(task='Exploration', target=datetime.now() + timedelta_cd)
         self.set_next_run(task='RealmRaid', target=datetime.now())
+        self.set_next_run(task='SoulsTidy',target=datetime.now())
         raise TaskEnd
 
     #
     def check_exit(self) -> bool:
 
-        # 判断是否开启突破票检测
+        # 判断是否开启检测
         if not self._config.scrolls.scrolls_enable:
             # True 表示要退出这个任务
             if self.minions_cnt >= self._config.exploration_config.minions_cnt:
-                logger.info('Minions count is enough, exit')
+                logger.info('探索次数已到, 结束探索任务')
                 return True
             if datetime.now() - self.start_time >= self.limit_time:
-                logger.info('Exploration time limit out')
+                logger.info('探索时间限制已到, 结束探索任务')
                 return True
 
         self.activate_realm_raid(self._config.scrolls, self._config.exploration_config)
         return False
 
     def quit_explore(self):
-        logger.info('退出 探索')
+        logger.info('退出本次探索')
         while 1:
             self.screenshot()
             if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
+                break
+            if self.appear(self.I_CHECK_EXPLORATION) and not (self.appear(self.I_E_SETTINGS_BUTTON) or self.appear(self.I_E_AUTO_ROTATE_ON) or self.appear(self.I_E_AUTO_ROTATE_OFF)):
+                break
+            if self.appear(self.I_BUFF_1):
                 break
             if self.appear_then_click(self.I_E_EXIT_CONFIRM, interval=0.8):
                 continue
