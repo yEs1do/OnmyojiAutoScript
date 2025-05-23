@@ -177,7 +177,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         :return:
         """
         conf = self.config.true_orochi.true_orochi_config
-        self.push_notify(title='真·八岐大蛇', content=f'本周已完成{conf.current_success}次，请查看截图')
+        self.config.notifier.push(title='真·八岐大蛇', content=f'本周已完成{conf.current_success}次，请查看截图')
 
         # 超过两次就说明这周打完了,设置下次运行时间为下周一，次数重置为0
         if conf.current_success >= 2:
