@@ -1,3 +1,5 @@
+from win32gui import IsWindow
+
 import os
 import psutil
 import pywintypes
@@ -35,7 +37,7 @@ class Device(Platform, Screenshot, Control, AppControl):
     stuck_long_wait_list = ['BATTLE_STATUS_S', 'PAUSE', 'LOGIN_CHECK']
 
     def __init__(self, *args, **kwargs):
-        max_retries = 4
+        max_retries = 3
         success = False
         last_exception = None  # 记录最后一次异常
 
@@ -54,7 +56,6 @@ class Device(Platform, Screenshot, Control, AppControl):
                 if isinstance(e, pywintypes.error) and e.winerror == 1400:
                     logger.warning(f"窗口句柄无效，清理残留进程 (第{trial}次重试/共{max_retries}次)")
                     self.force_cleanup()
-                    time.sleep(5)
 
                 # (2) 模拟器未运行错误
                 elif isinstance(e, EmulatorNotRunningError):
@@ -65,11 +66,13 @@ class Device(Platform, Screenshot, Control, AppControl):
                 else:
                     self.config.notifier.push(title=self.config.task, content=f"遇到异常 [{type(e).__name__}]，准备重试 (第{trial}次/共{max_retries}次)")
                     logger.warning(f"遇到异常 [{type(e).__name__}]，准备重试 (第{trial}次/共{max_retries}次)")
+                    self.force_cleanup()
 
         # ------------------------- 最终状态判断 -------------------------
         if not success:
             logger.critical(f"模拟器启动失败，已达最大重试次数 {max_retries} 次，最后一次错误: {last_exception}")
             self.config.notifier.push(title=self.config.task, content=f"模拟器启动失败{max_retries}次，错误类型: {type(last_exception).__name__}")
+            self.force_cleanup()
             # 抛出异常时携带原始错误栈信息
             raise RequestHumanTakeover("设备初始化失败") from last_exception
 
@@ -85,6 +88,9 @@ class Device(Platform, Screenshot, Control, AppControl):
 
     def _validate_window_handle(self):
         """Windows平台专用句柄验证"""
+        # 添加快速检查
+        if hasattr(self, '_screenshot_handle_num') and not IsWindow(getattr(self, '_screenshot_handle_num', 0)):
+            raise pywintypes.error(1400, "GetWindowRect", "无效窗口句柄")
         try:
             # 触发窗口属性检查
             _ = self.screenshot_size
@@ -96,6 +102,7 @@ class Device(Platform, Screenshot, Control, AppControl):
 
     def force_cleanup(self):
         """精准终止当前模拟器实例关联进程"""
+        logger.info('尝试清理模拟器进程')
         port = self.get_port_from_serial()
         if port is None:
             logger.error('无法获取有效端口号，跳过清理')
@@ -134,36 +141,8 @@ class Device(Platform, Screenshot, Control, AppControl):
 
         # 补充ADB清理
         os.system(f'adb -s {self.serial} kill-server')
-        logger.info(f'已重置ADB连接: {self.serial}')
-
-    def _find_emulator_processes(self):
-        """通过ADB端口精准定位当前实例的模拟器进程"""
-        target_port = self.serial  # 从配置获取当前实例端口
-        # self.device.serial
-
-        # 查找监听该端口的进程
-        listeners = []
-        for conn in psutil.net_connections(kind='tcp'):
-            if conn.status == 'LISTEN' and conn.laddr.port == target_port:
-                listeners.append(conn.pid)
-
-        # 获取进程树
-        processes = []
-        for pid in listeners:
-            try:
-                main_proc = psutil.Process(pid)
-                # 获取父进程（模拟器主进程）
-                parent = main_proc.parent()
-                if parent:
-                    processes.append(parent)
-                # 包含子进程
-                processes.extend(main_proc.children(recursive=True))
-            except psutil.NoSuchProcess:
-                continue
-
-        # 去重
-        unique_procs = {proc.pid: proc for proc in processes}
-        return list(unique_procs.values())
+        logger.info(f'已重置ADB连接: {self.serial}, 请稍等')
+        time.sleep(3)
 
     def get_port_from_serial(self):
         """

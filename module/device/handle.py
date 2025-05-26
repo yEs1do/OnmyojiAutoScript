@@ -1,6 +1,8 @@
 # This Python file uses the following encoding: utf-8
 # @author runhey
 # github https://github.com/runhey
+from functools import lru_cache
+
 import re
 
 from enum import Enum
@@ -216,6 +218,15 @@ class Handle:
         logger.info(f'Screenshot handle num: {self.screenshot_handle_num}')
         logger.info(f'Emulator screenshot size: {self.screenshot_size}')
 
+    @staticmethod
+    @lru_cache(maxsize=32)  # 添加这行装饰器
+    def handle_title2num(title: str) -> int:
+        """
+        从标题到句柄号（带缓存功能）
+        :param title:
+        :return:  如果没有找到就是返回零
+        """
+        return FindWindow(None, title)
     @staticmethod
     def all_windows() -> list:
         """

@@ -27,6 +27,15 @@
     "description": "狭间_神龙入口"
   },
   {
+    "itemName": "abyss_dragon_over",
+    "imageName": "res_abyss_dragon_over.png",
+    "roiFront": "253,185,33,100",
+    "roiBack": "253,185,33,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "狭间_神龙入口_已封印"
+  },
+  {
     "itemName": "abyss_peacock",
     "imageName": "res_abyss_peacock.png",
     "roiFront": "521,152,48,165",
@@ -78,16 +87,16 @@
     "roiBack": "711,489,107,38",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "狭间暗域"
+    "description": "寮-狭间暗域"
   },
   {
-    "itemName": "open_abyss_shadows",
-    "imageName": "res_open_abyss_shadows.png",
-    "roiFront": "1133,602,74,58",
-    "roiBack": "1133,602,74,58",
+    "itemName": "abyss_shadows_sure",
+    "imageName": "res_abyss_shadows_sure.png",
+    "roiFront": "95,19,136,41",
+    "roiBack": "95,19,136,41",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "开启狭间暗域"
+    "description": "狭间暗域主页面"
   },
   {
     "itemName": "abyss_map",
@@ -130,15 +139,6 @@
     "imageName": "res_change_area.png",
     "roiFront": "993,610,63,61",
     "roiBack": "993,610,63,61",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "description"
-  },
-  {
-    "itemName": "ensure_button",
-    "imageName": "res_ensure_button.png",
-    "roiFront": "672,405,169,55",
-    "roiBack": "672,405,169,55",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
@@ -205,5 +205,50 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "change_battle_level",
+    "imageName": "change_battle_level.png",
+    "roiFront": "715,659,24,24",
+    "roiBack": "715,659,24,24",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "切换狭间难度级别"
+  },
+  {
+    "itemName": "battle_level_easy",
+    "imageName": "battle_level_easy.png",
+    "roiFront": "639,463,41,38",
+    "roiBack": "639,463,41,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "易难度"
+  },
+  {
+    "itemName": "battle_level_easy_sure",
+    "imageName": "battle_level_easy_sure.png",
+    "roiFront": "570,652,105,38",
+    "roiBack": "570,652,105,38",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "易难度-已选择"
+  },
+  {
+    "itemName": "open_abyss_shadows",
+    "imageName": "res_open_abyss_shadows.png",
+    "roiFront": "1133,602,74,58",
+    "roiBack": "1133,602,74,58",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "开启狭间暗域"
+  },
+  {
+    "itemName": "ensure_button",
+    "imageName": "res_ensure_button.png",
+    "roiFront": "672,405,169,55",
+    "roiBack": "672,405,169,55",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "确认开启狭间暗域"
   }
 ]

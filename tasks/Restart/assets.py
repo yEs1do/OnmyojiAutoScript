@@ -89,6 +89,8 @@ class RestartAssets:
 	I_CHARACTARS = RuleImage(roi_front=(246,535,100,31), roi_back=(219,523,173,57), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_charactars.png")
 	# description 
 	I_CREATE_ACCOUNT = RuleImage(roi_front=(555,636,169,52), roi_back=(504,614,263,100), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_create_account.png")
+	# 是否继续刚才的战斗？-点击取消 
+	I_LOGIN_CANCEL_BATTLE = RuleImage(roi_front=(465,386,143,76), roi_back=(465,386,143,76), threshold=0.8, method="Template matching", file="./tasks/Restart/login/login_login_cancel_battle.png")
 
 
 	# Ocr Rule Assets

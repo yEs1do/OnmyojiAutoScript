@@ -124,5 +124,14 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "login_cancel_battle",
+    "imageName": "login_login_cancel_battle.png",
+    "roiFront": "465,386,143,76",
+    "roiBack": "465,386,143,76",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "是否继续刚才的战斗？-点击取消"
   }
 ]

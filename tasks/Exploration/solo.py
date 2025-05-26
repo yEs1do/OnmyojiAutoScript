@@ -59,23 +59,27 @@ class SoloExploration(BaseExploration):
                     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
-                    if self.ui_get_reward(self.I_BATTLE_REWARD):
-                        continue
+                    # if self.ui_get_reward(self.I_BATTLE_REWARD):
+                    logger.info('识别到小纸人')
+                    self.quit_explore()
+                    continue
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
-                        logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
+                        logger.info(f'Boss战斗完成')
+                        self.quit_explore()
                     continue
                 # 小怪
                 fight_button = self.search_up_fight()
                 if fight_button is not None:
                     if self.fire(fight_button):
-                        logger.info(f'Fight, minions cnt {self.minions_cnt}')
+                        logger.info(f'小怪战斗完成')
                     continue
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
                     search_fail_cnt = 0
                     if self.appear(self.I_SWIPE_END):
+                        logger.info('滚动到最后, 未发现怪物')
                         self.quit_explore()
                         continue
                     if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=3):
@@ -418,24 +422,24 @@ class ScriptTask(SoloExploration):
     def run(self):
         logger.hr('exploration')
         random_click_cnt = 0
-        while 1:
-            self.screenshot()
-            scene = self.get_current_scene()
-            if random_click_cnt >= 2:
-                break
-            if scene == Scene.UNKNOWN:
-                logger.warning('Unknown scene, random click')
-                if self.click(self.C_SAFE_RANDOM, interval=1.5):
-                    random_click_cnt += 1
-                continue
-            else:
-                break
-
-        if scene == Scene.UNKNOWN:
-            pass
+        # while 1:
+        #     self.screenshot()
+        #     scene = self.get_current_scene()
+        #     if random_click_cnt >= 2:
+        #         break
+        #     if scene == Scene.UNKNOWN:
+        #         logger.warning('Unknown scene, random click')
+        #         if self.click(self.C_SAFE_RANDOM, interval=1.5):
+        #             random_click_cnt += 1
+        #         continue
+        #     else:
+        #         break
+        #
+        # if scene == Scene.UNKNOWN:
+        #     pass
         # 换御魂
         self.pre_process()
-
+        self.limit_count = self._config.exploration_config.minions_cnt
         match self._config.exploration_config.user_status:
             case UserStatus.ALONE: self.run_solo()
             case UserStatus.LEADER: self.run_leader()
@@ -449,7 +453,7 @@ if __name__ == "__main__":
     from module.config.config import Config
     from module.device.device import Device
 
-    config = Config('oas1')
+    config = Config('du')
     device = Device(config)
     t = ScriptTask(config, device)
     t.run()

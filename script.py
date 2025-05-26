@@ -92,7 +92,15 @@ class Script:
             error_log_path = f'{error_path_base}.log'
             error_image_path = f'{error_path_base}.png'
             Path(folder).mkdir(parents=True, exist_ok=True)
-            save_image(self.device.image, error_image_path)
+
+            if hasattr(self.device, 'image') and self.device.image is not None:
+                try:
+                    save_image(self.device.image, error_image_path)
+                except Exception as e:
+                    logger.warning(f"保存错误截图失败: {str(e)}")
+            else:
+                self.device.image = ""
+
             with open(logger.log_file, 'r', encoding='utf-8') as f:
                 lines = f.readlines()
                 start = 0
@@ -311,7 +319,7 @@ class Script:
 
             # 执行等待策略
             if opt.do_noting:
-                logger.warning("保持当前状态, 等待下一个任务")
+                logger.warning("不关闭游戏, 等待下一个任务")
             elif should_close_emu:
                 if self.device_status:
                     logger.info("模拟器关闭前, 等待30秒...")
@@ -327,7 +335,7 @@ class Script:
                 except Exception as e:
                     logger.error(f"关闭游戏出错: {str(e)}")
             else:
-                logger.warning("保持当前状态, 等待下一个任务")
+                logger.warning("不关闭游戏, 等待下一个任务")
 
             # 执行等待操作
             logger.hr(f"模拟器状态 {self.device_status}", level=1)

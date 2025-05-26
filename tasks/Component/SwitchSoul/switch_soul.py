@@ -77,6 +77,7 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
                 5: tuple([self.C_SOU_GROUP_5, self.I_SOU_CHECK_GROUP_5]),
                 6: tuple([self.C_SOU_GROUP_6, self.I_SOU_CHECK_GROUP_6]),
                 7: tuple([self.C_SOU_GROUP_7, self.I_SOU_CHECK_GROUP_7]),
+                8: tuple([self.C_SOU_GROUP_8, self.I_SOU_CHECK_GROUP_8]),
             }
             return match[group]
 
@@ -104,8 +105,8 @@ class SwitchSoul(BaseTask, SwitchSoulAssets):
             # 等待滑动动画
             sleep(0.5)
 
-        if group < 1 or group > 7:
-            raise ValueError('Switch soul_one group must be in [1-7]')
+        if group < 1 or group > 8:
+            raise ValueError('Switch soul_one group must be in [1-8]')
         if team < 1 or team > 4:
             raise ValueError('Switch soul_one team must be in [1-4]')
         # 这一步是选择组

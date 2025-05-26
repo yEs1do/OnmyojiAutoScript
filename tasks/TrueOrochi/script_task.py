@@ -123,7 +123,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
             #     continue
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
-        logger.info("Start battle process")
+        logger.info("真蛇战斗开始")
         check_timer = Timer(280)
         check_timer.start()
         while 1:
@@ -153,7 +153,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                 self.device.stuck_record_add('BATTLE_STATUS_S')
             sleep(0.5)
 
-        logger.info("Battle process end")
+        logger.info("真蛇战斗结束")
         # 真蛇战斗完成，次数加一
         conf.current_success += 1
         self.config.save()
@@ -177,7 +177,7 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
         :return:
         """
         conf = self.config.true_orochi.true_orochi_config
-        self.push_notify(title='真·八岐大蛇', content=f'本周已完成{conf.current_success}次，请查看截图')
+        self.config.notifier.push(title='真·八岐大蛇', content=f'本周已完成{conf.current_success}次，请查看截图')
 
         # 超过两次就说明这周打完了,设置下次运行时间为下周一，次数重置为0
         if conf.current_success >= 2:

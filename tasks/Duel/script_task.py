@@ -14,11 +14,13 @@ from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_main, page_duel
 from tasks.Duel.config import Duel, Onmyoji
 from tasks.Duel.assets import DuelAssets
+from tasks.Component.SwitchSoul.switch_soul import SwitchSoul
+from tasks.GameUi.page import page_main, page_team, page_shikigami_records
 
 """ 斗技 """
 
 
-class ScriptTask(GameUi, GeneralBattle, DuelAssets):
+class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets):
 
     def run(self):
 
@@ -27,6 +29,18 @@ class ScriptTask(GameUi, GeneralBattle, DuelAssets):
             logger.warning('不在斗技时间段')
             self.set_next_run(task='Duel', success=True, finish=False)
             raise TaskEnd('Duel')
+
+        con = self.config.duel
+        # 切换御魂
+        if con.switch_soul.enable:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul(con.switch_soul.switch_group_team)
+
+        if con.switch_soul.enable_switch_by_name:
+            self.ui_get_current_page()
+            self.ui_goto(page_shikigami_records)
+            self.run_switch_soul_by_name(con.switch_soul.group_name,con.switch_soul.team_name)
 
         con = self.config.duel.duel_config
         limit_time = con.limit_time
