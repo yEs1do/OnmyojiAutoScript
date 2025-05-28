@@ -11,7 +11,7 @@ from datetime import timedelta, datetime
 from tasks.GameUi.game_ui import GameUi
 from tasks.GameUi.page import page_summon
 from tasks.OneKey.assets import OneKeyAssets
-from tasks.OneKey.config import ScrollNumber
+from tasks.OneKey.config import OneKeyConfig
 
 
 class ScriptTask(GameUi, OneKeyAssets):
