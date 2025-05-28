@@ -11,8 +11,8 @@
   {
     "itemName": "ok_i1",
     "imageName": "ok_ok_i1.png",
-    "roiFront": "1122,591,100,47",
-    "roiBack": "1122,591,100,47",
+    "roiFront": "1125,599,100,47",
+    "roiBack": "1125,599,100,47",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "第一页"
@@ -20,8 +20,8 @@
   {
     "itemName": "ok_i2",
     "imageName": "ok_ok_i2.png",
-    "roiFront": "14,97,100,32",
-    "roiBack": "14,97,100,32",
+    "roiFront": "166,643,26,21",
+    "roiBack": "166,643,26,21",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "第二页"

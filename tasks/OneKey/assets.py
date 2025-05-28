@@ -12,7 +12,7 @@ class OneKeyAssets:
 
 	# Image Rule Assets
 	# 第一页 
-	I_OK_C1 = RuleImage(roi_front=(1121,579,100,100), roi_back=(1121,579,100,100), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_c1.png")
+	I_OK_C1 = RuleImage(roi_front=(1124,585,100,68), roi_back=(1124,585,100,68), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_c1.png")
 	# 第二页 
 	I_OK_C2 = RuleImage(roi_front=(236,53,824,100), roi_back=(236,53,824,100), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_c2.png")
 	# 第三页 
@@ -23,9 +23,9 @@ class OneKeyAssets:
 	# 御魂溢出 
 	I_OVER_GHOST = RuleImage(roi_front=(609,410,65,28), roi_back=(609,410,65,28), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_over_ghost.png")
 	# 第一页 
-	I_OK_I1 = RuleImage(roi_front=(1122,591,100,47), roi_back=(1122,591,100,47), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_i1.png")
+	I_OK_I1 = RuleImage(roi_front=(1125,599,100,47), roi_back=(1125,599,100,47), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_i1.png")
 	# 第二页 
-	I_OK_I2 = RuleImage(roi_front=(14,97,100,32), roi_back=(14,97,100,32), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_i2.png")
+	I_OK_I2 = RuleImage(roi_front=(166,643,26,21), roi_back=(166,643,26,21), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_i2.png")
 	# 第三页 
 	I_OK_I3 = RuleImage(roi_front=(0,0,100,100), roi_back=(0,0,100,100), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_i3.png")
 

@@ -2,8 +2,8 @@
   {
     "itemName": "ok_c1",
     "imageName": "ok_ok_c1.png",
-    "roiFront": "1121,579,100,100",
-    "roiBack": "1121,579,100,100",
+    "roiFront": "1124,585,100,68",
+    "roiBack": "1124,585,100,68",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "第一页"
