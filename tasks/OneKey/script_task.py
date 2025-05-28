@@ -64,10 +64,10 @@ class ScriptTask(GameUi, OneKeyAssets):
         next_image = self.ok_images[page+1]
         while 1:
             self.screenshot()
-            if self.appear(next_image):
-                break
             if self.appear_then_click(self.I_OVER_GHOST, interval=1):
                 continue
+            if self.appear(next_image):
+                break
 
         logger.info(f'Going to page {page+2}')
         self.one_key_page(con, page=page+1)
