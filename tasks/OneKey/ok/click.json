@@ -1,7 +1,7 @@
 [
   {
-    "itemName": "ok_1",
-    "imageName": "ok_ok_1.png",
+    "itemName": "ok_c1",
+    "imageName": "ok_ok_c1.png",
     "roiFront": "1121,579,100,100",
     "roiBack": "1121,579,100,100",
     "method": "Template matching",
@@ -9,8 +9,8 @@
     "description": "第一页"
   },
   {
-    "itemName": "ok_2",
-    "imageName": "ok_ok_2.png",
+    "itemName": "ok_c2",
+    "imageName": "ok_ok_c2.png",
     "roiFront": "236,53,824,100",
     "roiBack": "236,53,824,100",
     "method": "Template matching",
@@ -18,8 +18,8 @@
     "description": "第二页"
   },
   {
-    "itemName": "ok_3",
-    "imageName": "ok_ok_3.png",
+    "itemName": "ok_c3",
+    "imageName": "ok_ok_c3.png",
     "roiFront": "0,0,100,100",
     "roiBack": "0,0,100,100",
     "method": "Template matching",

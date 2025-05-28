@@ -9,8 +9,8 @@
     "description": "御魂溢出"
   },
   {
-    "itemName": "ok_1",
-    "imageName": "ok_ok_1.png",
+    "itemName": "ok_i1",
+    "imageName": "ok_ok_i1.png",
     "roiFront": "1122,591,100,47",
     "roiBack": "1122,591,100,47",
     "method": "Template matching",
@@ -18,8 +18,8 @@
     "description": "第一页"
   },
   {
-    "itemName": "ok_2",
-    "imageName": "ok_ok_2.png",
+    "itemName": "ok_i2",
+    "imageName": "ok_ok_i2.png",
     "roiFront": "14,97,100,32",
     "roiBack": "14,97,100,32",
     "method": "Template matching",
@@ -27,8 +27,8 @@
     "description": "第二页"
   },
   {
-    "itemName": "ok_3",
-    "imageName": "ok_ok_3.png",
+    "itemName": "ok_i3",
+    "imageName": "ok_ok_i3.png",
     "roiFront": "0,0,100,100",
     "roiBack": "0,0,100,100",
     "method": "Template matching",

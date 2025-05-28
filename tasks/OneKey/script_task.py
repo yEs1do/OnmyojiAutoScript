@@ -20,8 +20,8 @@ class ScriptTask(GameUi, OneKeyAssets):
         con = self.config.one_key.one_key_config
         # 构造资源列表（根据最大页数，动态截取）
         max_page = con.page_number
-        ok_images = [self.I_OK_1, self.I_OK_2, self.I_OK_3]
-        ok_clicks = [self.C_OK_1, self.C_OK_2, self.C_OK_3]
+        ok_images = [self.I_OK_I1, self.I_OK_I2, self.I_OK_I3]
+        ok_clicks = [self.I_OK_C1, self.I_OK_C2, self.I_OK_C3]
         timeouts = [con.time_1, con.time_2, con.time_3]
         # 只取前 max_page 项
         self.ok_images = ok_images[:max_page]
