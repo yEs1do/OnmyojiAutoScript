@@ -1,44 +1,29 @@
 [
   {
-    "itemName": "ms_scroll_1",
-    "roiFront": "170,157,279,192",
-    "roiBack": "170,157,279,192",
-    "description": "进入卷一"
+    "itemName": "ok_1",
+    "imageName": "ok_ok_1.png",
+    "roiFront": "1121,579,100,100",
+    "roiBack": "1121,579,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第一页"
   },
   {
-    "itemName": "ms_scroll_2",
-    "roiFront": "490,135,297,210",
-    "roiBack": "490,135,297,210",
-    "description": "进入卷二"
+    "itemName": "ok_2",
+    "imageName": "ok_ok_2.png",
+    "roiFront": "236,53,824,100",
+    "roiBack": "236,53,824,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第二页"
   },
   {
-    "itemName": "ms_scroll_3",
-    "roiFront": "836,135,304,210",
-    "roiBack": "836,135,304,210",
-    "description": "进入卷三"
-  },
-  {
-    "itemName": "ms_scroll_4",
-    "roiFront": "137,389,305,206",
-    "roiBack": "137,389,305,206",
-    "description": "进入卷四"
-  },
-  {
-    "itemName": "ms_scroll_5",
-    "roiFront": "491,390,303,207",
-    "roiBack": "491,390,303,207",
-    "description": "进入卷五"
-  },
-  {
-    "itemName": "ms_scroll_6",
-    "roiFront": "835,389,303,204",
-    "roiBack": "835,389,303,204",
-    "description": "进入卷六"
-  },
-  {
-    "itemName": "ms_contributed",
-    "roiFront": "108,509,993,190",
-    "roiBack": "108,509,993,190",
-    "description": "贡献完成跳结算"
+    "itemName": "ok_3",
+    "imageName": "ok_ok_3.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第三页"
   }
 ]
