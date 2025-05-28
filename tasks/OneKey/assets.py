@@ -11,6 +11,8 @@ class OneKeyAssets:
 
 
 	# Image Rule Assets
+	# 安全点击 
+	I_OK_SAFE = RuleImage(roi_front=(614,67,100,68), roi_back=(614,67,100,68), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_safe.png")
 	# 第一页 
 	I_OK_C1 = RuleImage(roi_front=(1124,585,100,68), roi_back=(1124,585,100,68), threshold=0.8, method="Template matching", file="./tasks/OneKey/ok/ok_ok_c1.png")
 	# 第二页 

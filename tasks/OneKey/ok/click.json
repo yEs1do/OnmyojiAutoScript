@@ -1,5 +1,14 @@
 [
   {
+    "itemName": "ok_safe",
+    "imageName": "ok_ok_safe.png",
+    "roiFront": "614,67,100,68",
+    "roiBack": "614,67,100,68",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "安全点击"
+  },
+  {
     "itemName": "ok_c1",
     "imageName": "ok_ok_c1.png",
     "roiFront": "1124,585,100,68",

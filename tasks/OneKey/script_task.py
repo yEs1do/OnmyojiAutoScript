@@ -53,6 +53,8 @@ class ScriptTask(GameUi, OneKeyAssets):
 
         logger.info(f'Appear page {page+1}')
         self.click(C_current, interval=1)
+        # 安全点击，清除反复点击报错
+        self.click(self.I_OK_SAFE, interval=1)
         sleep(sleep_time)
 
         # 到达最后一页则返回
