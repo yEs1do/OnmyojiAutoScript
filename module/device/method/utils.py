@@ -11,7 +11,7 @@ from lxml import etree
 from module.base.decorator import cached_property
 from module.logger import logger
 
-RETRY_TRIES = 5
+RETRY_TRIES = 10
 RETRY_DELAY = 3
 
 
