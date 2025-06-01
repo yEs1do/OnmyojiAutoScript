@@ -69,6 +69,10 @@ class GeneralBattleAssets:
 	# Image Rule Assets
 	# 奖励，就是那个魂 
 	I_REWARD = RuleImage(roi_front=(547,518,172,96), roi_back=(547,518,172,96), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward.png")
+	# 活动掉落 
+	I_ACTIVITY_ITEMS = RuleImage(roi_front=(609,252,62,58), roi_back=(609,252,62,58), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_activity_items.png")
+	# 御魂溢出 
+	I_OVER_GHOST = RuleImage(roi_front=(609,410,65,28), roi_back=(609,410,65,28), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_over_ghost.png")
 	# 预设的小图标 
 	I_PRESET = RuleImage(roi_front=(32,650,47,45), roi_back=(32,650,47,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset.png")
 	# 准备 
@@ -108,7 +112,17 @@ class GeneralBattleAssets:
 	# 结算时左下角统计图标 
 	I_REWARD_STATISTICS = RuleImage(roi_front=(51,629,54,59), roi_back=(51,629,54,59), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_statistics.png")
 	# 结算金币 
-	I_REWARD_GOLD = RuleImage(roi_front=(943,312,97,69), roi_back=(943,312,97,69), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_gold.png")
+	I_REWARD_GOLD = RuleImage(roi_front=(268,178,97,69), roi_back=(254,163,797,261), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_gold.png")
+	# 结算紫蛇皮 
+	I_REWARD_PURPLE_SNAKE_SKIN = RuleImage(roi_front=(403,177,97,73), roi_back=(254,163,797,261), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_purple_snake_skin.png")
+	# 结算金蛇皮 
+	I_REWARD_GOLD_SNAKE_SKIN = RuleImage(roi_front=(537,176,97,75), roi_back=(254,163,797,261), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_gold_snake_skin.png")
+	# 结算四星青吉鬼 
+	I_REWARD_EXP_SOUL_4 = RuleImage(roi_front=(806,177,97,69), roi_back=(254,163,797,261), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_exp_soul_4.png")
+	# 结算五星御魂 
+	I_REWARD_SOUL_5 = RuleImage(roi_front=(266,533,97,20), roi_back=(254,163,797,396), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_soul_5.png")
+	# 结算六星御魂 
+	I_REWARD_SOUL_6 = RuleImage(roi_front=(942,397,97,20), roi_back=(254,163,797,396), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_soul_6.png")
 	# 针对封魔的特殊 
 	I_DE_WIN = RuleImage(roi_front=(472,49,100,100), roi_back=(239,36,399,133), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_de_win.png")
 	# description 

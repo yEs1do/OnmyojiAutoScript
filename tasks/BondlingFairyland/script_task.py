@@ -124,6 +124,8 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         self.appear_then_click(self.I_CREATE_TEAM, interval=2)
                         continue
                     # 求援
+                    if self.appear(self.I_CHECK_BONDLING_FAIRYLAND, interval=1):
+                        return False
                     if self.appear(self.I_BALL_HELP, interval=1):
                         cu, res, total = self.O_B_BALL_NUMBER.ocr(self.device.image)
                         logger.info(f'ball is cu {cu}, total {total}')
@@ -248,8 +250,7 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
 
         while 1:
             # 有一种情况是本来要退出的，但是队长邀请了进入的战斗的加载界面
-            if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE) or self.appear(
-                    self.I_CHECK_BONDLING_FAIRYLAND):
+            if self.appear(self.I_GI_HOME) or self.appear(self.I_GI_EXPLORE) or self.appear(self.I_CHECK_BONDLING_FAIRYLAND) or self.appear(self.I_BALL_HELP) :
                 break
             # 如果可能在房间就退出
             if self.exit_room():
@@ -375,10 +376,9 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                         self.screenshot()
                         if not self.appear(self.I_STONE_SURE):
                             break
-                        for i in range(0, 5):
-                            if self.appear_then_click(self.I_BUY_ADD, interval=1):
+                        for i in range(0, 3):
+                            if self.appear_then_click(self.I_BUY_PLUS, interval=1):
                                 sleep(0.5)
-                                continue
                         if self.appear_then_click(self.I_GI_SURE, interval=1):
                             continue
                         # current = self.O_B_SUMMON_BALL_NUMBER.ocr(self.device.image)
@@ -540,46 +540,6 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
             if self.appear(self.I_MATCHING) or self.appear(self.I_CHECK_EXPLORATION):
                 return True
         return False
-
-    @cached_property
-    def balls_target(self) -> list[RuleImage]:
-        """
-        获取所有的球的图片
-        :return:
-        """
-        result = [self.I_BF_LOCAL_1_AZURE_BASAN,
-                  self.I_BF_LOCAL_2_SNOWBALL,
-                  self.I_BF_LOCAL_3_LITTLE_KURO,
-                  self.I_BF_LOCAL_5_TOMB_GUARD]
-        return result
-
-    @cached_property
-    def balls_roi(self) -> list[tuple]:
-        """
-        获取球的五个位置是识别区域
-        :return:
-        """
-        result = [self.I_BF_LOCAL_1_AZURE_BASAN.roi_back,
-                  self.I_BF_LOCAL_2_SNOWBALL.roi_back,
-                  self.I_BF_LOCAL_3_LITTLE_KURO.roi_back,
-                  self.I_BF_LOCAL_4_NONE.roi_back,
-                  self.I_BF_LOCAL_5_TOMB_GUARD.roi_back]
-        return result
-
-    def roi_appear_ball(self, roi: tuple, image: np.ndarray) -> tuple | None:
-        """
-        判断某个固定的区域是否出现了球
-        :param roi:
-        :param image:
-        :return: 如果出现了，那就返回可以点击的区域，如果没有出现，那就返回None
-        """
-        for ball in self.balls_target:
-            ball.roi_back = list(roi)
-            if ball.match(image, threshold=0.8):
-                logger.info(f'Find ball {ball.name}')
-                logger.info(f'Ball roi {ball.roi_front}')
-                return ball.roi_front
-        return None
 
     def ball_click(self, index: int) -> bool:
         """
@@ -749,8 +709,6 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
         :return: 如果成功进入战斗（反正就是不在房间 ）返回 True
                  如果失败了，（退出房间）返回 False
         """
-        self.timer_emoji = Timer(15)
-        self.timer_emoji.start()
         wait_second = wait_time.second + wait_time.minute * 60
         self.timer_wait = Timer(wait_second)
         self.timer_wait.start()
@@ -774,22 +732,6 @@ class ScriptTask(GameUi, GeneralInvite, GeneralRoom, BondlingBattle, SwitchSoul,
                 success = True
                 logger.info("契灵：进入战斗页面！")
                 break
-
-            # # 判断是否进入战斗
-            # if self.is_in_room(is_screenshot=False):
-            #     logger.info("契灵：进入组队房间！")
-            #     if self.timer_emoji.reached():
-            #         self.timer_emoji.reset()
-            #         self.appear_then_click(self.I_GI_EMOJI_1)
-            #         self.appear_then_click(self.I_GI_EMOJI_2)
-            # else:
-            #     if self.appear(self.I_EXIT):
-            #         logger.info("契灵：进入战斗页面！")
-            #         break
-            #     if self.appear(self.I_CHECK_BONDLING_FAIRYLAND):
-            #         logger.info("契灵：探查页面！")
-            #         success = False
-            #         break
 
         # 调出循环只有这些可能性：
         # 1. 进入战斗（ui是战斗）

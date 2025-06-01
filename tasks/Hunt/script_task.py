@@ -44,7 +44,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
             self.kirin()
         else:
             self.netherworld()
-        sleep(1)
+        sleep(3)
 
         self.plan_tomorrow_hunt()
         raise TaskEnd('Hunt')

@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "over_ghost",
+    "imageName": "ok_over_ghost.png",
+    "roiFront": "609,410,65,28",
+    "roiBack": "609,410,65,28",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御魂溢出"
+  },
+  {
+    "itemName": "ok_i1",
+    "imageName": "ok_ok_i1.png",
+    "roiFront": "1125,599,100,47",
+    "roiBack": "1125,599,100,47",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第一页"
+  },
+  {
+    "itemName": "ok_i2",
+    "imageName": "ok_ok_i2.png",
+    "roiFront": "166,643,26,21",
+    "roiBack": "166,643,26,21",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第二页"
+  },
+  {
+    "itemName": "ok_i3",
+    "imageName": "ok_ok_i3.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第三页"
+  }
+]

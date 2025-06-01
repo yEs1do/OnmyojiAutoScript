@@ -52,5 +52,23 @@
     "method": "Template matching",
     "threshold": 0.8,
     "description": "description"
+  },
+  {
+    "itemName": "battle_fail",
+    "imageName": "battle_fail.png",
+    "roiFront": "740,267,79,84",
+    "roiBack": "740,267,79,84",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
+  },
+  {
+    "itemName": "battle_success",
+    "imageName": "battle_success.png",
+    "roiFront": "651,203,70,81",
+    "roiBack": "651,203,70,81",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "description"
   }
 ]
