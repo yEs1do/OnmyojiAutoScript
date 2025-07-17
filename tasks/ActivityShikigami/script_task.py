@@ -295,6 +295,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
         click_count = 0
         while 1:
             self.screenshot()
+            # 检查御魂溢出
+            if self.appear_then_click(self.I_OVER_GHOST, interval=1):
+                continue
             # 如果出现了 “鼓”
             if self.appear_then_click(self.I_WIN, interval=2.3):
                 logger.info("Win")
@@ -305,6 +308,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 self.wait_until_appear(self.I_REWARD_PURPLE_SNAKE_SKIN, wait_time=5)
                 while 1:
                     self.screenshot()
+                    # 检查御魂溢出
+                    if self.appear_then_click(self.I_OVER_GHOST, interval=1):
+                        continue
                     appear_reward = self.appear(self.I_REWARD)
                     appear_reward_purple_snake_skin = self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN)
                     if not appear_reward and not appear_reward_purple_snake_skin and click_count >= 1:
