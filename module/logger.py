@@ -24,7 +24,7 @@ from pathlib import Path
 
 SECONDS_IN_DAY = 24 * 60 * 60
 
-def cleanup_logs(log_dir: str = "./log", keep_days: int = 7):
+def cleanup_logs(log_dir: str = "./log", keep_days: int = 30):
     """删除 log_dir 下所有早于 keep_days 的普通文件"""
     cutoff_ts = time.time() - keep_days * SECONDS_IN_DAY
 
