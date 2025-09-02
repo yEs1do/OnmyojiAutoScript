@@ -316,7 +316,6 @@ class Script:
 
             if task.next_run > datetime.now():
                 logger.info(f'Wait until {task.next_run} for task `{task.command}`')
-                # self.is_first_task = False
                 method = self.config.script.optimization.when_task_queue_empty
                 close_game_limit_time = self.config.script.optimization.close_game_limit_time
                 close_emulator_limit_time = self.config.script.optimization.close_emulator_limit_time
@@ -483,6 +482,8 @@ class Script:
                 _ = self.device # 使用缓存
 
             # Run
+            if self.state_queue:
+                self.state_queue.put({"schedule": self.config.get_schedule_data()})
             logger.info(f'Scheduler: Start task `{task}`')
             self.device.stuck_record_clear()
             self.device.click_record_clear()
