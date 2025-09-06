@@ -507,8 +507,8 @@ class Script:
                 logger.critical('Request human takeover')
                 # 添加失败三次的推送通知
                 self.config.notifier.push(
-                    title=f'{I18n.trans_zh_cn(task)}{task}',
-                    content=f"<{self.config_name}> 任务连续失败三次，请上线查看"
+                    title=f'失败三次',
+                    content=f"<{self.config_name}> {I18n.trans_zh_cn(task)}{task} 任务连续失败三次，请上线查看"
                 )
                 # 关闭模拟器
                 self.device.emulator_stop()
