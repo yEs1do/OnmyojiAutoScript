@@ -389,6 +389,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 self.ui_click_until_smt_disappear(self.random_reward_click(),
                                                   self.I_UI_REWARD, interval=1.6)
                 ok_cnt += 1
+                # 检查御魂溢出
+                if self.wait_until_appear(self.I_OVER_GHOST, wait_time=2):
+                    self.ui_click_until_disappear(self.I_OVER_GHOST)
                 continue
             # 失败
             if self.appear(self.I_FALSE):
