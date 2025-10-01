@@ -40,10 +40,6 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
     timer_invite = None
     timer_wait = None
 
-    """
-
-    """
-
     def run_invite(self, config: InviteConfig, is_first: bool = False, is_over: bool = True) -> bool:
         """
         队长！！身份。。。在组队界面邀请好友（ 如果开启is_first） 等待队员进入开启挑战
@@ -53,7 +49,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         :param is_first: 如果是第一次开房间的那就要邀请队员，其他情况等待队员进入
         :return:
         """
-        logger.hr('Invite friend', 2)
+        logger.hr('Invite friend')
         if not self.ensure_enter():
             logger.warning('Not enter invite page')
             return False
@@ -72,7 +68,7 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
         while 1:
             self.screenshot()
             if self.timer_wait.reached():
-                logger.warning('Wait timeout')
+                logger.warning('队长等待超时...')
                 return False
             if self.appear(self.I_MATCHING):
                 logger.warning('Timeout, now is no room')
@@ -85,29 +81,6 @@ class GeneralInvite(BaseTask, BondlingFairylandAssets, GeneralInviteAssets):
             # 如果这个房间最多只容纳两个人（意思是只可以邀请一个人），且已经邀请一个人了，那就开启挑战
             if self.room_type == RoomType.NORMAL_2 and not self.appear(self.I_ADD_1):
                 logger.info('Start challenge and this room can only invite one friend')
-                fire = True
-            # 如果这个房间最多容纳三个人（意思是可以邀请两个人），且设定邀请一个就开启挑战，那就开启挑战
-            elif self.room_type == RoomType.NORMAL_3 and config.invite_number == InviteNumber.ONE and not self.appear(self.I_ADD_1):
-                logger.info('Start challenge and user only invite one friend')
-                fire = True
-            # 如果这个房间最多容纳三个人（意思是可以邀请两个人），且设定邀请两个就开启挑战，那就开启挑战
-            elif self.room_type == RoomType.NORMAL_3 \
-                    and config.invite_number == InviteNumber.TWO and not self.appear(self.I_ADD_2):
-                logger.info('Start challenge and user invite two friends')
-                fire = True
-            # 如果这个房间是五人的，且设定邀请一个就开启挑战，那就开启挑战
-            elif self.room_type == RoomType.NORMAL_5 \
-                    and config.invite_number == InviteNumber.ONE and not self.appear(self.I_ADD_5_1):
-                logger.info('Start challenge and user only invite one friend')
-                fire = True
-            # 如果这个房间是五人的，且设定邀请两个就开启挑战，那就开启挑战
-            elif self.room_type == RoomType.NORMAL_5 \
-                    and config.invite_number == InviteNumber.TWO and not self.appear(self.I_ADD_5_2):
-                logger.info('Start challenge and user invite two friends')
-                fire = True
-            # 如果是永生之海
-            elif self.room_type == RoomType.ETERNITY_SEA and not self.appear(self.I_ADD_SEA):
-                logger.info('Start challenge and this is lock sea')
                 fire = True
 
             # 点击挑战
@@ -492,7 +465,7 @@ if __name__ == '__main__':
     from module.device.device import Device
     import cv2
 
-    c = Config('oas1')
+    c = Config('du')
     d = Device(c)
     t = GeneralInvite(c, d)
 
