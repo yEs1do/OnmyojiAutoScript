@@ -257,4 +257,4 @@ page_reward = Page(check_button=[GeneralBattleAssets.I_REWARD_PURPLE_SNAKE_SKIN,
                                  gga.I_UI_REWARD],
                    links={page_climb_act_pass: random_click(), page_climb_act_ap: random_click(),
                           page_area_boss: random_click()})
-page_reward.additional = random_click(1, 3)
+page_reward.additional = [GeneralBattleAssets.I_OVER_GHOST, random_click(1, 3)]

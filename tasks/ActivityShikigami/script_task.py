@@ -231,6 +231,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 logger.info(f'Battle end, try close {ok_cnt}')
                 self.random_reward_click(exclude_bottom=True, get_click=False)
                 ok_cnt += 1
+                # 检查御魂溢出
+                if self.appear(self.I_OVER_GHOST):
+                    self.ui_click_until_disappear(self.I_OVER_GHOST)
                 continue
             # 已经不在战斗中了, 且奖励也识别过了还不在活动界面, 则随机点击
             if ok_cnt > 0 and not self.ui_page_appear(game.page_battle_auto):
