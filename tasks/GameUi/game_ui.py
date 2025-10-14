@@ -3,6 +3,8 @@
 # github https://github.com/runhey
 import time
 from time import sleep
+
+import random
 from collections import deque
 from module.atom.image import RuleImage
 from module.atom.list import RuleList
@@ -37,9 +39,9 @@ class GameUi(BaseTask, GameUiAssets):
         page_collection, page_act_list,
         # 爬塔活动
         page_act_list_climb_act, page_climb_act, page_climb_act_2, page_climb_act_pass, page_climb_act_ap,
-        page_climb_act_boss, page_climb_act_buff,
+        page_climb_act_boss, page_climb_act_buff, page_climb_act_ap100,
         # 战斗
-        page_battle_auto, page_battle_hand, page_reward
+        page_battle_auto, page_battle_hand, page_reward, page_failed
     ]
     ui_close = [GameUiAssets.I_BACK_MALL, GeneralBattleAssets.I_CONFIRM,
                 BaseTask.I_UI_BACK_RED, BaseTask.I_UI_BACK_YELLOW, BaseTask.I_UI_BACK_BLUE,
@@ -232,7 +234,7 @@ class GameUi(BaseTask, GameUiAssets):
             if self.ui_page_appear(destination):
                 if confirm_timer.reached():
                     logger.info(f'Page arrive: {destination}')
-                    break
+                    return True
                 confirm_timer.reset()
                 continue
             # 尝试关闭未知页面
@@ -246,7 +248,7 @@ class GameUi(BaseTask, GameUiAssets):
                 if not self.ui_page_appear(page):
                     continue
                 logger.info(f"Current page: {page}. Following shortest path:")
-                show_paths: str = ''.join([f"{p.name} -> " for p in path])
+                show_paths: str = ' -> '.join([p.name for p in path])
                 logger.info(f" {show_paths}")
                 if self._execute_path(path, confirm_timer, timeout_timer):
                     return True
@@ -269,7 +271,7 @@ class GameUi(BaseTask, GameUiAssets):
             if timeout_timer.reached():
                 return False
             # 等待当前页面出现
-            self.ui_wait_until_appear(current_page)
+            self.ui_wait_until_appear(current_page, interval=random.uniform(0.6, 1.2))
             logger.info(f'Page switch: {current_page} -> {next_page}')
             # 执行附加操作
             if current_page.additional:
@@ -278,7 +280,8 @@ class GameUi(BaseTask, GameUiAssets):
                             self.appear_then_click(button, interval=0.6) or
                             (isinstance(button, RuleOcr) and self.ocr_appear_click(button, interval=2))):
                         logger.info(f'Page {current_page} additional {button} clicked')
-                sleep(0.3)
+                    # 每次都随机延迟, 等待响应
+                    sleep(random.uniform(0.4, 0.8))
             # 执行页面跳转
             button = current_page.links.get(next_page)
             if not button:
