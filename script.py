@@ -497,8 +497,6 @@ class Script:
 
             # Get task
             task = self.get_next_task()
-            # 更新 gui的任务
-            # Init device and change server
             _ = self.device
             # Skip first restart
             if self.is_first_task and task == 'Restart':
