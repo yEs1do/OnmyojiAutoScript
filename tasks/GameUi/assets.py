@@ -184,6 +184,7 @@ class GameUiAssets:
 	# 退出战斗按钮 
 	I_BACK_BATTLE = RuleImage(roi_front=(24,19,40,38), roi_back=(0,0,90,85), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_back_battle.png")
 
+
 	# Image Rule Assets
 	# description 
 	I_CHECK_LOGIN_FORM = RuleImage(roi_front=(178,572,53,60), roi_back=(1,500,400,150), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_login_form.png")
@@ -223,6 +224,13 @@ class GameUiAssets:
 	# 活动列表页文字列表 
 	L_ACT_LIST_OCR = RuleList(folder="./tasks/GameUi/page", direction="vertical", mode="ocr", roi_back=(219,91,47,513), size=(42, 78), 
 					 array=["日之"])
+
+
+	# Ocr Rule Assets
+	# 战斗界面自动标识 
+	O_BATTLE_AUTO = RuleOcr(roi=(37,642,51,36), area=(0,589,133,128), mode="Single", method="Default", keyword="自动", name="battle_auto")
+	# 战斗页面手动标志 
+	O_BATTLE_HAND = RuleOcr(roi=(35,644,52,34), area=(0,589,136,129), mode="Single", method="Default", keyword="手动", name="battle_hand")
 
 
 	# Image Rule Assets
