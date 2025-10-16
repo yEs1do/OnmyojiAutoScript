@@ -217,8 +217,9 @@ class ScriptTask(GameUi, BaseActivity, SwitchSoul, ActivityShikigamiAssets):
                 self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
                 ok_cnt += 1
                 # 检查御魂溢出
-                if self.appear(self.I_OVER_GHOST):
-                    self.ui_click_until_disappear(self.I_OVER_GHOST)
+                if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                    self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                    self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
                 continue
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
             if ok_cnt > 0 and not self.ui_page_appear(game.page_battle_auto):
