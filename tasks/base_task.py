@@ -138,6 +138,16 @@ class BaseTask(GlobalGameAssets, CostumeBase):
 
         return self.device.image
 
+    def maybe_screenshot(self, soft_skip: bool = False):
+        """
+        可能截图
+        :param soft_skip: True跳过截图(但保证设备一定有图才跳过,否则依然截图)
+        :return:
+        """
+        if not soft_skip or not self.exist_image():
+            return self.screenshot()
+        return self.device.image
+
     def exist_image(self) -> bool:
         """
         判断当前设备是否有图片
