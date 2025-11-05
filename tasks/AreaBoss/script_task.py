@@ -261,30 +261,33 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         BOSS_REWARD_PHOTO1 = [self.C_AB_BOSS_REWARD_PHOTO_1, self.C_AB_BOSS_REWARD_PHOTO_2, self.C_AB_BOSS_REWARD_PHOTO_3]
         BOSS_REWARD_PHOTO2 = [self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, self.C_AB_BOSS_REWARD_PHOTO_MINUS_1]
         filter_statue, bossName = self.get_hot_in_reward() # 获取挑战人数最多的Boss的名字
-        if not filter_statue:
-            self.open_filter()
-        # 滑动到最顶层
-        logger.info("Swipe to top")
-        for i in range(random.randint(1, 3)):
-            self.swipe(self.S_AB_FILTER_DOWN)
+        if bossName == "direct_attack":
+            return self.boss_fight(self.I_BATTLE_1, True, fileter_open=False)
+        else:
+            if not filter_statue:
+                self.open_filter()
+            # 滑动到最顶层
+            logger.info("Swipe to top")
+            for i in range(random.randint(1, 3)):
+                self.swipe(self.S_AB_FILTER_DOWN)
 
-        for PHOTO in BOSS_REWARD_PHOTO1:
-            name = self.get_bossName(PHOTO)
-            if self.check_common_chars(str(name), bossName):
-                return self.boss_fight(PHOTO, True, fileter_open=False)
-            else:
-                self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-                self.open_filter()
-        # 倒数一和二
-        for i in range(random.randint(1, 3)):
-            self.swipe(self.S_AB_FILTER_UP)
-        for PHOTO in BOSS_REWARD_PHOTO2:
-            name = self.get_bossName(PHOTO)
-            if self.check_common_chars(str(name), bossName):
-                return self.boss_fight(PHOTO, True, fileter_open=False)
-            else:
-                self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
-                self.open_filter()
+            for PHOTO in BOSS_REWARD_PHOTO1:
+                name = self.get_bossName(PHOTO)
+                if self.check_common_chars(str(name), bossName):
+                    return self.boss_fight(PHOTO, True, fileter_open=False)
+                else:
+                    self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+                    self.open_filter()
+            # 倒数一和二
+            for i in range(random.randint(1, 3)):
+                self.swipe(self.S_AB_FILTER_UP)
+            for PHOTO in BOSS_REWARD_PHOTO2:
+                name = self.get_bossName(PHOTO)
+                if self.check_common_chars(str(name), bossName):
+                    return self.boss_fight(PHOTO, True, fileter_open=False)
+                else:
+                    self.ui_click_until_disappear(self.I_AB_CLOSE_RED)
+                    self.open_filter()
 
     def get_hot_in_reward(self):
         """
@@ -299,10 +302,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_1)
         #如果num为0则不再进行nameOcr
         if num:
-            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
             if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
                 logger.info("The number of challenges is enough")
-                return filter_open_flag, name
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
         else:
             name = "声望不够"
         lst.append(num)
@@ -312,10 +315,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.open_filter()
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_2)
         if num:
-            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_2)
             if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
                 logger.info("The number of challenges is enough")
-                return filter_open_flag, name
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
         else:
             name = "声望不够"
         boosName.append(name)
@@ -325,10 +328,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.open_filter()
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_3)
         if num:
-            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_3)
             if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
                 logger.info("The number of challenges is enough")
-                return filter_open_flag, name
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
         else:
             name = "声望不够"
         boosName.append(name)
@@ -341,10 +344,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2, wait_time=1)
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
         if num:
-            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_MINUS_2)
             if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
                 logger.info("The number of challenges is enough")
-                return filter_open_flag, name
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
         else:
             name = "声望不够"
         boosName.append(name)
@@ -357,10 +360,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, AreaBossAssets):
         self.wait_until_appear(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1, wait_time=1)
         num = self.get_num_challenge(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
         if num:
-            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_MINUS_1)
             if num >= 20000 and not self.appear(self.I_AB_NUM_CHALLENGE_RAIL):
                 logger.info("The number of challenges is enough")
-                return filter_open_flag, name
+                return filter_open_flag, str("direct_attack")
+            name = self.get_bossName(self.C_AB_BOSS_REWARD_PHOTO_1)
         else:
             name = "声望不够"
             filter_open_flag = True
