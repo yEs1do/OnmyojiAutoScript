@@ -4,7 +4,6 @@
 import time
 
 import importlib
-import pkgutil
 from pathlib import Path
 
 from datetime import datetime
@@ -23,7 +22,7 @@ from module.exception import (GameNotRunningError, GamePageUnknownError)
 from module.logger import logger
 from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.GameUi.assets import GameUiAssets
-from tasks.GameUi.page import Page, PageRegistry, page_main
+from tasks.GameUi.page import Page, PageRegistry, page_main, random_click
 from tasks.Restart.assets import RestartAssets
 from tasks.SixRealms.assets import SixRealmsAssets
 from tasks.base_task import BaseTask
@@ -166,7 +165,7 @@ class GameUi(BaseTask, GameUiAssets):
         while 1:
             self.maybe_screenshot(skip_first_screenshot)
             skip_first_screenshot = False
-            # 如果20S还没有到底，那么就抛出异常
+            # 如果10S还没有到底，那么就抛出异常
             if timeout.reached():
                 break
             # Known pages
@@ -180,6 +179,9 @@ class GameUi(BaseTask, GameUiAssets):
             # Try to close unknown page
             if self.try_close_unknown_page():
                 timeout = Timer(10, count=20).start()
+            else:
+                # entirely unknown page, click safe random area
+                self.click(random_click(), interval=4)
             # wait to ui
             sleep(0.3)
             app_check()
@@ -236,13 +238,13 @@ class GameUi(BaseTask, GameUiAssets):
         sorted_paths = sorted(paths.items(), key=lambda kv: len(kv[1]))
         return sorted_paths
 
-    def ui_goto_page(self, dest_page: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60):
+    def ui_goto_page(self, dest_page: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60) -> bool:
         """前往指定page, 自动调用获取当前页面方法, 其他参数同ui_goto
         """
         self.ui_get_current_page()
-        self.ui_goto(dest_page, confirm_wait, skip_first_screenshot, timeout)
+        return self.ui_goto(dest_page, confirm_wait, skip_first_screenshot, timeout)
 
-    def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60):
+    def ui_goto(self, destination: Page, confirm_wait=0, skip_first_screenshot=True, timeout: int = 60) -> bool:
         """
         Args:
             destination (Page):
@@ -278,6 +280,7 @@ class GameUi(BaseTask, GameUiAssets):
             if not found:
                 if close_unknown_timer.reached_and_reset():
                     self.try_close_unknown_page(skip_screenshot=False)
+                    self.ui_current = None
         else:
             logger.error(f'Cannot goto page[{destination}], timeout[{timeout}s] reached')
         return False
