@@ -211,7 +211,7 @@ class GameUi(BaseTask, GameUiAssets):
         # 初始化
         timeout_timer = Timer(timeout).start()
         confirm_timer = Timer(confirm_wait, count=int(confirm_wait // 0.5)).start()
-        close_unknown_timer = Timer(3).start()
+        close_unknown_timer = Timer(15).start()
         # 构建路径映射
         path_dict = self.build_reverse_path_dict(destination)
 
