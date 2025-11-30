@@ -319,8 +319,7 @@ class ScriptTask(GameUi, GeneralBattle, SwitchSoul, DuelAssets, SwitchOnmyoji):
 if __name__ == '__main__':
     from module.config.config import Config
     from module.device.device import Device
-
-    c = Config('mi')
+    c = Config('oas3')
     d = Device(c)
     t = ScriptTask(c, d)
 
