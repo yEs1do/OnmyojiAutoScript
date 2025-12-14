@@ -136,7 +136,8 @@ class GameUi(BaseTask, GameUiAssets):
                 timeout = Timer(10, count=20).start()
             else:
                 # entirely unknown page, click safe random area
-                self.click(random_click(), interval=4)
+                # self.click(random_click(), interval=4)
+                pass
             # wait to ui
             sleep(0.3)
             app_check()
