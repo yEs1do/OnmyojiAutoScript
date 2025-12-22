@@ -341,14 +341,19 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             # 战斗成功
             if self.appear_then_click(self.I_WIN, interval=2):
                 continue
-            # 检查御魂溢出
-            if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
-                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
-                self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
             if self.appear(self.I_REWARD):
                 logger.info('Win battle')
-                self.ui_click_until_disappear(self.I_REWARD, interval=1.5)
-                return True
+                while 1:
+                    self.screenshot()
+                    # 检查御魂溢出
+                    if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                        self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                        self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+                        continue
+                    if self.appear_then_click(self.I_REWARD, interval=1.5):
+                        continue
+                    if not self.appear(self.I_REWARD):
+                        return True
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
             # if ok_cnt > 0 and not self.is_in_battle(False):
             #     self.random_reward_click(exclude_click=[self.C_RANDOM_BOTTOM])
