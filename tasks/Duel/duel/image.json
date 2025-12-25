@@ -38,8 +38,8 @@
   {
     "itemName": "d_auto_entry",
     "imageName": "duel_d_auto_entry.png",
-    "roiFront": "21,116,66,62",
-    "roiBack": "2,95,115,111",
+    "roiFront": "23,118,53,54",
+    "roiBack": "2,97,93,96",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "自动上阵"
@@ -47,8 +47,8 @@
   {
     "itemName": "d_help",
     "imageName": "duel_d_help.png",
-    "roiFront": "784,502,32,30",
-    "roiBack": "774,489,49,55",
+    "roiFront": "783,500,29,30",
+    "roiBack": "778,476,49,78",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "主界面的感叹号"
@@ -72,15 +72,6 @@
     "description": "准备完毕 "
   },
   {
-    "itemName": "d_battle_data",
-    "imageName": "duel_d_battle_data.png",
-    "roiFront": "1068,610,38,60",
-    "roiBack": "1068,610,38,60",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "战斗数据"
-  },
-  {
     "itemName": "d_victory",
     "imageName": "duel_d_victory.png",
     "roiFront": "433,76,100,100",
@@ -101,8 +92,8 @@
   {
     "itemName": "d_word_battle",
     "imageName": "duel_d_word_battle.png",
-    "roiFront": "612,41,54,54",
-    "roiBack": "612,41,54,54",
+    "roiFront": "613,41,54,54",
+    "roiBack": "600,24,84,85",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "战"

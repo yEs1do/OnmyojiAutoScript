@@ -236,6 +236,11 @@ class ScriptTask(GameUi, BaseActivity, HeroTestAssets, SwitchSoul):
         logger.info("Get reward")
         while 1:
             self.screenshot()
+            # 检查御魂溢出
+            if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+                continue
             # 如果出现领奖励
             # self.C_REWARD_2 在掉落物品过多的时候可能会点击到物品，导致脚本卡死
             action_click = random.choice(

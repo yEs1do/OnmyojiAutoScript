@@ -11,6 +11,7 @@ import time
 
 class LoginHandler(BaseTask, RestartAssets):
     character: str
+    harvest_mail_cnt: int = 0
 
     def __init__(self, *wargs, **kwargs):
         super().__init__(*wargs, **kwargs)

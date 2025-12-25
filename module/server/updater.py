@@ -128,10 +128,6 @@ class Updater(DeployConfig, GitManager, PipManager):
             return False
 
 
-
 if __name__ == "__main__":
     updater = Updater()
     print(updater.latest_commit())
-
-
-

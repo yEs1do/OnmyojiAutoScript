@@ -43,6 +43,7 @@ _log_switch_lock = threading.Lock()#线程锁
 
 class Script:
     def __init__(self, config_name: str ='oas') -> None:
+        self._emulator_down = False
         logger.hr('Start', level=0)
         self.server = None
         self.state_queue: Queue = None
@@ -352,6 +353,27 @@ class Script:
         self.device.release_during_wait()
         return self.wait_until(next_run)
 
+    def _handle_goto_main(self):
+        logger.info('Goto main page during wait')
+        self.run('GotoMain')
+
+    def _handle_close_game(self, task, close_game_limit_time):
+        if task.next_run > datetime.now() + timedelta(hours=close_game_limit_time.hour, minutes=close_game_limit_time.minute, seconds=close_game_limit_time.second):
+            logger.info('Close game during wait')
+            self.device.app_stop()
+        else:
+            self._handle_goto_main()
+
+    def _handle_close_emulator_or(self, task, close_game_limit_time, close_emulator_limit_time, method):
+        if task.next_run > datetime.now() + timedelta(hours=close_emulator_limit_time.hour, minutes=close_emulator_limit_time.minute, seconds=close_emulator_limit_time.second):
+            logger.info('Close emulator during wait')
+            self.device.emulator_stop()
+            self._emulator_down = True # 标记
+        elif method == 'close_emulator_or_goto_main':
+            self._handle_goto_main()
+        else:
+            self._handle_close_game(task, close_game_limit_time)
+
     def exception_handler(self, e: Exception, command: str) -> None:
         # 处理御魂溢出
         from tasks.Utils.post_diagnotor import PostDiagnotor, AnalyzeType
@@ -487,6 +509,11 @@ class Script:
                 self.config.task_delay(task='Restart', success=True, server=True)
                 del_cached_property(self, 'config')
                 continue
+            if self._emulator_down:
+                self.device = Device(self.config)
+                self._emulator_down = False
+            else:                
+                _ = self.device # 使用缓存
 
             # Run
             logger.info(f'Scheduler: Start task `{task}`')
@@ -514,8 +541,8 @@ class Script:
                 logger.critical('Request human takeover')
                 # 添加失败三次的推送通知
                 self.config.notifier.push(
-                    title=f'{I18n.trans_zh_cn(task)}{task}',
-                    content=f"<{self.config_name}> 任务连续失败三次，请上线查看"
+                    title=f'失败三次',
+                    content=f"<{self.config_name}> {I18n.trans_zh_cn(task)}{task} 任务连续失败三次，请上线查看"
                 )
                 # 关闭模拟器
                 if self.config.script.error.error_repeated:
