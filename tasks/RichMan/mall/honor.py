@@ -21,11 +21,14 @@ class Honor(Special):
         if not con.enable:
             logger.info('Honor is not enable')
             return
+        if self.config.model.rich_man.done_record.check_done_and_record_dt('honor'):
+            logger.info('Honor is done')
+            return
         self._enter_honor()
         
         # 向下滑找到购买的物品
         mystery_bought, black_bought = False, False
-        max_swipes = 3
+        max_swipes = 5
         swipe_count = 0
         
         while 1:
@@ -52,6 +55,7 @@ class Honor(Special):
             if self.swipe(self.S_SP_DOWN, interval=2):
                 swipe_count += 1
                 time.sleep(2)
+        self.config.model.rich_man.done_record.honor_done = True
 
     def _honor_mystery_amulet(self, enable: bool=False):
         logger.hr('Buy mystery amulet', 3)
@@ -70,9 +74,7 @@ class Honor(Special):
         if not self.mall_check_money(4, 1500):
             logger.warning('No enough money')
             return
-        # 使用动态位置点击购买
-        self.appear_then_click(self.I_HONOR_BLUE)
-        time.sleep(1)
+        self.buy_more(self.I_HONOR_BLUE)
 
     def _honor_black_daruma_scrap(self, enable: bool=False):
         logger.hr('Buy black daruma scrap', 3)
@@ -93,7 +95,6 @@ class Honor(Special):
             return
         # 使用动态位置点击购买
         self.buy_more(self.I_HONOR_BLACK)
-        time.sleep(0.5)
 
 
 if __name__ == '__main__':
