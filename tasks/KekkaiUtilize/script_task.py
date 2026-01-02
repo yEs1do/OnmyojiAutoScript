@@ -649,6 +649,41 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         # logger.info(f'识别成功: 卡类型: {card_type}, 数值: {value}')
         return card_type, value
 
+    def back_guild(self):
+        """
+        回到寮的界面
+        :return:
+        """
+        while 1:
+            self.screenshot()
+
+            if self.appear(self.I_GUILD_INFO):
+                break
+            if self.appear(self.I_GUILD_REALM):
+                break
+            if self.appear_then_click(self.I_PLANT_TREE_CLOSE):
+                continue
+
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
+                continue
+
+    def back_realm(self):
+        # 回到寮结界
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_REALM_SHIN):
+                break
+            if self.appear(self.I_SHI_DEFENSE):
+                break
+            if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
+                continue
+            if self.appear_then_click(self.I_UI_BACK_BLUE, interval=1):
+                continue
+
 
 if __name__ == "__main__":
     from module.config.config import Config
