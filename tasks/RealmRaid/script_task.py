@@ -564,3 +564,4 @@ if __name__ == "__main__":
     t = ScriptTask(config, device)
 
     t.run()
+
