@@ -44,7 +44,7 @@ class RichManAssets:
 
 	# Swipe Rule Assets
 	# description 
-	S_GUILD_STORE = RuleSwipe(roi_front=(806,460,46,35), roi_back=(754,360,90,34), mode="default", name="guild_store")
+	S_GUILD_STORE = RuleSwipe(roi_front=(807,460,46,35), roi_back=(720,214,90,34), mode="default", name="guild_store")
 
 
 	# Image Rule Assets
@@ -158,7 +158,7 @@ class RichManAssets:
 	# 密卷屋 
 	I_MALL_SCCALES = RuleImage(roi_front=(470,647,68,37), roi_back=(427,621,147,92), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales.png")
 	# 密卷屋 
-	I_MALL_SCCALES_CHECK = RuleImage(roi_front=(409,253,100,100), roi_back=(336,133,253,355), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales_check.png")
+	I_MALL_SCCALES_CHECK = RuleImage(roi_front=(409,253,100,100), roi_back=(409,253,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sccales_check.png")
 	# description 
 	I_MALL_SCALES_SURE = RuleImage(roi_front=(1195,100,62,85), roi_back=(1195,100,62,85), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_scales_sure.png")
 	# 契灵商店 
@@ -171,6 +171,19 @@ class RichManAssets:
 	I_MALL_SUNDRY = RuleImage(roi_front=(880,646,53,54), roi_back=(834,621,116,90), threshold=0.65, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry.png")
 	# 杂货铺 
 	I_MALL_SUNDRY_CHECK = RuleImage(roi_front=(1093,10,31,44), roi_back=(1093,10,31,44), threshold=0.7, method="Template matching", file="./tasks/RichMan/mall/navbar/navbar_mall_sundry_check.png")
+
+
+	# Image Rule Assets
+	# 体力 
+	I_MALL_RESOURCE_AP = RuleImage(roi_front=(155,7,45,43), roi_back=(155,7,1115,90), threshold=0.7, method="Default", file="./tasks/RichMan/mall/navbar/navbar_mall_resource_ap.png")
+	# 荣誉 
+	I_MALL_RESOURCE_HONOR = RuleImage(roi_front=(722,11,41,42), roi_back=(155,7,1115,90), threshold=0.7, method="Default", file="./tasks/RichMan/mall/navbar/navbar_mall_resource_honor.png")
+	# 友情点 
+	I_MALL_RESOURCE_FRIENDS = RuleImage(roi_front=(908,8,39,43), roi_back=(155,7,1115,90), threshold=0.7, method="Default", file="./tasks/RichMan/mall/navbar/navbar_mall_resource_friends.png")
+	# 勋章 
+	I_MALL_RESOURCE_MEDAL = RuleImage(roi_front=(535,9,40,44), roi_back=(155,7,1115,90), threshold=0.7, method="Default", file="./tasks/RichMan/mall/navbar/navbar_mall_resource_medal.png")
+	# 魅力值 
+	I_MALL_RESOURCE_CHARISMA = RuleImage(roi_front=(906,5,48,46), roi_back=(155,7,1115,90), threshold=0.7, method="Default", file="./tasks/RichMan/mall/navbar/navbar_mall_resource_charisma.png")
 
 
 	# Image Rule Assets
@@ -245,11 +258,11 @@ class RichManAssets:
 
 	# Image Rule Assets
 	# 蛇皮 
-	I_SCA_OROCHI_SCALES = RuleImage(roi_front=(110,261,100,100), roi_back=(77,184,175,216), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_orochi_scales.png")
+	I_SCA_OROCHI_SCALES = RuleImage(roi_front=(110,261,100,100), roi_back=(110,261,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_orochi_scales.png")
 	# 首领御魂 
-	I_SCA_DEMON_SOULS = RuleImage(roi_front=(707,260,100,100), roi_back=(659,190,182,218), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_souls.png")
+	I_SCA_DEMON_SOULS = RuleImage(roi_front=(707,260,100,100), roi_back=(707,260,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_souls.png")
 	# 永生之海 
-	I_SCA_PICTURE_BOOK = RuleImage(roi_front=(995,258,100,100), roi_back=(954,177,185,240), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_picture_book.png")
+	I_SCA_PICTURE_BOOK = RuleImage(roi_front=(995,258,100,100), roi_back=(995,258,100,100), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_picture_book.png")
 	# 土蜘蛛 
 	I_SCA_DEMON_BOSS_1 = RuleImage(roi_front=(246,224,112,126), roi_back=(168,142,346,290), threshold=0.8, method="Template matching", file="./tasks/RichMan/mall/scales/scales_sca_demon_boss_1.png")
 	# 胧车 
