@@ -58,6 +58,10 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             self.screenshot()
             if self.is_in_real_battle(False):  # 战斗阶段
                 return True
+            if self.appear_then_click(self.I_DISABLE_7DAYS_DIFF_SOUL, interval=0.6):  # 关闭御魂不一致提示
+                continue
+            if self.appear_then_click(self.I_CONFIRM_CLOSE_DIFF_SOUL, interval=0.6):  # 确认关闭御魂不一致提示
+                continue
             if self.is_in_prepare(False):  # 战斗准备阶段
                 if not getattr(config, 'lock_team_enable', False):  # 没有锁定阵容
                     if self.current_count == 1 and not confed:  # 第一次战斗且是本次第一次配置
@@ -65,9 +69,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
                         self.check_and_open_buff(buff)
                         confed = True
                 # 点击准备(锁定阵容自动点准备,不锁定阵容前面也已经配置完毕需要点准备)
-                if self.ui_click_until_disappear(self.I_PREPARE_HIGHLIGHT, interval=0.8):
-                    # 识别到且点击了准备且准备按钮已经消失, 则直接结束战前判断
-                    return True
+                if self.appear_then_click(self.I_PREPARE_HIGHLIGHT, interval=0.8):
+                    continue
                 continue
             # 未知界面, 既不是准备界面也不是战斗界面
             logger.info('Wait for preparation page')
