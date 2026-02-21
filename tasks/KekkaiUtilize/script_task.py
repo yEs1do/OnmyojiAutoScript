@@ -122,7 +122,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         while 1:
             self.screenshot()
 
-            if self.appear(self.I_REALM_SHIN) and self.appear(self.I_SHI_GROWN):
+            if self.appear(self.I_REALM_SHIN) and self.appear_multi_scale(self.I_SHI_GROWN):
                 self.screenshot()
                 if not self.appear(self.I_REALM_SHIN):
                     continue
@@ -178,6 +178,22 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                     logger.info('appear_click reward success')
                     click_ap = True
                     timer_check.reset()
+                continue
+
+    def goto_realm(self):
+        """
+        从寮的主界面进入寮结界
+        :return:
+        """
+        while 1:
+            self.screenshot()
+            if self.appear(self.I_REALM_SHIN):
+                break
+            if self.appear_multi_scale(self.I_SHI_DEFENSE):
+                break
+            if self.appear_then_click(self.I_PLANT_TREE_CLOSE):
+                continue
+            if self.appear_then_click(self.I_GUILD_REALM, interval=1):
                 continue
 
     def check_box_ap_or_exp(self, ap_enable: bool = True, exp_enable: bool = True, exp_waste: bool = True) -> bool:
@@ -298,6 +314,41 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
         # 收获
         self.ui_get_reward(self.I_UTILIZE_EXP)
+        return True
+
+    def realm_goto_grown(self):
+        """
+        进入式神育成界面
+        :return:
+        """
+        while 1:
+            self.screenshot()
+
+            if self.in_shikigami_growth():
+                break
+
+            if self.appear_then_click_multi_scale(self.I_SHI_GROWN, interval=1):
+                continue
+        logger.info('Enter shikigami grown')
+
+    def grown_goto_utilize(self):
+        """
+        从式神育成界面到 蹭卡界面
+        :return:
+        """
+        self.screenshot()
+        if not self.appear(self.I_UTILIZE_ADD):
+            logger.warning('No utilize add')
+            return False
+
+        while 1:
+            self.screenshot()
+
+            if self.appear(self.I_U_ENTER_REALM):
+                break
+            if self.appear_then_click(self.I_UTILIZE_ADD, interval=2):
+                continue
+        logger.info('Enter utilize')
         return True
 
     def switch_friend_list(self, friend: SelectFriendList = SelectFriendList.SAME_SERVER) -> bool:
@@ -677,7 +728,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             self.screenshot()
             if self.appear(self.I_REALM_SHIN):
                 break
-            if self.appear(self.I_SHI_DEFENSE):
+            if self.appear_multi_scale(self.I_SHI_DEFENSE):
                 break
             if self.appear_then_click(self.I_UI_BACK_RED, interval=1):
                 continue
