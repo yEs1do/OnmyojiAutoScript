@@ -306,8 +306,11 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                         self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
                         self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
                         continue
-                    appear_reward = self.appear_then_click(self.I_REWARD)
+                    # appear_reward = self.appear_then_click(self.I_REWARD)
                     appear_reward_purple_snake_skin = self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN)
+                    appear_reward = self.appear(self.I_REWARD)
+                    if appear_reward:
+                        self.click(self.I_REWARD, interval=0.9)
                     if not appear_reward and not appear_reward_purple_snake_skin:
                         break
                     if appear_reward or appear_reward_purple_snake_skin:
