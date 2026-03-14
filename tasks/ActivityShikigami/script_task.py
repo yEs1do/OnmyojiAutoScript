@@ -258,7 +258,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
         logger.hr(f'Start run climb type AP100')
 
     def start_battle(self):
-        click_times, max_times = 0, random.randint(2, 4)
+        click_times, max_times = 0, random.randint(4, 8)
         while 1:
             self.screenshot()
             if self.is_in_battle(False):
