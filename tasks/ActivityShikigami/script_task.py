@@ -305,27 +305,14 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
             #  出现 “魂” 和 紫蛇皮
             if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) or \
                     self.appear(self.I_REWARD_GOLD) or self.appear(self.I_REWARD_GOLD_SNAKE_SKIN):
-                logger.info('Win battle')
-                while 1:
-                    self.screenshot()
-                    # 检查御魂溢出
-                    if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
-                        self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
-                        self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
-                        continue
-                    # appear_reward = self.appear_then_click(self.I_REWARD)
-                    appear_reward_purple_snake_skin = self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN)
-                    appear_reward = self.appear(self.I_REWARD)
-                    if appear_reward:
-                        self.click(self.I_REWARD, interval=0.9)
-                    if not appear_reward and not appear_reward_purple_snake_skin:
-                        break
-                    if appear_reward or appear_reward_purple_snake_skin:
-                        reward_click = random.choice(
-                            [self.C_RANDOM_LEFT, self.C_RANDOM_RIGHT])
-                        self.click(reward_click, interval=1.8)
-                        continue
-                return True
+                # 检查御魂溢出
+                if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                    self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                    self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+                    continue
+                self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
+                ok_cnt += 1
+                continue
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
             if ok_cnt > 0 and not self.is_in_battle(False):
                 self.random_reward_click(exclude_click=[self.C_RANDOM_RIGHT])
@@ -433,5 +420,3 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
 
     t.run()
-
-
