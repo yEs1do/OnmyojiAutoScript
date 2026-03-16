@@ -315,7 +315,7 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 ok_cnt += 1
                 continue
             # 已经不在战斗中了, 且奖励也识别过了, 则随机点击
-            if ok_cnt > 0 and not self.is_in_battle(False):
+            if ok_cnt > 3 and not self.is_in_battle(False):
                 self.random_reward_click(exclude_click=[self.C_RANDOM_TOP, self.C_RANDOM_LEFT])
                 self.device.stuck_record_clear()
                 ok_cnt += 1
