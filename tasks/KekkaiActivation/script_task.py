@@ -15,6 +15,7 @@ from module.atom.image import RuleImage
 from module.base.utils import point2str
 from module.logger import logger
 from module.exception import TaskEnd, GameStuckError
+from tasks.KekkaiUtilize.page import page_guild_realm, page_guild_realm_growth
 
 from tasks.KekkaiUtilize.script_task import ScriptTask as KU
 from tasks.KekkaiUtilize.utils import CardClass
@@ -30,14 +31,8 @@ class ScriptTask(KU, KekkaiActivationAssets):
 
     def run(self):
         con = self.config.kekkai_activation.activation_config
-        self.ui_get_current_page()
-        self.ui_goto(page_guild)
-
-        # 在寮的主界面 检查是否有收取体力或者是收取寮资金
-        # self.check_guild_ap_or_assets()
-
         # 进入寮结界
-        self.goto_realm()
+        self.ui_goto_page(page_guild_realm)
 
         if con.exchange_before:
             self.check_max_lv(con.shikigami_class)
@@ -367,7 +362,7 @@ class ScriptTask(KU, KekkaiActivationAssets):
         退出的时候还是结界界面
         :return:
         """
-        self.realm_goto_grown()
+        self.ui_goto_page(page_guild_realm_growth)
         if self.appear(self.I_RS_LEVEL_MAX):
             # 存在满级的式神
             logger.info('Exist max level shikigami and replace it')

@@ -116,12 +116,14 @@ class BaseTask(GlobalGameAssets, CostumeBase):
             self.set_next_run(task='WantedQuests', target=datetime.now().replace(microsecond=0))
         return True
 
-    def screenshot(self):
+    def screenshot(self, soft_skip: bool = False):
         """
         截图 引入中间函数的目的是 为了解决如协作的这类突发的事件
+        :param soft_skip: True跳过截图(但保证设备一定有图才跳过,否则依然截图)
         :return:
         """
-        self.device.screenshot()
+        if not soft_skip or not self.exist_image():
+            self.device.screenshot()
         # 判断勾协
         self._burst()
 
@@ -769,14 +771,16 @@ class BaseTask(GlobalGameAssets, CostumeBase):
         点击一个按钮直到消失
         :param interval:
         :param click:
-        :return:
+        :return: True:出现并点击过, False:没有出现过
         """
+        appear_and_clicked = False
         while 1:
             self.screenshot()
             if not self.appear(click):
                 break
             elif self.appear_then_click(click, interval=interval):
-                continue
+                appear_and_clicked = True
+        return appear_and_clicked
 
     def ui_click_until_smt_disappear(self, click, stop, interval: float = 1):
         """

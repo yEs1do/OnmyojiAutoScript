@@ -45,7 +45,7 @@ class ScriptTask(GameUi, GeneralBattle, GeneralInvite, SwitchSoul, HuntAssets):
         else:
             self.ui_goto(page_hunt)
             self.netherworld()
-        sleep(1)
+        sleep(3)
 
         self.plan_tomorrow_hunt()
         raise TaskEnd('Hunt')

@@ -94,3 +94,4 @@ zope-interface==6.1       # via gevent
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
+websocket-client~=1.8.0

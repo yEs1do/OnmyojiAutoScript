@@ -9,6 +9,7 @@ from module.exception import TaskEnd, GameStuckError
 from module.base.timer import Timer
 
 from tasks.GameUi.game_ui import GameUi
+from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.GeneralBattle.general_battle import GeneralBattle
 from tasks.Component.GeneralInvite.general_invite import GeneralInvite
 from tasks.Component.GeneralRoom.general_room import GeneralRoom
@@ -148,6 +149,11 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                     self.screenshot()
                     if not self.appear(self.I_GREED_GHOST):
                         break
+                    # 检查御魂溢出
+                    if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                        self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                        self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+                        continue
                     if self.appear_then_click(self.I_GREED_GHOST, interval=1):
                         continue
                     if self.appear_then_click(self.I_ST_FRAME, interval=1):

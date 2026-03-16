@@ -12,6 +12,7 @@ from module.logger import logger
 from module.exception import TaskEnd
 
 from tasks.GameUi.game_ui import GameUi
+from tasks.KekkaiUtilize.page import page_guild_realm, page_guild_realm_utilize, page_guild_realm_growth
 from tasks.Utils.config_enum import ShikigamiClass
 from tasks.KekkaiUtilize.assets import KekkaiUtilizeAssets
 from tasks.KekkaiUtilize.config import UtilizeRule, SelectFriendList
@@ -33,11 +34,8 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
 
     def run(self):
         con = self.config.kekkai_utilize.utilize_config
-        self.ui_get_current_page()
-        self.ui_goto(page_guild)
-
         # 进入寮结界
-        self.goto_realm()
+        self.ui_goto_page(page_guild_realm)
         # 育成界面去蹭卡
         if con.utilize_enable:
             self.check_utilize_add()
@@ -81,7 +79,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
             # 无论收不收到菜，都会进入看看至少看一眼时间还剩多少
             time.sleep(0.5)
             # 进入育成界面
-            self.realm_goto_grown()
+            self.ui_goto_page(page_guild_realm_growth)
             self.screenshot()
 
             if not self.appear(self.I_UTILIZE_ADD):
@@ -94,16 +92,11 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
                 next_time = datetime.now() + remaining_time
                 self.set_next_run(task='KekkaiUtilize', target=next_time)
                 return
-            if not self.grown_goto_utilize():
+            if not self.ui_goto_page(page_guild_realm_utilize):
                 logger.info('Utilize failed, exit')
             # 开始执行寄养
-            if self.run_utilize(con.select_friend_list, con.shikigami_class, con.shikigami_order):
-                # 退出寮结界
-                self.back_guild()
-                # 进入寮结界
-                self.goto_realm()
-            else:
-                self.back_realm()
+            self.run_utilize(con.select_friend_list, con.shikigami_class, con.shikigami_order)
+            self.ui_goto_page(page_guild_realm)
 
     def check_max_lv(self, shikigami_class: ShikigamiClass = ShikigamiClass.N):
         """
@@ -111,7 +104,7 @@ class ScriptTask(GameUi, ReplaceShikigami, KekkaiUtilizeAssets):
         退出的时候还是结界界面
         :return:
         """
-        self.realm_goto_grown()
+        self.ui_goto_page(page_guild_realm_growth)
         if self.appear(self.I_RS_LEVEL_MAX):
             # 存在满级的式神
             logger.info('Exist max level shikigami and replace it')

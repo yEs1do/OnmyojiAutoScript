@@ -447,6 +447,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 while 1:
                     self.screenshot()
                     action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
+                    # 检查御魂溢出
+                    if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                        self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                        self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+                        continue
                     if not self.appear(self.I_GREED_GHOST):
                         break
                     if self.click(action_click, interval=1.5):
@@ -459,6 +464,11 @@ class ScriptTask(GeneralBattle, GeneralInvite, GeneralBuff, GeneralRoom, GameUi,
                 while 1:
                     self.screenshot()
                     action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
+                    # 检查御魂溢出
+                    if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                        self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                        self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+                        continue
                     if self.appear_then_click(self.I_REWARD, action=action_click, interval=1.5):
                         continue
                     if not self.appear(self.I_REWARD):

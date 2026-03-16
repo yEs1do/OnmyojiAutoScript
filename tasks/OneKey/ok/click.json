@@ -1,0 +1,38 @@
+[
+  {
+    "itemName": "ok_safe",
+    "imageName": "ok_ok_safe.png",
+    "roiFront": "614,67,100,68",
+    "roiBack": "614,67,100,68",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "安全点击"
+  },
+  {
+    "itemName": "ok_c1",
+    "imageName": "ok_ok_c1.png",
+    "roiFront": "1124,585,100,68",
+    "roiBack": "1124,585,100,68",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第一页"
+  },
+  {
+    "itemName": "ok_c2",
+    "imageName": "ok_ok_c2.png",
+    "roiFront": "236,53,824,100",
+    "roiBack": "236,53,824,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第二页"
+  },
+  {
+    "itemName": "ok_c3",
+    "imageName": "ok_ok_c3.png",
+    "roiFront": "0,0,100,100",
+    "roiBack": "0,0,100,100",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "第三页"
+  }
+]
