@@ -204,14 +204,12 @@ class ListExtractor:
         """
         self.file = str(Path(file).resolve().relative_to((Path.cwd()).resolve()).as_posix())
         self.image_path = Path(self.file).parent.as_posix()
-        self._result = ''
+        self._result = '\n\n\t# List Rule Assets\n'
 
         if not isinstance(data, dict):
             raise TypeError("data must be dict")
 
-        extracted = self.extract(data)
-        if extracted:
-            self._result = '\n\n\t# List Rule Assets\n' + extracted
+        self._result += self.extract(data)
 
     @property
     def result(self) -> str:
@@ -223,19 +221,15 @@ class ListExtractor:
         :param data:
         :return:
         """
-        items = data.get("list", [])
-        if not items:
-            return ""
-
         width, height = 0, 0
         array: list = []
-        for item in items:
+        for item in data["list"]:
             roi_front = item["roiFront"].split(",")
             width += int(roi_front[2])
             height += int(roi_front[3])
             array.append(f'"{item["itemName"]}"')
-        width = int(width / len(items))
-        height = int(height / len(items))
+        width = int(width / len(data["list"]))
+        height = int(height / len(data["list"]))
         array = ', '.join(array)
 
         description: str = f'\t# {data["description"]} \n'
