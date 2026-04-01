@@ -517,10 +517,10 @@ class ScriptTask(GeneralBattle, GameUi, SwitchSoul, RealmRaidAssets):
 
             if not self.appear(self.I_RR_PERSON, threshold=0.8):
                 break
-                
-            if self.appear_then_click(self.I_FIRE, interval=1):
+            if self.appear_then_click(self.I_FIRE, interval=0.8):
                 continue
-            if self.click(click, interval=1.8):
+            if self.click(click, interval=2):
+                click_cnt += 1
                 continue
                 
         logger.info(f'Click fire {order} success')
