@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from module.logger import logger
 from module.server.home_router import home_app
 from module.server.script_router import script_app
+from module.server.stats_router import stats_app
 from module.server.tool_router import tool_app
 from module.server.setting import State
 from module.server.main_manager import mm
@@ -43,6 +44,7 @@ app.add_middleware(
 
 app.include_router(home_app)
 app.include_router(script_app)
+app.include_router(stats_app)
 app.include_router(tool_app)
 
 annotator_static_dir = Path(__file__).resolve().parent / "web" / "annotator" / "static"
@@ -108,3 +110,5 @@ def fastapi_app():
     app.state.script_instances = runs
 
     return app
+
+
