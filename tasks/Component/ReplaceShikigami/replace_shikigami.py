@@ -49,15 +49,27 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
         while 1:
             self.screenshot()
 
+            # 已经切到了目标分类
             if self.appear(check_selected):
-                break
+                logger.info('Select shikigami class: %s' % shikigami_class)
+                return
+
+            # 看到了目标分类按钮，就点它
             if self.appear(check_click, interval=1):
                 if self.wait_until_pos_stable(check_click, stable_time=0.8, timeout=2.5):
                     self.click(check_click)
+                    logger.info('Clicked shikigami class: %s' % shikigami_class)
+                    time.sleep(1)
+                    # 点完后只确认 selected 状态，避免下一轮又把 selected 当 click target
+                    self.screenshot()
+                    if self.appear(check_selected):
+                        logger.info('Select shikigami class: %s' % shikigami_class)
+                        break
                 continue
-            if self.click(self.C_SHIKIGAMI_SWITCH_1, interval=3.5):
-                continue
-        logger.info('Select shikigami class: %s' % shikigami_class)
+
+            # 没看到就展开分类面板
+            self.click(self.C_SHIKIGAMI_SWITCH_1, interval=1.0)
+            time.sleep(1)
 
     def unset_shikigami_max_lv(self):
         """
