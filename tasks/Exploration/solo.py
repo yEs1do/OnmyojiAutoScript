@@ -34,67 +34,67 @@ class SoloExploration(BaseExploration):
         while True:
             self.screenshot()
             scene = self.get_current_scene()
-            match scene:
-                case Scene.WORLD:
-                    if self.appear(self.I_TREASURE_BOX_CLICK):  # 宝箱
-                        logger.info('Treasure box appear, get it.')
-                        self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
-                    if self.check_exit():
-                        return
-                    self.open_expect_level()
-                case Scene.ENTRANCE:
-                    if self.check_exit():
-                        return
-                    self.ui_click(self.I_E_EXPLORATION_CLICK, stop=self.I_E_SETTINGS_BUTTON)
-                case Scene.MAIN:
-                    if not explore_init:
-                        if self._config.exploration_config.auto_rotate == AutoRotate.yes:
-                            # 第一次进入就直接看一下轮换式神够不够，先补上
-                            self.enter_settings_and_do_operations()
-                            # 轮换打开
-                            self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
-                        else:
-                            # 轮换关闭
-                            self.ui_click(self.I_E_AUTO_ROTATE_ON, stop=self.I_E_AUTO_ROTATE_OFF)
-                        explore_init = True
-                    else:
-                        # 已经初始化了, 但是当前轮换是off状态, 则需要添加式神
-                        if self._config.exploration_config.auto_rotate == AutoRotate.yes and \
-                                self.appear(self.I_E_AUTO_ROTATE_OFF):
-                            self.enter_settings_and_do_operations()
-                            self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
-                    # 小纸人
-                    if self.appear(self.I_BATTLE_REWARD):
-                        if self.ui_get_reward(self.I_BATTLE_REWARD):
-                            continue
-                    # boss
-                    if self.appear(self.I_BOSS_BATTLE_BUTTON):
-                        if self.fire(self.I_BOSS_BATTLE_BUTTON):
-                            logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
-                        continue
-                    # 小怪
-                    fight_button = self.search_up_fight()
-                    if fight_button is not None:
-                        if self.fire(fight_button):
-                            logger.info(f'Fight, minions cnt {self.minions_cnt}')
-                        continue
-                    # 向后拉,寻找怪
-                    if search_fail_cnt >= 4:
-                        search_fail_cnt = 0
-                        if self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28 and self.appear(self.I_SWIPE_END):
-                            self.quit_explore()
-                            continue
-                        elif self._config.exploration_config.exploration_level != ExplorationLevel.EXPLORATION_28 and self._match_end.stable(self.device.image, refresh_after_stable=True):
-                            self.quit_explore()
-                            continue
-                        if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=2):
-                            continue
-                    else:
-                        search_fail_cnt += 1
-                case Scene.BATTLE_PREPARE | Scene.BATTLE_FIGHTING:
-                    self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
-                case Scene.UNKNOWN:
+
+            #
+            if scene == Scene.WORLD:
+                # 打开右边箭头
+                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
+                if self.appear(self.I_TREASURE_BOX_CLICK):
+                    # 宝箱
+                    logger.info('Treasure box appear, get it.')
+                    self.ui_click_until_disappear(self.I_TREASURE_BOX_CLICK)
+                if self.check_exit():
+                    break
+                self.open_expect_level()
+                explore_init = False
+                continue
+            #
+            elif scene == Scene.ENTRANCE:
+                if self.check_exit():
+                    break
+                self.ui_click(self.I_E_EXPLORATION_CLICK, stop=self.I_E_SETTINGS_BUTTON)
+                explore_init = False
+                continue
+            #
+            elif scene == Scene.MAIN:
+                if not explore_init:
+                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                    if self._config.exploration_config.auto_rotate == AutoRotate.yes:
+                        self.enter_settings_and_do_operations()
+                    explore_init = True
                     continue
+                # 小纸人
+                if self.appear(self.I_BATTLE_REWARD):
+                    if self.ui_get_reward(self.I_BATTLE_REWARD):
+                        continue
+                # boss
+                if self.appear(self.I_BOSS_BATTLE_BUTTON):
+                    if self.fire(self.I_BOSS_BATTLE_BUTTON):
+                        logger.info(f'Boss battle, minions cnt {self.minions_cnt}')
+                    continue
+                # 小怪
+                fight_button = self.search_up_fight()
+                if fight_button is not None:
+                    if self.fire(fight_button):
+                        logger.info(f'Fight, minions cnt {self.minions_cnt}')
+                    continue
+                # 向后拉,寻找怪
+                if search_fail_cnt >= 4:
+                    search_fail_cnt = 0
+                    if (self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28\
+                        and self.appear(self.I_SWIPE_END))\
+                            or self._match_end.stable(self.device.image, refresh_after_stable=True):
+                        self.quit_explore()
+                        continue
+                    if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=3):
+                        continue
+                else:
+                    search_fail_cnt += 1
+            #
+            elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
+                self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
+            elif scene == Scene.UNKNOWN:
+                continue
 
     def run_leader(self):
         logger.hr('leader')
@@ -108,6 +108,8 @@ class SoloExploration(BaseExploration):
             # 探索大世界
             if scene == Scene.WORLD:
                 self.wait_until_stable(self.I_CHECK_EXPLORATION)
+                # 打开右边箭头
+                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
@@ -249,6 +251,8 @@ class SoloExploration(BaseExploration):
             self.screenshot()
             scene = self.get_current_scene()
             if scene == Scene.WORLD:
+                # 打开右边箭头
+                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
