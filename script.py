@@ -631,7 +631,7 @@ class Script:
             failed = 0 if success else failed + 1
             # deep_set(self.failure_record, keys=task, value=failed)
             self.failure_record[task] = failed
-            if failed >= 3:
+            if failed == 3:
                 logger.critical(f"Task `{task}` failed 3 or more times.")
                 logger.critical("Possible reason #1: You haven't used it correctly. "
                                 "Please read the help text of the options.")
@@ -642,6 +642,18 @@ class Script:
                 self.config.notifier.push(
                     title=f'失败三次',
                     content=f"<{self.config_name}> {I18n.trans_zh_cn(task)}{task} 任务连续失败三次，请上线查看"
+                )
+            if failed >= 15:
+                logger.critical(f"Task `{task}` failed 15 or more times.")
+                logger.critical("Possible reason #1: You haven't used it correctly. "
+                                "Please read the help text of the options.")
+                logger.critical("Possible reason #2: There is a problem with this task. "
+                                "Please contact developers or try to fix it yourself.")
+                logger.critical('Request human takeover')
+                # 添加失败十五次的推送通知
+                self.config.notifier.push(
+                    title=f'失败十五次',
+                    content=f"<{self.config_name}> {I18n.trans_zh_cn(task)}{task} 任务连续失败十五次，请上线查看"
                 )
                 # 关闭模拟器
                 if self.config.script.error.error_repeated:
