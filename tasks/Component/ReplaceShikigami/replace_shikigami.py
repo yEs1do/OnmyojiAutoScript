@@ -56,7 +56,7 @@ class ReplaceShikigami(BaseTask, ReplaceShikigamiAssets):
 
             # 看到了目标分类按钮，就点它
             if self.appear(check_click, interval=1):
-                if self.wait_until_pos_stable(check_click, stable_time=0.8, timeout=2.5):
+                if self.wait_until_pos_stable(check_click, stable_time=1.5, timeout=3.5):
                     self.click(check_click)
                     logger.info('Clicked shikigami class: %s' % shikigami_class)
                     time.sleep(1)
