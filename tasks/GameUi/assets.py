@@ -25,6 +25,11 @@ class GameUiAssets:
 
 
 	# Image Rule Assets
+	# 关闭聊天窗口 
+	I_CLOSE_CHAT_WINDOW = RuleImage(roi_front=(653,397,18,18), roi_back=(653,397,18,18), threshold=0.91, method="Template matching", file="./tasks/GameUi/additional/additional_close_chat_window.png")
+
+
+	# Image Rule Assets
 	# 商店弹窗红色关闭 
 	I_AD_CLOSE_RED = RuleImage(roi_front=(993,130,33,36), roi_back=(953,91,215,121), threshold=0.8, method="Template matching", file="./tasks/GameUi/additional/additional_ad_close_red.png")
 
@@ -44,7 +49,7 @@ class GameUiAssets:
 	# description 
 	I_MAIN_GOTO_EXPLORATION = RuleImage(roi_front=(493,116,45,75), roi_back=(243,100,933,211), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_main_goto_exploration.png")
 	# description 
-	I_CHECK_EXPLORATION = RuleImage(roi_front=(681,12,27,36), roi_back=(661,0,70,61), threshold=0.8, method="Template matching", file="./tasks/GameUi/page/page_check_exploration.png")
+	I_CHECK_EXPLORATION = RuleImage(roi_front=(681,12,27,36), roi_back=(661,0,70,61), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_check_exploration.png")
 	# 探索前往觉醒 
 	I_EXPLORATION_GOTO_AWAKE_ZONE = RuleImage(roi_front=(65,632,50,41), roi_back=(33,619,1125,98), threshold=0.65, method="Template matching", file="./tasks/GameUi/page/page_exploration_goto_awake_zone.png")
 	# 探索前往御魂 

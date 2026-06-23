@@ -34,11 +34,12 @@ class SoloExploration(BaseExploration):
         while True:
             self.screenshot()
             scene = self.get_current_scene()
-
+            logger.info(f'[run_solo] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             #
             if scene == Scene.WORLD:
                 # 打开右边箭头
-                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
+                if not self.wait_world_stable():
+                    continue
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
@@ -105,11 +106,12 @@ class SoloExploration(BaseExploration):
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
+            logger.info(f'[run_leader] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
             # 探索大世界
             if scene == Scene.WORLD:
-                self.wait_until_stable(self.I_CHECK_EXPLORATION)
                 # 打开右边箭头
-                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
+                if not self.wait_world_stable():
+                    continue
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
@@ -250,9 +252,12 @@ class SoloExploration(BaseExploration):
         while True:
             self.screenshot()
             scene = self.get_current_scene()
+            logger.info(f'[run_member] Current scene: {scene.name}')  # TODO 2026.06.12 之后删掉这个刷屏的
+            #
             if scene == Scene.WORLD:
                 # 打开右边箭头
-                self.ui_click(click=self.I_EXP_ARROW_LEFT, stop=self.I_EXP_ARROW_RIGHT, interval=2)
+                if not self.wait_world_stable():
+                    continue
                 if self.appear(self.I_TREASURE_BOX_CLICK):
                     # 宝箱
                     logger.info('Treasure box appear, get it.')
@@ -266,7 +271,8 @@ class SoloExploration(BaseExploration):
                     break
                 continue
             elif scene == Scene.ENTRANCE:
-                self.ui_click_until_disappear(self.I_UI_BACK_RED)
+                self.ui_click(self.I_UI_BACK_YELLOW,stop=self.I_CHECK_EXPLORATION)
+            #
             elif scene == Scene.TEAM:
                 continue
             elif scene == Scene.MAIN:
@@ -316,6 +322,7 @@ class SoloExploration(BaseExploration):
                     friend_leave_timer = Timer(5)
                     leader_leave_log = False
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
+                logger.info('[run_member] Handling scene: BATTLE')
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
                 # 进入战斗了则需要重新打印日志
                 team_log = False

@@ -139,6 +139,8 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             # 获取当前章节名
             results = self.O_E_EXPLORATION_LEVEL_NUMBER.detect_and_ocr(self.device.image)
             text1 = [result.ocr_text for result in results]
+            # https://github.com/runhey/OnmyojiAutoScript/issues/1540
+            text1 = [text.replace("名", "第").replace("书", "第") for text in text1]
             # 判断当前章节有无目标章节
             result = set(text1).intersection({explorationConfig.exploration_config.exploration_level})
             # 有则跳出检测
@@ -157,7 +159,6 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
                 raise GameStuckError(
                     f"Swiped too many times ({swipeCount}), seems stuck in exploration level selection"
                 )
-                return False
             time.sleep(1)
 
         # 选中对应章节
@@ -351,7 +352,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         logger.info("RealmRaid and Exploration  set_next_run !")
         next_run = datetime.now() + con_scrolls.scrolls_cd
         self.set_next_run(task='Exploration', success=False, finish=False, target=next_run)
-        self.set_next_run(task='RealmRaid', success=False, finish=False, target=datetime.now())
+        self.set_next_run(task='RealmRaid', success=False, finish=False, server=False, target=datetime.now())
         self.set_next_run(task='MemoryScrolls', success=False, finish=False, target=datetime.now())
         raise TaskEnd
 
@@ -377,7 +378,7 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             self.screenshot()
             
             # 探索章节标题界面
-            if self.appear(self.I_UI_BACK_RED) and self.appear(self.I_E_EXPLORATION_CLICK):
+            if self.appear(self.I_UI_BACK_YELLOW) and self.appear(self.I_E_EXPLORATION_CLICK):
                 break
             # 探索大世界界面
             if self.appear(self.I_CHECK_EXPLORATION) and not self.appear(self.I_E_SETTINGS_BUTTON):
@@ -403,6 +404,13 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
             if self.appear(self.I_EXPLORATION_TITLE) or self.appear(self.I_CHECK_EXPLORATION):
                 break
 
+    def _hook_special_reward(self) -> bool:
+        if self.appear(self.I_STATISTICS) and not self.appear(self.I_REWARD) and not self.appear(self.I_WIN):
+            if self.appear_then_click(self.I_CONFIRM_CLOSE_DIFF_SOUL):
+                return True
+            self.click(self.C_RANDOM_CLICK, interval=1.5)
+        return False
+
     def fire(self, button) -> bool:
         self.ui_click_until_disappear(button, interval=2)
         self.screenshot()
@@ -415,6 +423,22 @@ class BaseExploration(GameUi, GeneralBattle, GeneralRoom, GeneralInvite, Replace
         self.run_general_battle(self._config.general_battle_config)
         self.minions_cnt += 1
         return True
+
+    def wait_world_stable(self) -> bool:
+        """
+        # 打开右边箭头 and https://github.com/runhey/OnmyojiAutoScript/pull/1589/
+        https://github.com/runhey/OnmyojiAutoScript/issues/1588
+        @return:
+        """
+        while 1:
+            scene = self.get_current_scene(reuse_screenshot=False)
+            if scene == Scene.WORLD and self.appear(self.I_EXP_ARROW_RIGHT):
+                return True
+            if scene == Scene.ENTRANCE:
+                logger.warning('World scene unstable, possibly transient frame after paper doll collection')
+                return False
+            if self.appear_then_click(self.I_EXP_ARROW_LEFT, interval=2):
+                continue
 
 
 if __name__ == "__main__":
@@ -430,10 +454,9 @@ if __name__ == "__main__":
     # image = load_image(IMAGE_FILE)
     # t.device.image = image
     while 1:
-    # print(t.search_up_fight(UpType.EXP))
+        # print(t.search_up_fight(UpType.EXP))
         t.screenshot()
-        print(t.I_UP_DARUMA.test_match(t.device.image))
-        time.sleep(0.2)
+        print(t.get_current_scene())
     from PIL import Image
     # Image.fromarray(t.device.image.astype(np.uint8)).show()
 
