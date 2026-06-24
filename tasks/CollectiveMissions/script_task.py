@@ -37,11 +37,19 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
             self.exit()
             self.set_next_run(task='CollectiveMissions', success=True)
             raise TaskEnd('CollectiveMissions')
-        self.select_and_update_cur_mission(self.config.collective_missions.missions_config.missions_select)
+        success = self.select_and_update_cur_mission(self.config.collective_missions.missions_config.missions_select)
+
+        if not success:
+            logger.warning('Mission cannot be switched anymore')
+            self.exit()
+            self.set_next_run(task='CollectiveMissions', success=False)
+            raise TaskEnd('CollectiveMissions')
+
         if self.current_mission is None:
             self.exit()
             self.set_next_run(task='CollectiveMissions', success=False)
             raise TaskEnd('CollectiveMissions')
+        
         match self.current_mission:
             case MC.FEED:
                 self._feed()  # 喂 N 卡
@@ -54,31 +62,84 @@ class ScriptTask(GameUi, CollectiveMissionsAssets):
         raise TaskEnd('CollectiveMissions')
 
     def select_and_update_cur_mission(self, mission: MC) -> bool:
-        """尝试选择对应任务并更新当前任务, 若选择失败(无法切换)则会停留在当前任务
-        :return: 成功选择返回True
+        """
+        尝试选择对应任务并更新当前任务
+        若选择失败(无法切换)则会停留在当前任务
+
+        Returns:
+            bool:
+                True  成功切换到目标任务
+                False 无法继续切换
         """
         pre_mission = ''
-        switch_fail_cnt, max_retry = 0, random.randint(2, 3)
+        switch_fail_cnt = 0
+        max_retry = random.randint(2, 3)
+
         while True:
-            if switch_fail_cnt >= max_retry:
-                logger.warning(f'Cannot switch next mission, stop select and try run')
-                return False
             self.screenshot()
+
             # 识别当前任务
             mission_text = self.O_CM_2.ocr(self.device.image)
+
             try:
                 detect_mission = MC(mission_text)
-                logger.info(f"Current: {detect_mission.value}, target: {mission.value}")
+
+                logger.info(
+                    f"Current: {detect_mission.value}, "
+                    f"target: {mission.value}"
+                )
+
                 self.current_mission = detect_mission
+
                 if detect_mission == mission:
-                    logger.info(f"Success select mission[{mission_text}]")
+                    logger.info(
+                        f"Success select mission[{mission_text}]"
+                    )
                     return True
-            except ValueError as e:
-                logger.warning(f'Unknown {mission_text}, skip')
+
+            except ValueError:
+                logger.warning(
+                    f"Unknown mission: {mission_text}"
+                )
+
             logger.info("Try switch to next mission")
-            switch_fail_cnt = 0 if pre_mission != mission_text else (switch_fail_cnt + 1)
+
+            # 连续识别到同一个任务
+            switch_fail_cnt = (
+                0
+                if pre_mission != mission_text
+                else switch_fail_cnt + 1
+            )
+
             pre_mission = mission_text
-            if self.appear_then_click(self.I_CM_SWITCH, interval=0.6):
+
+            if switch_fail_cnt >= max_retry:
+                logger.warning(
+                    "Cannot switch next mission, "
+                    "stop select and try run"
+                )
+                return False
+
+            #
+            # 上游修复：
+            # 刷新按钮已经变灰时直接退出
+            #
+            if not (
+                self.I_CM_SWITCH.match_brightness(self.device.image)
+                and self.I_CM_SWITCH.match_mean_color(
+                    self.device.image,
+                    color=(134, 107, 83)
+                )
+            ):
+                logger.warning(
+                    "Mission switch button unavailable"
+                )
+                return False
+
+            if self.appear_then_click(
+                self.I_CM_SWITCH,
+                interval=0.6
+            ):
                 sleep(random.uniform(0.6, 1.2))
 
     def _donate(self):
