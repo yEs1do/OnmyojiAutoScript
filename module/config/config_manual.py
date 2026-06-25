@@ -15,7 +15,7 @@ class ConfigManual:
         > Orochi > OrochiMoans > OrochiJudgement > Sougenbi > FallenSun > EternitySea > SixRealms
         > ActivityShikigami > ActivityCommon > WantedQuests
         > BondlingFairyland > EvoZone > GoryouRealm > HeroTest
-        > CollectiveMissionsr
+        > CollectiveMissions
         > Pets > TalismanPass > Delegation > Hyakkiyakou
         > Secret > WeeklyTrifles > MysteryShop > Duel 
         > TrueOrochi > RichMan
