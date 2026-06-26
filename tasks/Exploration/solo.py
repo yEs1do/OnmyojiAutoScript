@@ -15,6 +15,7 @@ from tasks.Exploration.config import ChooseRarity, AutoRotate, UserStatus, Explo
 class SoloExploration(BaseExploration):
     INVITE_FLAG_OFF = (157, 109, 83)
     INVITE_FLAG_ON = (227, 193, 153)
+    explore_init = False
 
     @cached_property
     def _invite_config(self) -> InviteConfig:
@@ -29,9 +30,9 @@ class SoloExploration(BaseExploration):
 
     def run_solo(self):
         logger.hr('solo')
-        explore_init = False
         search_fail_cnt = 0
-        while True:
+
+        while 1:
             self.screenshot()
             scene = self.get_current_scene()
             logger.info(f'[run_solo] Current scene: {scene.name}')  # TODO 2026.06.22 之后删掉这个刷屏的
@@ -47,22 +48,20 @@ class SoloExploration(BaseExploration):
                 if self.check_exit():
                     break
                 self.open_expect_level()
-                explore_init = False
                 continue
             #
             elif scene == Scene.ENTRANCE:
                 if self.check_exit():
                     break
                 self.ui_click(self.I_E_EXPLORATION_CLICK, stop=self.I_E_SETTINGS_BUTTON)
-                explore_init = False
                 continue
             #
             elif scene == Scene.MAIN:
-                if not explore_init:
-                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                if not self.explore_init:
                     if self._config.exploration_config.auto_rotate == AutoRotate.yes:
                         self.enter_settings_and_do_operations()
-                    explore_init = True
+                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                    self.explore_init = True
                     continue
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
@@ -99,10 +98,9 @@ class SoloExploration(BaseExploration):
 
     def run_leader(self):
         logger.hr('leader')
-        explore_init = False
         search_fail_cnt = 0
-        friend_leave_timer = Timer(5)
-        team_log = False
+        friend_leave_timer = Timer(10)
+
         while 1:
             self.screenshot()
             scene = self.get_current_scene()
@@ -138,7 +136,9 @@ class SoloExploration(BaseExploration):
                     # 可以加一下，清空第一次 explore_init
                     continue
                 self.open_expect_level()
+                # explore_init = False
                 continue
+
             # 邀请好友, 非常有可能是后面邀请好友，然后直接跳到组队了
             elif scene == Scene.ENTRANCE:
                 while 1:
@@ -153,8 +153,9 @@ class SoloExploration(BaseExploration):
                         continue
                     if self.appear_then_click(self.I_EXP_CREATE_ENSURE, interval=2):
                         continue
+            #
             elif scene == Scene.TEAM:
-                self.wait_until_stable(self.I_ADD_2, timer=Timer(0.8, 1), timeout=Timer(3))
+                self.wait_until_stable(self.I_ADD_2, timer=Timer(0.8, 1))
                 if self.appear(self.I_FIRE, threshold=0.8) and not self.appear(self.I_ADD_2):
                     self.ui_click_until_disappear(self.I_FIRE, interval=1)
                     continue
@@ -173,23 +174,15 @@ class SoloExploration(BaseExploration):
                         if self.appear_then_click(self.I_UI_BACK_YELLOW, interval=1):
                             continue
                     break
+            ##
             elif scene == Scene.MAIN:
-                if not explore_init:
-                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                if not self.explore_init:
                     if self._config.exploration_config.auto_rotate == AutoRotate.yes:
                         self.enter_settings_and_do_operations()
-                        self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
-                    else:
-                        # 轮换关闭
-                        self.ui_click(self.I_E_AUTO_ROTATE_ON, stop=self.I_E_AUTO_ROTATE_OFF)
-                    explore_init = True
+                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                    friend_leave_timer = Timer(10)
+                    self.explore_init = True
                     continue
-                else:
-                    # 已经初始化了, 但是当前轮换是off状态, 则需要添加式神
-                    if self._config.exploration_config.auto_rotate == AutoRotate.yes and \
-                            self.appear(self.I_E_AUTO_ROTATE_OFF):
-                        self.enter_settings_and_do_operations()
-                        self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
@@ -198,19 +191,16 @@ class SoloExploration(BaseExploration):
                 if not self.appear(self.I_TEAM_EMOJI):
                     if not friend_leave_timer.started():
                         logger.warning('Mate leave, start timer')
-                        friend_leave_timer = Timer(5)
+                        friend_leave_timer = Timer(10)
                         friend_leave_timer.start()
                     elif friend_leave_timer.started() and friend_leave_timer.reached():
                         logger.warning('Mate leave timer reached')
                         logger.warning('Exit team')
                         self.quit_explore()
-                    # 队友已经跑路了, 不管超没超时都不能进攻
-                    continue
+                        continue
                 else:
-                    if not team_log:
-                        logger.info('Team emoji appear again, clear friend_leave_timer')
-                        team_log = True
-                    friend_leave_timer = Timer(5)
+                    logger.warning('Team emoji appear again, clear friend_leave_timer')
+                    friend_leave_timer = Timer(10)
                 # boss
                 if self.appear(self.I_BOSS_BATTLE_BUTTON):
                     if self.fire(self.I_BOSS_BATTLE_BUTTON):
@@ -225,31 +215,27 @@ class SoloExploration(BaseExploration):
                 # 向后拉,寻找怪
                 if search_fail_cnt >= 4:
                     search_fail_cnt = 0
-                    if self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28 and self.appear(
-                            self.I_SWIPE_END):
+                    if (self._config.exploration_config.exploration_level == ExplorationLevel.EXPLORATION_28\
+                        and self.appear(self.I_SWIPE_END))\
+                            or self._match_end.stable(self.device.image, refresh_after_stable=True):
                         self.quit_explore()
                         continue
-                    elif self._config.exploration_config.exploration_level != ExplorationLevel.EXPLORATION_28 and self._match_end.stable(
-                            self.device.image, refresh_after_stable=True):
-                        self.quit_explore()
-                        continue
-                    if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=2):
+                    if self.swipe(self.S_SWIPE_BACKGROUND_RIGHT, interval=4.5):
                         continue
                 else:
                     search_fail_cnt += 1
+            #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
-                team_log = False
             elif scene == Scene.UNKNOWN:
                 continue
 
     def run_member(self):
         logger.hr('member')
-        explore_init = False
         wait_timer = Timer(50)
-        friend_leave_timer = Timer(5)
-        team_log, leader_leave_log = False, False
-        while True:
+        friend_leave_timer = Timer(10)
+
+        while 1:
             self.screenshot()
             scene = self.get_current_scene()
             logger.info(f'[run_member] Current scene: {scene.name}')  # TODO 2026.06.12 之后删掉这个刷屏的
@@ -269,86 +255,62 @@ class SoloExploration(BaseExploration):
                 if wait_timer.started() and wait_timer.reached():
                     logger.warning('Wait timer reached')
                     break
+
                 continue
+            #
             elif scene == Scene.ENTRANCE:
                 self.ui_click(self.I_UI_BACK_YELLOW,stop=self.I_CHECK_EXPLORATION)
             #
             elif scene == Scene.TEAM:
                 continue
+            #
             elif scene == Scene.MAIN:
-                if not explore_init:
-                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                if not self.explore_init:
                     if self._config.exploration_config.auto_rotate == AutoRotate.yes:
                         self.enter_settings_and_do_operations()
-                        self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
-                    else:
-                        # 轮换关闭
-                        self.ui_click(self.I_E_AUTO_ROTATE_ON, stop=self.I_E_AUTO_ROTATE_OFF)
-                    explore_init = True
+                    self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
+                    self.explore_init = True
                     continue
-                else:
-                    # 已经初始化了, 但是当前轮换是off状态, 则需要添加式神
-                    if self._config.exploration_config.auto_rotate == AutoRotate.yes and \
-                            self.appear(self.I_E_AUTO_ROTATE_OFF):
-                        self.enter_settings_and_do_operations()
-                        self.ui_click(self.I_E_AUTO_ROTATE_OFF, stop=self.I_E_AUTO_ROTATE_ON)
                 # 小纸人
                 if self.appear(self.I_BATTLE_REWARD):
                     if self.ui_get_reward(self.I_BATTLE_REWARD):
                         continue
+                #
                 if not self.appear(self.I_TEAM_EMOJI):
-                    if not leader_leave_log:
-                        logger.warning('Leader may have run away, wait a while...')
-                        leader_leave_log = True
+                    logger.warning('Team emoji not appear')
                     if not friend_leave_timer.started():
                         logger.warning('Mate leave, start timer')
-                        friend_leave_timer = Timer(5)
+                        friend_leave_timer = Timer(10)
                         friend_leave_timer.start()
-                        # 好友离开计时器刚开, 总的等待计时器也必须重置
-                        wait_timer = Timer(50)
                     elif friend_leave_timer.started() and friend_leave_timer.reached():
                         logger.warning('Mate leave timer reached')
                         logger.warning('Exit team')
                         self.quit_explore()
                         wait_timer = Timer(50)
                         wait_timer.start()
-                    continue
+                        continue
                 else:
-                    if not team_log:
-                        logger.info('Team emoji appear again, clear friend_leave_timer')
-                        team_log = True
-                    # 出现好友标志, 重置计时器
-                    wait_timer = Timer(50)
-                    friend_leave_timer = Timer(5)
-                    leader_leave_log = False
+                    logger.warning('Team emoji appear again, clear friend_leave_timer')
+                    friend_leave_timer = Timer(10)
+            #
             elif scene == Scene.BATTLE_PREPARE or scene == Scene.BATTLE_FIGHTING:
                 logger.info('[run_member] Handling scene: BATTLE')
                 self.check_take_over_battle(is_screenshot=False, config=self._config.general_battle_config)
-                # 进入战斗了则需要重新打印日志
-                team_log = False
-                leader_leave_log = False
             elif scene == Scene.UNKNOWN:
                 continue
 
     def invite_friend(self, name: str = None, find_mode: FindMode = FindMode.AUTO_FIND) -> bool:
         logger.info('Click add to invite friend')
-        no_click_timeout = Timer(5)
         # 点击＋号
-        while True:
+        while 1:
             self.screenshot()
-            # 有时候会出现准备邀请但是队友比较快直接上车了, 导致永远识别不到+号, 设置超时计时器
-            if no_click_timeout.started() and no_click_timeout.reached():
-                logger.warning('Cannot invite friend, maybe already existing')
-                return True
             if self.appear(self.I_LOAD_FRIEND):
                 break
             if self.appear(self.I_INVITE_ENSURE):
                 break
             if self.appear_then_click(self.I_ADD_2, interval=1):
-                no_click_timeout = Timer(5)
                 continue
             if self.appear_then_click(self.I_ADD_5_4, interval=1):
-                no_click_timeout = Timer(5)
                 continue
 
         friend_class = []
