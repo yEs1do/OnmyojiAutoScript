@@ -98,16 +98,16 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
         }
         while True:
             self.screenshot()
-            # 检查御魂溢出
-            if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
-                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
-                self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
-                continue
             if win is not None and self.appear(self.O_FIRE, interval=1.5):
                 break
             if mode_wait_dict.get(self.conf.herotest.layer, None) is not None and \
                     mode_wait_dict[self.conf.herotest.layer]():
                 win = True
+                continue
+            # 检查御魂溢出
+            if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
                 continue
             if self.appear(self.I_WIN, interval=1.2) or \
                     self.appear(self.I_DE_WIN, interval=1.2) or \
