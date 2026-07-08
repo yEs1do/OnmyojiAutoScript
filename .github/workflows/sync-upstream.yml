@@ -1,0 +1,49 @@
+name: Auto Sync Upstream
+
+on:
+  schedule:
+    # 每天北京时间早上 8:00 运行 (UTC 0:00)
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync-upstream:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check and Create Sync PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 借鉴上游：设置时区为上海，确保获取的日期是中国时间
+          TZ: Asia/Shanghai 
+        run: |
+          BASE_BRANCH="ove-dev"
+          HEAD_REPO="runhey:dev"
+          
+          # 借鉴上游：获取当前日期，格式如 2026.07.08
+          CURRENT_DATE=$(date +%Y.%m.%d)
+
+          echo "1. 检查是否存在未合并的 PR..."
+          OPEN_PRS=$(gh pr list --base $BASE_BRANCH --state open --json number --jq 'length')
+          
+          if [ "$OPEN_PRS" -gt "0" ]; then
+            echo "发现 $OPEN_PRS 个未合并的 PR！为避免冲突，跳过本次拉取更新。"
+            exit 0
+          fi
+
+          echo "2. 未发现未合并的 PR，尝试从上游创建合并 PR..."
+          
+          # 融合上游优点：使用带日期的标题，并打上自动化标签
+          gh pr create \
+            --base $BASE_BRANCH \
+            --head $HEAD_REPO \
+            --title "🔄 [Sync] $CURRENT_DATE 同步上游更新" \
+            --body "检测到上游有更新，自动拉取最新的提交代码。<br>由 GitHub Actions 自动生成。" \
+            --label "automated" \
+            || echo "没有检测到新的更新，或者当前分支已是最新。"
