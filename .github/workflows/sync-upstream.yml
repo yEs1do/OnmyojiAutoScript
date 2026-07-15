@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check and Create Sync PR
         env:
@@ -46,4 +46,5 @@ jobs:
             --title "🔄 [Sync] $CURRENT_DATE 同步上游更新" \
             --body "检测到上游有更新，自动拉取最新的提交代码。<br>由 GitHub Actions 自动生成。" \
             --label "automated" \
+            --no-maintainer-edit \
             || echo "没有检测到新的更新，或者当前分支已是最新。"
