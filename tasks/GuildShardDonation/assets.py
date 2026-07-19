@@ -17,7 +17,7 @@ class ScaledRuleOcr(RuleOcr):
 
 class GuildShardDonationAssets:
     I_PRAYER_ENTRY = RuleImage(roi_front=(963, 628, 66, 71), roi_back=(920, 590, 145, 125), threshold=0.8, method="Template matching", file="./tasks/GuildShardDonation/res/guild_shard_donation_prayer_entry.png")
-    I_PRAYER_PAGE = RuleImage(roi_front=(1166, 239, 61, 99), roi_back=(1140, 205, 105, 155), threshold=0.8, method="Template matching", file="./tasks/GuildShardDonation/res/guild_shard_donation_prayer_page.png")
+    I_PRAYER_PAGE = RuleImage(roi_front=(1181, 257, 34, 72), roi_back=(1140, 205, 105, 155), threshold=0.8, method="Template matching", file="./tasks/GuildShardDonation/res/guild_shard_donation_prayer_page.png")
     I_RECEIVED_POPUP = RuleImage(roi_front=(530, 178, 127, 25), roi_back=(470, 145, 260, 95), threshold=0.78, method="Template matching", file="./tasks/GuildShardDonation/res/guild_shard_donation_received_popup.png")
     I_GIVE = RuleImage(roi_front=(828, 274, 134, 66), roi_back=(800, 130, 330, 350), threshold=0.82, method="Template matching", file="./tasks/GuildShardDonation/res/guild_shard_donation_give.png")
     I_CONFIRM_DIALOG = RuleImage(roi_front=(432, 400, 416, 69), roi_back=(390, 370, 500, 125), threshold=0.78, method="Template matching", file="./tasks/GuildShardDonation/res/guild_shard_donation_confirm_dialog.png")

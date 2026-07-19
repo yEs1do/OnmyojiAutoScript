@@ -11,7 +11,7 @@
   {
     "itemName": "prayer_page",
     "imageName": "guild_shard_donation_prayer_page.png",
-    "roiFront": "1166,239,61,99",
+    "roiFront": "1181,257,34,72",
     "roiBack": "1140,205,105,155",
     "method": "Template matching",
     "threshold": 0.8,
