@@ -1,38 +1,38 @@
 [
   {
     "itemName": "ms_scroll_1",
-    "roiFront": "170,157,279,192",
-    "roiBack": "170,157,279,192",
+    "roiFront": "248,194,279,192",
+    "roiBack": "248,194,279,192",
     "description": "进入卷一"
   },
   {
     "itemName": "ms_scroll_2",
-    "roiFront": "490,135,297,210",
-    "roiBack": "490,135,297,210",
+    "roiFront": "541,192,282,201",
+    "roiBack": "541,192,282,201",
     "description": "进入卷二"
   },
   {
     "itemName": "ms_scroll_3",
-    "roiFront": "836,135,304,210",
-    "roiBack": "836,135,304,210",
+    "roiFront": "842,191,276,197",
+    "roiBack": "842,191,276,197",
     "description": "进入卷三"
   },
   {
     "itemName": "ms_scroll_4",
-    "roiFront": "137,389,305,206",
-    "roiBack": "137,389,305,206",
+    "roiFront": "249,403,281,201",
+    "roiBack": "249,403,281,201",
     "description": "进入卷四"
   },
   {
     "itemName": "ms_scroll_5",
-    "roiFront": "491,390,303,207",
-    "roiBack": "491,390,303,207",
+    "roiFront": "543,408,281,189",
+    "roiBack": "543,408,281,189",
     "description": "进入卷五"
   },
   {
     "itemName": "ms_scroll_6",
-    "roiFront": "835,389,303,204",
-    "roiBack": "835,389,303,204",
+    "roiFront": "837,404,280,191",
+    "roiBack": "837,404,280,191",
     "description": "进入卷六"
   },
   {
