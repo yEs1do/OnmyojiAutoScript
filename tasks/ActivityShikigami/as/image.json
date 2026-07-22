@@ -2,7 +2,7 @@
   {
     "itemName": "lock",
     "imageName": "as_lock.png",
-    "roiFront": "825,657,28,25",
+    "roiFront": "798,657,28,25",
     "roiBack": "739,613,276,85",
     "method": "Template matching",
     "threshold": 0.5,
@@ -11,7 +11,7 @@
   {
     "itemName": "unlock",
     "imageName": "as_unlock.png",
-    "roiFront": "884,648,28,25",
+    "roiFront": "797,654,28,25",
     "roiBack": "733,607,266,95",
     "method": "Template matching",
     "threshold": 0.5,
@@ -20,8 +20,8 @@
   {
     "itemName": "climb_mode_pass",
     "imageName": "as_climb_mode_pass.png",
-    "roiFront": "1142,547,21,21",
-    "roiBack": "1129,511,111,68",
+    "roiFront": "1136,544,29,22",
+    "roiBack": "1085,513,111,68",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "活动爬塔标志"
@@ -29,8 +29,8 @@
   {
     "itemName": "climb_mode_ap",
     "imageName": "as_climb_mode_ap.png",
-    "roiFront": "1093,544,20,20",
-    "roiBack": "1055,495,100,100",
+    "roiFront": "1091,542,20,20",
+    "roiBack": "1083,504,100,100",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "体力爬塔标志"

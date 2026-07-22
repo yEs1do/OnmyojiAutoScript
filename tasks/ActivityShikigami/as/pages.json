@@ -2,7 +2,7 @@
   {
     "itemName": "shi",
     "imageName": "as_shi.png",
-    "roiFront": "1187,383,43,29",
+    "roiFront": "1197,311,23,20",
     "roiBack": "1164,134,83,393",
     "method": "Template matching",
     "threshold": 0.7,
@@ -29,8 +29,8 @@
   {
     "itemName": "red_exit",
     "imageName": "as_red_exit.png",
-    "roiFront": "1162,96,39,38",
-    "roiBack": "1120,49,110,135",
+    "roiFront": "1100,179,39,38",
+    "roiBack": "1078,125,110,135",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "红色退出"
@@ -38,8 +38,8 @@
   {
     "itemName": "to_battle_main",
     "imageName": "as_to_battle_main.png",
-    "roiFront": "245,284,39,176",
-    "roiBack": "177,240,238,269",
+    "roiFront": "1041,175,39,176",
+    "roiBack": "940,120,238,269",
     "method": "Template matching",
     "threshold": 0.8,
     "description": "进入主要的战斗界面"
@@ -56,7 +56,7 @@
   {
     "itemName": "check_battle_main",
     "imageName": "as_check_battle_main.png",
-    "roiFront": "50,642,62,58",
+    "roiFront": "96,634,62,58",
     "roiBack": "1,510,415,203",
     "method": "Template matching",
     "threshold": 0.8,

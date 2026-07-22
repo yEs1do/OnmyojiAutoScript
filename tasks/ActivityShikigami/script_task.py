@@ -323,7 +323,13 @@ class ScriptTask(StateMachine, GameUi, BaseActivity, SwitchSoul, ActivityShikiga
                 continue
             #  出现 “魂” 和 紫蛇皮
             if self.appear(self.I_REWARD) or self.appear(self.I_REWARD_PURPLE_SNAKE_SKIN) or \
-                    self.appear(self.I_REWARD_GOLD) or self.appear(self.I_REWARD_GOLD_SNAKE_SKIN):
+                    self.appear(self.I_REWARD_GOLD) or self.appear(self.I_REWARD_GOLD_SNAKE_SKIN) or \
+                    self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                # 检查御魂溢出
+                if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
+                    self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                    self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+                    continue
                 self.random_reward_click(exclude_click=[self.C_RANDOM_TOP, self.C_RANDOM_LEFT])
                 ok_cnt += 1
                 continue
@@ -435,5 +441,3 @@ if __name__ == '__main__':
     t = ScriptTask(c, d)
 
     t.run()
-
-
