@@ -1,22 +1,22 @@
 [
   {
     "itemName": "ms_swipe_s",
-    "roiFront": "854,183,37,27",
-    "roiBack": "1126,160,80,81",
+    "roiFront": "853,182,37,27",
+    "roiBack": "1129,157,49,70",
     "mode": "default",
     "description": "小碎片拉满"
   },
   {
     "itemName": "ms_swipe_m",
     "roiFront": "852,326,37,23",
-    "roiBack": "1132,298,83,84",
+    "roiBack": "1129,300,47,81",
     "mode": "default",
     "description": "中碎片拉满"
   },
   {
     "itemName": "ms_swipe_l",
-    "roiFront": "856,467,34,25",
-    "roiBack": "1151,442,78,85",
+    "roiFront": "854,465,34,25",
+    "roiBack": "1131,440,43,77",
     "mode": "default",
     "description": "大碎片拉满"
   }
