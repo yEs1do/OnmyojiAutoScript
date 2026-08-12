@@ -86,6 +86,8 @@ class GeneralBattleAssets:
 	I_EXIT_ENSURE = RuleImage(roi_front=(674,388,135,63), roi_back=(674,388,135,63), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_exit_ensure.png")
 	# 左上角好友图标 
 	I_FRIENDS = RuleImage(roi_front=(89,14,36,36), roi_back=(89,14,36,36), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_friends.png")
+    # 御魂溢出 
+	I_OVER_GHOST = RuleImage(roi_front=(696,410,88,28), roi_back=(696,410,88,28), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_over_ghost.png")
 	# 结算时的统计图标 
 	I_REWARD_STATISTICS = RuleImage(roi_front=(59,49,34,35), roi_back=(24,23,111,684), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_reward_statistics.png")
 	# 结算金币 

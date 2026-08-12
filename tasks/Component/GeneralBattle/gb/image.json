@@ -99,6 +99,15 @@
     "description": "退出确认"
   },
   {
+    "itemName": "over_ghost",
+    "imageName": "gb_over_ghost.png",
+    "roiFront": "696,410,88,28",
+    "roiBack": "696,410,88,28",
+    "method": "Template matching",
+    "threshold": 0.8,
+    "description": "御魂溢出"
+  },
+  {
     "itemName": "friends",
     "imageName": "gb_friends.png",
     "roiFront": "89,14,36,36",
