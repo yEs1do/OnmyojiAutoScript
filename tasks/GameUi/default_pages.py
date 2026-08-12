@@ -309,7 +309,7 @@ page_battle_result = Page(
     category="global",
     priority=25
 )
-page_battle_result.add_enter_success_hooks(lambda _task: random_click())
+page_battle_result.add_enter_success_hooks(GeneralBattleAssets.I_OVER_GHOST, lambda _task: random_click())
 
 page_reward = Page(
     any_of(
@@ -328,7 +328,7 @@ page_reward = Page(
     category="global",
     priority=25
 )
-page_reward.add_enter_success_hooks(lambda _task: random_click())
+page_reward.add_enter_success_hooks(GeneralBattleAssets.I_OVER_GHOST, lambda _task: random_click())
 
 page_battle_team_exit = Page(GeneralBattleAssets.I_GB_CHECK_TEAM_EXIT, priority=75)
 page_battle_team = Page(any_of(GeneralInviteAssets.I_GI_EMOJI_1, GeneralInviteAssets.I_GI_EMOJI_2,
