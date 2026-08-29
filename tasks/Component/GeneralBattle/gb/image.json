@@ -20,20 +20,11 @@
   {
     "itemName": "over_ghost",
     "imageName": "gb_over_ghost.png",
-    "roiFront": "609,410,65,28",
-    "roiBack": "609,410,65,28",
-    "method": "Template matching",
-    "threshold": 0.8,
-    "description": "御魂溢出"
-  },
-  {
-    "itemName": "over_ghost_2",
-    "imageName": "gb_over_ghost_2.png",
     "roiFront": "696,410,88,28",
     "roiBack": "609,410,65,28",
     "method": "Template matching",
     "threshold": 0.8,
-    "description": "御魂溢出2"
+    "description": "御魂溢出"
   },
   {
     "itemName": "preset",
