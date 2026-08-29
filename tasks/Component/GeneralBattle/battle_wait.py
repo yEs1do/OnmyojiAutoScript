@@ -291,7 +291,7 @@ class BattleWait(BaseTask):
             self.appear(self.I_GREED_GHOST),
             self.appear(self.I_REWARD),
             self.appear(self.I_REWARD_GOLD)
-            
+
         )
         if not any([appear_ghost, appear_reward, appear_gold]):
             return HookSignal.CONTINUE
@@ -368,6 +368,10 @@ class BattleWait(BaseTask):
         while 1:
             self.screenshot()
 
+            # # 检查御魂溢出
+            # if self.appear(self.I_OVER_GHOST):
+            #     self.ui_click_until_disappear(self.I_OVER_GHOST, interval=0.3)
+            #     continue
             _appear_ghost, _appear_reward, _appear_gold, _appear_skin = (
                 self.appear(self.I_GREED_GHOST, threshold=0.6),
                 self.appear(self.I_REWARD),

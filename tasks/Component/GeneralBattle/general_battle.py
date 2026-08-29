@@ -232,7 +232,7 @@ class GeneralBattle(BattleWait, GeneralBuff, GeneralBattleAssets):
                 continue
             # 检查御魂溢出
             if self.appear(self.I_OVER_GHOST):
-                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
+                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=0.3)
                 continue
             # 如果出现领奖励
             action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
