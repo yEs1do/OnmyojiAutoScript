@@ -169,9 +169,8 @@ class ScriptTask(OrochiScriptTask, TrueOrochiAssets):
                     if not self.appear(self.I_GREED_GHOST):
                         break
                     # 检查御魂溢出
-                    if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
-                        self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
-                        self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+                    if self.appear(self.I_OVER_GHOST):
+                        self.ui_click_until_disappear(self.I_OVER_GHOST, interval=0.3)
                         continue
                     if self.appear_then_click(self.I_GREED_GHOST, interval=1):
                         continue

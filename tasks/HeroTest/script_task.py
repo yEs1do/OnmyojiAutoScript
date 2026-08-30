@@ -105,9 +105,8 @@ class ScriptTask(GameUi, GeneralBattle, HeroTestAssets, SwitchSoul):
                 win = True
                 continue
             # 检查御魂溢出
-            if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
-                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
-                self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+            if self.appear(self.I_OVER_GHOST):
+                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=0.3)
                 continue
             if self.appear(self.I_WIN, interval=1.2) or \
                     self.appear(self.I_DE_WIN, interval=1.2) or \

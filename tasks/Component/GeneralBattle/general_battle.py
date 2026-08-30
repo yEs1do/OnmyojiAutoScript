@@ -15,11 +15,12 @@ from tasks.Component.GeneralBattle.assets import GeneralBattleAssets
 from tasks.Component.GeneralBattle.config_general_battle import GreenMarkType, GeneralBattleConfig
 from tasks.Component.GeneralBuff.config_buff import BuffClass
 from tasks.Component.GeneralBuff.general_buff import GeneralBuff
+from tasks.Component.GeneralBattle.battle_wait import BattleWait
 
 from module.logger import logger
 
 
-class GeneralBattle(GeneralBuff, GeneralBattleAssets):
+class GeneralBattle(BattleWait, GeneralBuff, GeneralBattleAssets):
     """
     使用这个通用的战斗必须要求这个任务的config有config_general_battle
     """
@@ -230,9 +231,8 @@ class GeneralBattle(GeneralBuff, GeneralBattleAssets):
             if self.appear_then_click(self.I_ACTIVITY_ITEMS, interval=1):
                 continue
             # 检查御魂溢出
-            if self.appear(self.I_OVER_GHOST) or self.appear(self.I_OVER_GHOST_2):
-                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=1)
-                self.ui_click_until_disappear(self.I_OVER_GHOST_2, interval=1)
+            if self.appear(self.I_OVER_GHOST):
+                self.ui_click_until_disappear(self.I_OVER_GHOST, interval=0.3)
                 continue
             # 如果出现领奖励
             action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])

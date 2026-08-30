@@ -72,9 +72,7 @@ class GeneralBattleAssets:
 	# 活动掉落 
 	I_ACTIVITY_ITEMS = RuleImage(roi_front=(609,252,62,58), roi_back=(609,252,62,58), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_activity_items.png")
 	# 御魂溢出 
-	I_OVER_GHOST = RuleImage(roi_front=(609,410,65,28), roi_back=(609,410,65,28), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_over_ghost.png")
-	# 御魂溢出2 
-	I_OVER_GHOST_2 = RuleImage(roi_front=(696,410,88,28), roi_back=(696,410,88,28), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_over_ghost_2.png")
+	I_OVER_GHOST = RuleImage(roi_front=(696,410,88,28), roi_back=(696,410,88,28), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_over_ghost.png")
 	# 预设的小图标 
 	I_PRESET = RuleImage(roi_front=(32,650,47,45), roi_back=(32,650,47,45), threshold=0.8, method="Template matching", file="./tasks/Component/GeneralBattle/gb/gb_preset.png")
 	# 准备 
