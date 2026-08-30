@@ -291,7 +291,6 @@ class BattleWait(BaseTask):
             self.appear(self.I_GREED_GHOST),
             self.appear(self.I_REWARD),
             self.appear(self.I_REWARD_GOLD)
-
         )
         if not any([appear_ghost, appear_reward, appear_gold]):
             return HookSignal.CONTINUE
