@@ -7,9 +7,11 @@ from functools import wraps
 from dataclasses import dataclass
 from typing import TypeVar, ParamSpec, Callable
 from enum import Enum, auto
+from cached_property import cached_property
 
 from module.logger import logger
 from module.base.timer import Timer
+from module.atom.click import RuleClickExclude
 
 from tasks.base_task import BaseTask
 
@@ -300,6 +302,40 @@ class battle_wait_strategy:
 class BattleWait(BaseTask):
     # build in
     # ------------------------------------------------------------------------------------------------------------------
+    # @property
+    # def reward_exclude_click(self):
+    #     if not hasattr(self, '_reward_exclude_click'):
+    #         self._reward_exclude_click = RuleClickExclude(
+    #             [self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3]
+    #         )
+    #     return self._reward_exclude_click
+    @cached_property
+    def exclude_button_stage_1(self):
+        return ['C_END_MESSAGE_RIGHT_TOP', 'C_END_BUFF_AREA_1', 'C_END_BUFF_AREA_2',
+                'C_END_SOUL_RECORD', 'C_END_SOUL_DETAILS', 'C_END_FRIENDS_1'
+                ]
+
+    @cached_property
+    def exclude_button_stage_2(self):
+        return []
+
+    def reward_exclude_click(self, areas: list[str] = None, name: str = 'success_exclude_click') -> RuleClickExclude:
+        inputs = []
+        for area in areas:
+            click = getattr(self, area, None)
+            if click is None:
+                raise ValueError(f'Unknown success exclusion click: {area!r}')
+            inputs.append(click)
+        return RuleClickExclude(inputs, name=name)
+
+    def reward_exclude_click_1(self, areas: list[str] = None) -> RuleClickExclude:
+        return self.reward_exclude_click(areas, name='reward_exclude_click_1')
+
+    def reward_exclude_click_2(self, areas: list[str] = None) -> RuleClickExclude:
+        return self.reward_exclude_click(areas, name='reward_exclude_click_2')
+
+    # build in
+    # ------------------------------------------------------------------------------------------------------------------
     def _bw_setup_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
         self.C_REWARD_1.name = 'C_REWARD'
         self.C_REWARD_2.name = 'C_REWARD'
@@ -307,6 +343,17 @@ class BattleWait(BaseTask):
         self.device.stuck_record_add('BATTLE_STATUS_S')
         self.device.click_record_clear()
         logger.info('Start battle process')
+        options: dict[str, dict] = getattr(bw_ctx, 'options', None) or {}
+        success_options = options.get('success') or {}
+        if not isinstance(success_options, dict):
+            raise TypeError("battle wait option 'success' must be a dict")
+        excludes = success_options.get('excludes')
+        exclude_stage_1 = excludes if excludes is not None else self.exclude_button_stage_1
+        exclude_stage_2 = excludes if excludes is not None else self.exclude_button_stage_2
+        self._reward_exclude_click_1 = self.reward_exclude_click_1(exclude_stage_1)
+        self._reward_exclude_click_2 = self.reward_exclude_click_2(exclude_stage_2)
+        # print(self._reward_exclude_click_1)
+        # print(self._reward_exclude_click_2)
         return HookSignal.DONE
 
     def _bw_completion_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
@@ -319,29 +366,33 @@ class BattleWait(BaseTask):
         return HookSignal.CONTINUE
 
     def _bw_success_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+
+
         if self.appear_then_click(self.I_WIN, interval=0.8):
+            self.click(self._reward_exclude_click_1)
             return HookSignal.CONTINUE
-        appear_ghost, appear_reward, appear_gold = (
+        appear_ghost, appear_reward, appear_gold, appear_skin = (
             self.appear(self.I_GREED_GHOST),
             self.appear(self.I_REWARD),
-            self.appear(self.I_REWARD_GOLD)
+            self.appear(self.I_REWARD_GOLD),
+            self.appear(self.I_REWARD_GOLD_SNAKE_SKIN)
         )
-        if not any([appear_ghost, appear_reward, appear_gold]):
+        if not any([appear_ghost, appear_reward, appear_gold, appear_skin]):
             return HookSignal.CONTINUE
         logger.info('Win battle')
         timer = Timer(20).start()
         while 1:
             self.screenshot()
 
-            _appear_ghost, _appear_reward, _appear_gold = (
+            _appear_ghost, _appear_reward, _appear_gold, _appear_skin = (
                 self.appear(self.I_GREED_GHOST, threshold=0.6),
                 self.appear(self.I_REWARD),
-                self.appear(self.I_REWARD_GOLD)
+                self.appear(self.I_REWARD_GOLD),
+                self.appear(self.I_REWARD_GOLD_SNAKE_SKIN)
             )
-            # logger.info(f'_appear_ghost: {_appear_ghost} _appear_reward: {_appear_reward} _appear_gold: {_appear_gold}')
-            if any([_appear_ghost, _appear_reward, _appear_gold]):
-                action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
-                self.click(action_click, interval=1.5)
+            # logger.info(f'_appear_ghost: {_appear_ghost} _appear_reward: {_appear_reward} _appear_gold: {_appear_gold} _appear_skin: {_appear_skin}')
+            if any([_appear_ghost, _appear_reward, _appear_gold, _appear_skin]):
+                self.click(self._reward_exclude_click_2, interval=1.5)
             else:
                 logger.info('Get all reward')
                 bw_ctx.success = True
@@ -368,6 +419,8 @@ class BattleWait(BaseTask):
         return HookSignal.CONTINUE
 
     def _bw_randomclick_default(self, bw_ctx: BattleWaitContext) -> HookSignal:
+        if not self.is_in_battle(is_screenshot=False):
+            return HookSignal.CONTINUE
         if 0 <= random.randint(0, 500) <= 20:  # 百分之4的概率
             rand_type = random.randint(0, 2)
             match rand_type:
@@ -386,6 +439,11 @@ class BattleWait(BaseTask):
     # custom
     # ------------------------------------------------------------------------------------------------------------------
     def _bw_success_soul(self, bw_ctx: BattleWaitContext) -> HookSignal:
+        options: dict[str, dict] = getattr(bw_ctx, 'options', None) or {}
+        success_options = options.get('success') or {}
+        if not isinstance(success_options, dict):
+            raise TypeError("battle wait option 'success' must be a dict")
+        action_click = self.reward_exclude_click(success_options.get('excludes'))
         if self.appear_then_click(self.I_WIN, interval=0.8):
             return HookSignal.CONTINUE
         appear_ghost, appear_reward, appear_gold, appear_skin = (
@@ -413,7 +471,6 @@ class BattleWait(BaseTask):
             )
             # logger.info(f'_appear_ghost: {_appear_ghost} _appear_reward: {_appear_reward} _appear_gold: {_appear_gold} _appear_skin: {_appear_skin}')
             if any([_appear_ghost, _appear_reward, _appear_gold, _appear_skin]):
-                action_click = random.choice([self.C_REWARD_1, self.C_REWARD_2, self.C_REWARD_3])
                 self.click(action_click, interval=1.5)
             else:
                 logger.info('Get all reward')
@@ -541,10 +598,6 @@ if __name__ == '__main__':
     test_battle_wait.battle_wait(random_click_swipt_enable=1)
     with battle_wait_strategy(sequence='completion > interrupt > success > failure > idle').with_options(options={"setup": {"11": "11"}}):
         test_battle_wait.battle_wait()
-
-
-
-
 
 
 
