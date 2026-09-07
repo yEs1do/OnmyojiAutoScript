@@ -14,6 +14,7 @@ import os
 import inflection
 import asyncio
 import json
+import copy
 
 from datetime import date
 import threading
@@ -59,6 +60,9 @@ class Script:
         # Failure count of tasks
         # Key: str, task name, value: int, failure count
         self.failure_record = {}
+        self.last_task_runtime_outcome: dict[str, Any] | None = None
+        self.task_hoarding_until: datetime | None = None
+        self.task_hoarding_released = False
         # 运行loop的线程
         self.loop_thread: Thread = None
         # 跨进程排队管理器（仅在 queue_mode=True 时初始化）
@@ -321,6 +325,40 @@ class Script:
             if self.config.should_reload():
                 return False
 
+    def _hoard_next_task(self, task, now: datetime):
+        """在空闲时延迟首个到期任务，窗口内到达的任务一并等待。"""
+        duration = self.config.script.optimization.task_hoarding_duration
+        if duration <= 0 or not self.config.pending_task:
+            self.task_hoarding_until = None
+            self.task_hoarding_released = False
+            return task
+
+        if (self.config.model.running_task or self.task_hoarding_released
+                or (self.is_first_task and task.command == 'Restart')
+                or (task.next_run > now and self.task_hoarding_until is None)):
+            return task
+
+        if self.task_hoarding_until is None:
+            self.task_hoarding_until = now + timedelta(minutes=duration)
+            logger.info(
+                f"Task hoarding started for {duration:g} minutes, "
+                f"release at {self.task_hoarding_until.strftime('%Y-%m-%d %H:%M:%S')}"
+            )
+
+        if now < self.task_hoarding_until:
+            task = copy.deepcopy(task)
+            task.next_run = max(self.task_hoarding_until, task.next_run)
+            logger.info(
+                f"Task hoarding active, defer pending tasks until "
+                f"{self.task_hoarding_until.strftime('%Y-%m-%d %H:%M:%S')}"
+            )
+            return task
+
+        self.task_hoarding_until = None
+        self.task_hoarding_released = True
+        logger.info("Task hoarding window ended, resume scheduled task execution")
+        return task
+
     def get_next_task(self) -> str:
         """
         获取下一个任务的名字, 大驼峰。
@@ -328,13 +366,14 @@ class Script:
         """
         while True:
             task = self.config.get_next()
-            self.config.task = task
-            if self.state_queue:
-                self.state_queue.put({"schedule": self.config.get_schedule_data()})
             now = datetime.now()
             antiban_wake = self.anti_ban_guard.wake_time(now, self.config.script.anti_ban)
             if antiban_wake is not None:
                 task.next_run = max(task.next_run, antiban_wake)
+            task = self._hoard_next_task(task, now)
+            self.config.task = task
+            if self.state_queue:
+                self.state_queue.put({"schedule": self.config.get_schedule_data()})
             if not self._try_acquire_queue_token():
                 del_cached_property(self, "config")
                 continue
@@ -342,8 +381,15 @@ class Script:
             if task.next_run <= now:
                 return task.command
             # 根据策略执行等待逻辑
-            if not self._handle_wait_during_idle(task.next_run):
-                # 若等待被打断, 则刷新配置
+            wait_until = task.next_run
+            if self.task_hoarding_until and self.config.waiting_task:
+                wait_until = min(wait_until, self.config.waiting_task[0].next_run)
+            decision = self.runtime.handle_wait_during_idle(wait_until)
+            if decision == ScriptRuntimeDecision.RESCHEDULE:
+                logger.info('Idle wait requested scheduler refresh, reload config and reschedule')
+                del_cached_property(self, "config")
+            elif decision == ScriptRuntimeDecision.FAILED:
+                logger.warning('Idle wait preparation failed, reload config and retry scheduling')
                 del_cached_property(self, "config")
 
     def _try_acquire_queue_token(self) -> bool:
