@@ -1,5 +1,6 @@
 import random
 import time
+import copy
 
 
 from functools import wraps
@@ -24,6 +25,7 @@ class HookSignal(Enum):
 
 @dataclass
 class BattleWaitContext:
+    options: dict[str: dict] = None
     completion = False
     success = False
 
@@ -190,9 +192,22 @@ class battle_wait_strategy:
     首次装饰 func 初始化 battle_wait_plan
     """
     battle_wait_plan: BattleWaitPlan = None
+    options: dict[str: dict] = None
 
 
     def __init__(self, *arg, **kwargs):
+        self._temp_options = kwargs.pop('options', None)
+        if self._temp_options is not None:
+            if not isinstance(self._temp_options, dict):
+                raise TypeError(f'temp_options must be a dict, got {self._temp_options!r}')
+            for key, value in self._temp_options.items():
+                if not isinstance(key, str):
+                    raise
+                if not isinstance(value, dict):
+                    raise TypeError(f'temp_options must be a dict, got {self._temp_options!r}')
+            if battle_wait_strategy.options is None:
+                battle_wait_strategy.options = self._temp_options
+
         self._temp_battle_wait_plan = None
         if battle_wait_strategy.battle_wait_plan is None:
             # 首次装饰 func 初始化 battle_wait_plan
@@ -251,16 +266,35 @@ class battle_wait_strategy:
                     if key == 'random_click_swipt_enable' and value:
                         override_kwargs['randomclick'] = 'default'
                         override_args.append('randomclick_default')
-                battle_wait_strategy.battle_wait_plan =\
-                    battle_wait_strategy.battle_wait_plan.override(*override_args)
+                current_plan = copy.deepcopy(battle_wait_strategy.battle_wait_plan)
+                current_plan = current_plan.override(*override_args)
+            else:
+                current_plan = battle_wait_strategy.battle_wait_plan
             # -----------------------------------------------------------------------
             # kwargs.setdefault(
             #     'battle_wait_plan',
             #     self.battle_wait_plan,
             # )
-            return func(owner, battle_wait_plan=battle_wait_strategy.battle_wait_plan)
+            options = self.options if self.options is not None else battle_wait_strategy.options
+            return func(owner, battle_wait_plan=current_plan, options=options) \
+                if options is not None else func(owner, battle_wait_plan=current_plan)
 
         return inner
+
+    def with_options(self, options: dict) -> "battle_wait_strategy":
+        if not isinstance(options, dict):
+            raise
+        for event, v in options.items():
+            if not isinstance(event, str):
+                raise TypeError()
+            if not isinstance(v, dict):
+                raise TypeError()
+        # 先装饰器, 后临时变量
+        if battle_wait_strategy.options is None:
+            battle_wait_strategy.options = options
+        else:
+            self._temp_options = options
+        return self
 
 
 class BattleWait(BaseTask):
@@ -447,15 +481,29 @@ class BattleWait(BaseTask):
         但是必须要实现对应的hook 上面的比如 _bw_yyy_default() 以及 _bw_abcd_edf()
 
         hook 可以自定义顺序，比如 battle_wait_strategy(sequence='completion > interrupt > success > failure > idle')
-        如果指定sequence， 新增的event会按照传参时候从左到右排序，左边高优先级，新增的会插入到 failure 和 idle 之间
+        如果没有指定sequence， 新增的event会按照传参时候从左到右排序，左边高优先级，新增的会插入到 failure 和 idle 之间
+
+        如果希望每一个hook带上参数：
+        1. 可以在装饰器定义 @battle_wait_strategy(options = options)
+        2. 上下文带上  with battle_wait_strategy(...).with_options(options)
+        options: dict[str: dict] = {
+            "setup": {...}
+            ...
+        }
+
         """
+        bw_ctx = BattleWaitContext()
+
         battle_wait_plan = kwargs.get('battle_wait_plan')
         if battle_wait_plan is None:
             battle_wait_plan = BattleWaitPlan()
         # print(battle_wait_plan)
         # print(battle_wait_plan.sequence_function_names())
+        options = kwargs.get('options', None)
+        if options is not None:
+            bw_ctx.options = options
+            # logger.info('options: {}'.format(options))
 
-        bw_ctx = BattleWaitContext()
         setup_func = getattr(self, battle_wait_plan.function_setup_name, self._bw_setup_default)
         setup_func(bw_ctx)
         handlers = [getattr(self, func_name, None) for func_name in battle_wait_plan.sequence_function_names()]
@@ -466,6 +514,8 @@ class BattleWait(BaseTask):
                 result = handler(bw_ctx)
                 if handler.__name__.startswith('_bw_completion') and result == HookSignal.DONE:
                     return True
+                if result == HookSignal.CONTINUE:
+                    continue
 
             # bw_ctx.completion = True
 
@@ -489,7 +539,7 @@ if __name__ == '__main__':
 
     test_battle_wait = TestBattleWait(c,d)
     test_battle_wait.battle_wait(random_click_swipt_enable=1)
-    with battle_wait_strategy(sequence='completion > interrupt > success > failure > idle'):
+    with battle_wait_strategy(sequence='completion > interrupt > success > failure > idle').with_options(options={"setup": {"11": "11"}}):
         test_battle_wait.battle_wait()
 
 
