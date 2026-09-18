@@ -3,7 +3,7 @@
 # github https://github.com/runhey
 from pydantic import BaseModel, Field
 from enum import Enum
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 from tasks.Component.config_scheduler import Scheduler
 from tasks.Component.config_base import ConfigBase, TimeDelta
@@ -32,9 +32,19 @@ class UtilizeConfig(BaseModel):
     auto_fill: bool = Field(default=False, description='auto_fill_help')
     shikigami_class: ShikigamiClass = Field(default=ShikigamiClass.N, description='shikigami_class_help')
     shikigami_order: int = Field(default=4, description='shikigami_order_help')
+    min_run_interval: TimeDelta = Field(default=timedelta(0), description='min_run_interval_help')
+    min_taiko_value: int = Field(default=0, ge=0, le=200, description='min_taiko_value_help')
+    min_fish_value: int = Field(default=0, ge=0, le=200, description='min_fish_value_help')
     harvest_guild_max_times: int = Field(default=2, description='harvest_guild_max_times_help')
     utilize_harvest: bool = Field(default=True, description='utilize_harvest_help')
     utilize_enable: bool = Field(default=True, description='utilize_enable_help')
+    lazy_mode: bool = Field(default=False, description='lazy_mode_help')
+    lazy_mode_weight: float = Field(
+        default=1.0,
+        ge=0,
+        le=1,
+        description='lazy_mode_weight_help',
+    )
     box_ap_enable: bool = Field(default=True)
     box_exp_enable: bool = Field(default=True)
     box_exp_waste: bool = Field(default=True, description='box_exp_waste_help')
@@ -43,6 +53,3 @@ class UtilizeConfig(BaseModel):
 class KekkaiUtilize(ConfigBase):
     scheduler: UtilizeScheduler = Field(default_factory=UtilizeScheduler)
     utilize_config: UtilizeConfig = Field(default_factory=UtilizeConfig)
-
-
-
